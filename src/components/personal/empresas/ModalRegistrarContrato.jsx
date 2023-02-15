@@ -6,6 +6,7 @@ import { modalContratoEmpresa } from "../../../data/FormValues";
 import { valuesContrato } from "../../../data/initalValues";
 import { notificacion } from "../../../helpers/mensajes";
 import MainModal from "../../modal/MainModal";
+import { AiOutlineForm } from "react-icons/ai";
 import "../styles/modalRegistrarContrato.css";
 const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
   const [form] = Form.useForm();
@@ -24,7 +25,9 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
     modal1,
     setModal1,
     setDataToEdit,
-    dataToEdit, cargando, setCargando
+    dataToEdit,
+    cargando,
+    setCargando,
   } = useContext(CrudContext);
 
   const [contrato, setContrato] = useState(modalContratoEmpresa);
@@ -84,22 +87,22 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
 
   const handleSubmit = async (e) => {
     if (dataToEdit === null) {
-      setCargando(true)
+      setCargando(true);
       const response = await createData(contrato, route);
       if (response) {
         notificacion(response.msg, response.status);
         closeModal();
         actualizarTabla();
-        setCargando(false)
+        setCargando(false);
       }
     } else {
-      setCargando(true)
+      setCargando(true);
       const response = await updateData(contrato, selected.id, route);
       if (response) {
         notificacion(response.msg, response.status);
         closeModal();
         actualizarTabla();
-        setCargando(false)
+        setCargando(false);
       }
     }
   };
@@ -120,7 +123,7 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
   );
   return (
     <MainModal
-      className={"modal-contrato"}
+      className={"modal-contrato-empresa"}
       title={"Registrar contrato"}
       open={modal1}
       width={900}
@@ -132,11 +135,10 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
         onFinish={handleSubmit}
         layout="horizontal"
       >
-        <fieldset>
-          <legend>Contrato</legend>
-
-          {formData.slice(0, 12).map((item, i) => (
+        <div className="contrato">
+          {formData.slice(0, 10).map((item, i) => (
             <Form.Item
+              className="item"
               key={i}
               name={item.name}
               rules={item.rules}
@@ -148,12 +150,12 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
               </>
             </Form.Item>
           ))}
-        </fieldset>
+        </div>
 
-        <fieldset>
-          <legend>Recomendado</legend>
-          {formData.slice(12, 15).map((item, i) => (
+        <div className="finalizacion">
+          {formData.slice(10, 15).map((item, i) => (
             <Form.Item
+              className="item"
               key={i}
               name={item.name}
               rules={item.rules}
@@ -165,27 +167,14 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
               </>
             </Form.Item>
           ))}
-        </fieldset>
-
-        <fieldset>
-          <legend>Termino de contrato</legend>
-          {formData.slice(15, 18).map((item, i) => (
-            <Form.Item
-              key={i}
-              name={item.name}
-              rules={item.rules}
-              style={{ marginBottom: "8px" }}
-            >
-              <>
-                {item.label}
-                {item.type}
-              </>
-            </Form.Item>
-          ))}
-        </fieldset>
+        </div>
 
         <Form.Item className="button-container">
-          <Button type="primary" htmlType="submit" loading={cargando ? true: false}> 
+          <Button
+            htmlType="submit"
+            loading={cargando ? true : false}
+            icon={<AiOutlineForm />}
+          >
             {dataToEdit ? "Editar" : "Registrar"}
           </Button>
         </Form.Item>

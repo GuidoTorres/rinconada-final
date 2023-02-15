@@ -34,14 +34,21 @@ const ModalRegistroEvaluacion = ({
   const [evaluacion, setEvaluacion] = useState(evaluacionValues);
   const [cargo, setCargo] = useState([]);
   const [socio, setSocio] = useState([]);
+  const [area, setArea] = useState([]);
+  const [campamento, setCampamento] = useState([]);
   const getCargo = async () => {
     const route2 = "socio";
     const response = await getData(route1);
     const response2 = await getData(route2);
+    const response3 = await getData("area");
+    const response4 = await getData("campamento");
 
     setCargo(response.data);
     setSocio(response2.data);
+    setArea(response3.data);
+    setCampamento(response4.data);
   };
+  console.log(campamento);
   useEffect(() => {
     if (dataToEdit) {
       setEvaluacion(dataToEdit);
@@ -160,6 +167,42 @@ const ModalRegistroEvaluacion = ({
               })}
             />
           </div>
+          <div>
+            <label htmlFor="">Área</label>
+            <Select
+              value={evaluacion.area}
+              name="area"
+              size="small"
+              style={{
+                width: "300px",
+              }}
+              onChange={(e) => handleData(e, "area")}
+              options={area.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.nombre,
+                };
+              })}
+            />
+          </div>
+          <div>
+            <label htmlFor="">Campamento</label>
+            <Select
+              value={evaluacion.campamento}
+              name="campamento"
+              size="small"
+              style={{
+                width: "300px",
+              }}
+              onChange={(e) => handleData(e, "campamento")}
+              options={campamento?.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.nombre,
+                };
+              })}
+            />
+          </div>
         </fieldset>
         <fieldset className="cooperativa">
           <legend>
@@ -243,6 +286,10 @@ const ModalRegistroEvaluacion = ({
                 {
                   label: "Recomendado",
                   value: "Recomendado",
+                },
+                {
+                  label: "Titular",
+                  value: "Titular",
                 },
               ]}
             />

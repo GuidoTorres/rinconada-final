@@ -8,7 +8,12 @@ import { notificacion } from "../../../helpers/mensajes";
 import MainModal from "../../modal/MainModal";
 import "../styles/modalAsociacion.css";
 
-const ModalRegistrarAsociacion = ({ actualizarTabla, selected, modal, setModal }) => {
+const ModalRegistrarAsociacion = ({
+  actualizarTabla,
+  selected,
+  modal,
+  setModal,
+}) => {
   const [form] = Form.useForm();
 
   const route = "asociacion";
@@ -45,23 +50,23 @@ const ModalRegistrarAsociacion = ({ actualizarTabla, selected, modal, setModal }
 
   const handleSubmit = async (e) => {
     if (dataToEdit === null) {
-      setCargando(true)
+      setCargando(true);
       const response = await createData(asociacion, route);
       if (response) {
         notificacion(response.status, response.msg);
         closeModal();
         actualizarTabla();
-        setCargando(false)
+        setCargando(false);
       }
     }
     if (dataToEdit) {
-      setCargando(true)
+      setCargando(true);
       const response = await updateData(asociacion, dataToEdit.id, route);
       if (response) {
         notificacion(response.status, response.msg);
         closeModal();
         actualizarTabla();
-        setCargando(false)
+        setCargando(false);
       }
     }
   };
@@ -101,7 +106,7 @@ const ModalRegistrarAsociacion = ({ actualizarTabla, selected, modal, setModal }
         onFinish={handleSubmit}
         layout="horizontal"
       >
-        {formData.map((item, i) => (
+        {formData.splice(0, 1).map((item, i) => (
           <Form.Item
             key={i}
             name={item.name}
@@ -114,6 +119,20 @@ const ModalRegistrarAsociacion = ({ actualizarTabla, selected, modal, setModal }
             </>
           </Form.Item>
         ))}
+        {asociacion.tipo === "Canteadores" &&
+          formData.splice(0, 2).map((item, i) => (
+            <Form.Item
+              key={i}
+              name={item.name}
+              rules={item.rules}
+              style={{ marginBottom: "8px" }}
+            >
+              <>
+                {item.label}
+                {item.type}
+              </>
+            </Form.Item>
+          ))}
 
         <Form.Item className="button-container">
           <Button

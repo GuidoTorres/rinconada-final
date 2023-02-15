@@ -368,7 +368,12 @@ export const modalRegistrarSocio = (socio, handleData) => {
 
 //=====================PERSONAL============================
 
-export const modalRegistroTrabajador = (trabajador, handleData, cod) => {
+export const modalRegistroTrabajador = (
+  trabajador,
+  handleData,
+  cod,
+  asociacion
+) => {
   return [
     {
       label: <label>Dni</label>,
@@ -586,11 +591,61 @@ export const modalRegistroTrabajador = (trabajador, handleData, cod) => {
         />
       ),
     },
+    {
+      label: <label>Asociación</label>,
+      name: "direccion",
+      rules: [
+        {
+          required: false,
+        },
+      ],
+      type: (
+        <Select
+          placeholder="Asociación"
+          style={{
+            width: "100%",
+          }}
+          name="asociacion_id"
+          onChange={(e) => handleData(e, "asociacion_id")}
+          value={trabajador.asociacion_id}
+          options={asociacion.map((item) => {
+            return {
+              value: item.id,
+              label: item.nombre,
+            };
+          })}
+        />
+      ),
+    },
   ];
 };
 
 export const modalRegistroAsociacion = (asociacion, handleData) => {
   return [
+    {
+      label: <label>Tipo de asociación</label>,
+      name: "tipo",
+      rules: [
+        {
+          required: false,
+        },
+      ],
+      type: (
+        <Select
+          defaultValue="Tipo de asociación"
+          style={{
+            width: "100%",
+          }}
+          name="tipo"
+          onChange={(e) => handleData(e, "tipo")}
+          value={asociacion.tipo}
+        >
+          <Select.Option value="Canteadores">Canteadores</Select.Option>
+          <Select.Option value="Inspectores">Inspectores</Select.Option>
+          <Select.Option value="Vigilantes">Vigilantes</Select.Option>
+        </Select>
+      ),
+    },
     {
       label: <label>Nombre asociación</label>,
       name: "nombre",
@@ -629,30 +684,7 @@ export const modalRegistroAsociacion = (asociacion, handleData) => {
         />
       ),
     },
-    {
-      label: <label>Tipo de asociación</label>,
-      name: "tipo",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Select
-          defaultValue="Tipo de asociación"
-          style={{
-            width: "100%",
-          }}
-          name="tipo"
-          onChange={(e) => handleData(e, "tipo")}
-          value={asociacion.tipo}
-        >
-          <Select.Option value="Canteadores">Canteadores</Select.Option>
-          <Select.Option value="Inspectores">Inspectores</Select.Option>
-          <Select.Option value="Vigilantes">Vigilantes</Select.Option>
-        </Select>
-      ),
-    },
+
   ];
 };
 
@@ -684,88 +716,6 @@ export const modalRegistroContratoPersonal = (
           name="codigo_contrato"
           placeholder="Codigo de contrato"
           onChange={handleData}
-        />
-      ),
-    },
-    {
-      label: <label>Fecha de ingreso</label>,
-      name: "fecha_inicio",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Input
-          type="date"
-          value={ contrato?.fecha_inicio?.split("T")[0]}
-          name="fecha_inicio"
-          onChange={handleData}
-        />
-      ),
-    },
-    {
-      label: <label>Fecha de fin</label>,
-      name: "fecha_fin",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Input
-          type="date"
-          value={contrato?.fecha_fin}
-          name="fecha_fin"
-          onChange={handleData}
-        />
-      ),
-    },
-
-    {
-      label: <label>Perido de trabajo(quincena)</label>,
-      name: "periodo_trabajo",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Input
-          type="number"
-          value={contrato?.periodo_trabajo}
-          name="periodo_trabajo"
-          onChange={handleData}
-        />
-      ),
-    },
-    {
-      label: <label>Tipo de contrato</label>,
-      name: "tipo_contrato",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Select
-          placeholder="Tipo de contrato"
-          style={{
-            width: "100%",
-          }}
-          name="tipo_contrato"
-          value={contrato?.tipo_contrato}
-          onChange={(e) => handleData(e, "tipo_contrato")}
-          options={[
-            {
-              label: "Especies",
-              value: "Especies",
-            },
-            {
-              label: "Planilla",
-              value: "Planilla",
-            },
-          ]}
         />
       ),
     },
@@ -839,6 +789,89 @@ export const modalRegistroContratoPersonal = (
         />
       ),
     },
+    {
+      label: <label>Fecha de ingreso</label>,
+      name: "fecha_inicio",
+      rules: [
+        {
+          required: false,
+        },
+      ],
+      type: (
+        <Input
+          type="date"
+          value={contrato?.fecha_inicio?.split("T")[0]}
+          name="fecha_inicio"
+          onChange={handleData}
+        />
+      ),
+    },
+    {
+      label: <label>Fecha de fin</label>,
+      name: "fecha_fin",
+      rules: [
+        {
+          required: false,
+        },
+      ],
+      type: (
+        <Input
+          type="date"
+          value={contrato?.fecha_fin}
+          name="fecha_fin"
+          onChange={handleData}
+        />
+      ),
+    },
+
+    {
+      label: <label>Perido de trabajo(quincena)</label>,
+      name: "periodo_trabajo",
+      rules: [
+        {
+          required: false,
+        },
+      ],
+      type: (
+        <Input
+          type="number"
+          value={contrato?.periodo_trabajo}
+          name="periodo_trabajo"
+          onChange={handleData}
+        />
+      ),
+    },
+    {
+      label: <label>Tipo de contrato</label>,
+      name: "tipo_contrato",
+      rules: [
+        {
+          required: false,
+        },
+      ],
+      type: (
+        <Select
+          placeholder="Tipo de contrato"
+          style={{
+            width: "100%",
+          }}
+          name="tipo_contrato"
+          value={contrato?.tipo_contrato}
+          onChange={(e) => handleData(e, "tipo_contrato")}
+          options={[
+            {
+              label: "Especies",
+              value: "Especies",
+            },
+            {
+              label: "Planilla",
+              value: "Planilla",
+            },
+          ]}
+        />
+      ),
+    },
+
     {
       label: <label>Campamento</label>,
       name: "campamento_id",
@@ -1353,7 +1386,7 @@ export const modalContratoEmpresa = (
 
       type: (
         <Input
-          value={contrato.codigo_contrato}
+          value={contrato?.codigo_contrato}
           type="text"
           name="codigo_contrato"
           placeholder="codigo_contrato"
@@ -1372,7 +1405,7 @@ export const modalContratoEmpresa = (
       ],
       type: (
         <DatePicker
-          defaultValue={contrato.fecha_inicio}
+          defaultValue={contrato?.fecha_inicio}
           style={{
             width: "100%",
           }}
@@ -1395,7 +1428,7 @@ export const modalContratoEmpresa = (
       ],
       type: (
         <DatePicker
-          defaultValue={contrato.fecha_fin}
+          defaultValue={contrato?.fecha_fin}
           style={{
             width: "100%",
           }}
@@ -1417,7 +1450,7 @@ export const modalContratoEmpresa = (
       ],
       type: (
         <Input
-          value={contrato.periodo_trabajo}
+          value={contrato?.periodo_trabajo}
           type="text"
           name="periodo_trabajo"
           placeholder="Periodo de trabajo"
@@ -1442,7 +1475,7 @@ export const modalContratoEmpresa = (
           }}
           name="tipo_contrato"
           onChange={(e) => handleData(e, "tipo_contrato")}
-          value={contrato.tipo_contrato}
+          value={contrato?.tipo_contrato}
         >
           <Select.Option value="Especies">Especies</Select.Option>
           <Select.Option value="Planilla">Planilla</Select.Option>
@@ -1465,10 +1498,10 @@ export const modalContratoEmpresa = (
           }}
           name="gerencia"
           onChange={(e) => handleData(e, "gerencia")}
-          value={contrato.gerencia}
+          value={contrato?.gerencia}
         >
           {gerencia &&
-            gerencia.map((item, i) => (
+            gerencia?.map((item, i) => (
               <Select.Option key={i} value={item.id}>
                 {item.nombre}
               </Select.Option>
@@ -1492,7 +1525,7 @@ export const modalContratoEmpresa = (
           }}
           name="puesto"
           onChange={(e) => handleData(e, "puesto")}
-          value={contrato.puesto}
+          value={contrato?.puesto}
         >
           {cargo &&
             cargo.map((item, i) => (
@@ -1519,7 +1552,7 @@ export const modalContratoEmpresa = (
           }}
           name="campamento_id"
           onChange={(e) => handleData(e, "campamento_id")}
-          value={contrato.campamento_id}
+          value={contrato?.campamento_id}
         >
           {campamento &&
             campamento.map((item, i) => (
@@ -1528,51 +1561,6 @@ export const modalContratoEmpresa = (
               </Select.Option>
             ))}
         </Select>
-      ),
-    },
-    {
-      label: <label>Jefe directo</label>,
-      name: "jefe_directo",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Select
-          placeholder="Jefe directo"
-          style={{
-            width: "100%",
-          }}
-          name="jefe_directo"
-          onChange={(e) => handleData(e, "jefe_directo")}
-          value={contrato.jefe_directo}
-        >
-          {cargo &&
-            cargo.map((item, i) => (
-              <Select.Option key={i} value={item.id}>
-                {item.nombre}
-              </Select.Option>
-            ))}
-        </Select>
-      ),
-    },
-    {
-      label: <label>Género</label>,
-      name: "volquete",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Input
-          value={contrato.volquete}
-          type="text"
-          name="volquete"
-          placeholder="Volquete"
-          onChange={handleData}
-        />
       ),
     },
     {
@@ -1585,7 +1573,7 @@ export const modalContratoEmpresa = (
       ],
       type: (
         <Input
-          value={contrato.volquete}
+          value={contrato?.volquete}
           type="text"
           name="volquete"
           placeholder="Volquete"
@@ -1603,85 +1591,12 @@ export const modalContratoEmpresa = (
       ],
       type: (
         <Input
-          value={contrato.teletran}
+          value={contrato?.teletran}
           type="text"
           name="teletran"
           placeholder="Teletrans"
           onChange={handleData}
         />
-      ),
-    },
-    {
-      label: <label>Recomendado por</label>,
-      name: "recomendado_por",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Select
-          placeholder="Recomendado por"
-          style={{
-            width: "100%",
-          }}
-          name="recomendado_por"
-          onChange={(e) => handleData(e, "recomendado_por")}
-          value={contrato.recomendado_por}
-        >
-          {socio &&
-            socio.map((item, i) => (
-              <Select.Option key={i} value={item.nombre}>
-                {item.nombre}
-              </Select.Option>
-            ))}
-        </Select>
-      ),
-    },
-    {
-      label: <label>Cooperativa</label>,
-      name: "cooperativa",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Input
-          value={contrato.cooperativa}
-          type="text"
-          name="cooperativa"
-          placeholder="Cooperativa"
-          onChange={handleData}
-        />
-      ),
-    },
-    {
-      label: <label>Condición cooperativa</label>,
-      name: "condicion_cooperativa",
-      rules: [
-        {
-          required: false,
-        },
-      ],
-      type: (
-        <Select
-          placeholder="Condición cooperativa"
-          style={{
-            width: "100%",
-          }}
-          name="condicion_cooperativa"
-          onChange={(e) => handleData(e, "condicion_cooperativa")}
-          value={contrato.condicion_cooperativa}
-        >
-          <Select.Option value="Hijo">Hijo</Select.Option>
-          <Select.Option value="Sobrino">Sobrino</Select.Option>
-          <Select.Option value="Primo">Primo</Select.Option>
-          <Select.Option value="Tio">Tio</Select.Option>
-          <Select.Option value="Compadre">Compadre</Select.Option>
-          <Select.Option value="Compañero">Compañero</Select.Option>
-          <Select.Option value="Amigo">Amigo</Select.Option>
-        </Select>
       ),
     },
     {
@@ -1700,7 +1615,7 @@ export const modalContratoEmpresa = (
           }}
           name="suspendido"
           onChange={(e) => handleData(e, "suspendido")}
-          value={contrato.suspendido}
+          value={contrato?.suspendido}
         >
           <Select.Option value={false}>Normal</Select.Option>
           <Select.Option value={true}>Suspendido</Select.Option>
@@ -1717,7 +1632,7 @@ export const modalContratoEmpresa = (
       ],
       type: (
         <Input
-          value={contrato.termino_contrato}
+          value={contrato?.termino_contrato}
           type="text"
           name="termino_contrato"
           placeholder="Termino de contrato"
@@ -1735,7 +1650,7 @@ export const modalContratoEmpresa = (
       ],
       type: (
         <Input
-          value={contrato.nota_contrato}
+          value={contrato?.nota_contrato}
           type="text"
           name="nota_contrato"
           placeholder="Nota de contrato"

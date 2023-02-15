@@ -234,7 +234,7 @@ export const tableHistorialContrato = (handleEdit, handleDelete) => {
     {
       id: "Id contrato",
       name: "Id contrato",
-      selector: (row) => row?.id,
+      selector: (row, index) => index+1,
     },
     {
       id: "Tipo de Contrato",

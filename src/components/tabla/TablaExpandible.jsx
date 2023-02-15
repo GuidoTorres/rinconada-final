@@ -23,7 +23,8 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
     setModal,
     setModal1,
     modal,
-    modal1, setDataToEdit
+    modal1,
+    setDataToEdit,
   } = useContext(CrudContext);
   const [id, setId] = useState("");
 
@@ -39,8 +40,12 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
     selectAllRowsItemText: "Todos",
   };
 
-  const handleDelete = (e) => {
-    const response = deleteData(route, e);
+  const handleDelete = async (e) => {
+
+    const response = await deleteData(route, e);
+    console.log('====================================');
+    console.log(response);
+    console.log('====================================');
     if (response) {
       notificacion(response.status, response.msg);
       actualizarTabla();
@@ -63,6 +68,7 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
       selector: (row) => (
         <div style={{ padding: "3px" }}>
           <img
+            alt=""
             src={row?.foto || "https://via.placeholder.com/80"}
             style={{ height: "60px", width: "80px" }}
           ></img>
@@ -106,21 +112,24 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
       button: true,
       cell: (e, index) => (
         <>
-          <label htmlFor="">{e.evaluacions.control}</label>
-
           <AiFillEye onClick={() => handleEvaluacion(e)} />
-          {e.evaluacions.control === "si" &&
-          e.evaluacions.topico === "si" &&
-          e.evaluacions.seguridad === "si" &&
-          e.evaluacions.medio_ambiente === "si" &&
-          e.evaluacions.recursos_humanos === "si" ? (
+          {e?.evaluacion?.at(-1)?.fiscalizador_aprobado === "si" &&
+          e?.evaluacion?.at(-1)?.control === "si" &&
+          e?.evaluacion?.at(-1)?.topico === "si" &&
+          e?.evaluacion?.at(-1)?.seguridad === "si" &&
+          e?.evaluacion?.at(-1)?.medio_ambiente === "si" &&
+          e?.evaluacion?.at(-1)?.recursos_humanos === "si" &&
+          !e?.evaluacion?.at(-1)?.finalizado ? (
             <AiOutlineCheck
               style={{ color: "green", fontWeigth: "bold", fontSize: "16px" }}
             />
-          ) : (
+          ) : e?.evaluacion?.at(-1)?.id &&
+            !e?.evaluacion?.at(-1)?.finalizado ? (
             <AiOutlineClose
               style={{ color: "red", fontWeigth: "bold", fontSize: "16px" }}
             />
+          ) : (
+            ""
           )}
         </>
       ),
@@ -133,7 +142,7 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
       cell: (e) => (
         <>
           <AiFillEdit onClick={() => handleEdit(e)} />
-          <BsFillTrash2Fill onClick={() => handleDelete(e.id)} />
+          <BsFillTrash2Fill onClick={() => handleDelete(e.dni)} />
         </>
       ),
     },

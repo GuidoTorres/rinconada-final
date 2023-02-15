@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CrudContext } from "../../../context/CrudContext";
-import moment from "moment";
-import { trabajadorContratoValues } from "../../../data/initalValues";
 import MainModal from "../../modal/MainModal";
 import { notificacion } from "../../../helpers/mensajes";
-import { Button, Form, Select } from "antd";
+import { Button, Form } from "antd";
 import { AiOutlineForm } from "react-icons/ai";
 import { modalRegistroContratoPersonal } from "../../../data/FormValues";
+import { addDays } from "../../../helpers/calcularFechaFin";
 import "../styles/modalRegistrarContrato.css";
 
 const ModalRegistrarContrato = ({
@@ -16,9 +15,6 @@ const ModalRegistrarContrato = ({
   trabajadorDni,
 }) => {
   const [form] = Form.useForm();
-  console.log('====================================');
-  console.log(selected);
-  console.log('====================================');
   const route = "contrato";
   const route1 = "cargo";
   const route2 = "campamento";
@@ -37,7 +33,7 @@ const ModalRegistrarContrato = ({
     cargando,
     setCargando,
   } = useContext(CrudContext);
-  
+
   const [cargo, setCargo] = useState([]);
   const [campamento, setCampamento] = useState([]);
   const [gerencia, setGerencia] = useState([]);
@@ -70,7 +66,7 @@ const ModalRegistrarContrato = ({
       setId(idFinal);
     }
   }, [responseContrato]);
-  
+
   const trabajadorContratoValues = {
     fecha_inicio: "",
     codigo_contrato: "",
@@ -98,22 +94,6 @@ const ModalRegistrarContrato = ({
   const [contrato, setContrato] = useState(trabajadorContratoValues);
 
 
-  const addDays = (date, daysToAdd) => {
-    const WEEKEND = [moment().day("Sunday").weekday()];
-    var daysAdded = 0,
-      momentDate = moment(new Date(date));
-    while (daysAdded < daysToAdd) {
-      momentDate = momentDate.add(1, "days");
-      if (!WEEKEND.includes(momentDate.weekday())) {
-        daysAdded++;
-      }
-    }
-    let fecha = momentDate._d?.toISOString().split("T")[0];
-
-    setContrato((prevState) => {
-      return { ...prevState, fecha_fin: fecha };
-    });
-  };
   useEffect(() => {
     if (dataToEdit) {
       setContrato(dataToEdit);
@@ -127,11 +107,15 @@ const ModalRegistrarContrato = ({
     getAll();
   }, []);
   useEffect(() => {
+    //para calcular la fecha de fin al registrar contrato
     if (contrato.fecha_inicio !== "" && contrato.periodo_trabajo !== "") {
       let inicial = 14;
       let fechaInicio = contrato.fecha_inicio;
       let total = inicial * parseInt(contrato.periodo_trabajo);
-      addDays(fechaInicio, total);
+      const date = addDays(fechaInicio, total);
+      setContrato((prevState) => {
+        return { ...prevState, fecha_fin: date };
+      });
     } else {
       setContrato((prevState) => {
         return { ...prevState, fecha_fin: "" };
@@ -195,7 +179,8 @@ const ModalRegistrarContrato = ({
     campamento,
     gerencia,
     area,
-    id, dataToEdit
+    id,
+    dataToEdit
   );
   return (
     <MainModal
@@ -228,7 +213,7 @@ const ModalRegistrarContrato = ({
             </Form.Item>
           ))}
         </div>
-        <div className="termino-contrato">
+        <div className="finalizacion">
           {formData.map((item, i) => (
             <Form.Item
               key={i}

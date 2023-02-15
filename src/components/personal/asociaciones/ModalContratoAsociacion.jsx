@@ -189,7 +189,7 @@ const ModalContratoAsociacion = ({
             </Form.Item>
           ))}
         </div>
-        <div className="termino-contrato">
+        <div className="finalizacion">
           {formData.map((item, i) => (
             <Form.Item
               key={i}

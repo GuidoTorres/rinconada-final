@@ -2,7 +2,7 @@ import moment from "moment";
 
 export const addDays = (date, daysToAdd) => {
   const WEEKEND = [moment().day("Sunday").weekday()];
-  var daysAdded = 0,
+  let daysAdded = 0,
     momentDate = moment(new Date(date));
   while (daysAdded < daysToAdd) {
     momentDate = momentDate.add(1, "days");

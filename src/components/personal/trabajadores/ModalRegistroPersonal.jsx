@@ -22,6 +22,7 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
     modal,
     cargando,
     setCargando,
+    data3
   } = useContext(CrudContext);
   const [trabajador, setTrabajador] = useState(trabajadorValues);
   const [avatar, setAvatar] = useState(null);
@@ -39,11 +40,11 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
   }, [dataToEdit]);
 
   useEffect(() => {
-    if (data.length === 0) {
+    if (data?.length === 0) {
       setCodTrabajador("CCM00" + 1);
     }
 
-    if (data.length > 0) {
+    if (data?.length > 0) {
       const id = data?.at(-1)?.codigo_trabajador;
       const getNumber = id.includes("CCM00")
         ? id.split("CCM00")[1]
@@ -152,7 +153,7 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
   const formData = modalRegistroTrabajador(
     trabajador,
     handleData,
-    codTrabajador
+    codTrabajador, data3
   );
 
   return (

@@ -51,7 +51,7 @@ const AsociacionLayout = () => {
 
   const handleEdit = (e) => {
     setDataToEdit(e);
-    setModal(true);
+    setRegistrarAsociacion(true);
   };
 
   const handleDelete = async (e) => {

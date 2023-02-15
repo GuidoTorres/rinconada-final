@@ -38,8 +38,6 @@ const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador,data }) => {
     setDataToEdit(e);
     setModal3(true);
   };
-  console.log(data.at(-1));
-
   const handleDelete = async (id) => {
     const response = await deleteData(route, id.evaluacion_id);
 
