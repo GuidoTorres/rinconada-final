@@ -1,10 +1,18 @@
+import { Button, Input } from "antd";
 import React, { useContext, useState } from "react";
 import { AiOutlineClose, AiFillEye } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
 import { PlanillaContext } from "../../../context/PlanillaContext";
 import MainModal from "../../modal/MainModal";
 import "../style/modalPagos.css";
-const ModalPago = ({ data, selected, actualizarTabla, evaluacion_id, modal1, setPago }) => {
+const ModalPago = ({
+  data,
+  selected,
+  actualizarTabla,
+  evaluacion_id,
+  modal1,
+  setPago,
+}) => {
   const [initialValues, setInitialValues] = useState([
     {
       conductor: "",
@@ -86,18 +94,16 @@ const ModalPago = ({ data, selected, actualizarTabla, evaluacion_id, modal1, set
         </div>
 
         <div>
-          <div>
-            <label htmlFor="">Dni: {data && data?.dni}</label>
-          </div>
-          <div>
-            <label htmlFor="">Teléfono: {data && data?.telefono}</label>
-          </div>
-          <div>
-            <label htmlFor="">Cargo:</label>
-          </div>
+          <label htmlFor="">Dni: {data && data?.dni}</label>
+        </div>
+        <div>
+          <label htmlFor="">Teléfono: {data && data?.telefono}</label>
+        </div>
+        <div>
+          <label htmlFor="">Cargo:</label>
         </div>
       </section>
-      <section className="button-container">
+      {/* <section className="button-container">
         {data && data?.asociacion !== null ? (
           <button
             onClick={addFields}
@@ -114,70 +120,68 @@ const ModalPago = ({ data, selected, actualizarTabla, evaluacion_id, modal1, set
         ) : (
           ""
         )}
-      </section>
+      </section> */}
       <form className="form" onSubmit={handleSubmit}>
         {initialValues.map((input, i) => {
           return (
-            <section className="body">
-              <div className="input-container">
-                <div>
-                  <label htmlFor="">Conductor</label>
-                  <input
-                    name="conductor"
-                    type="text"
-                    onChange={(e) => handleChange(e, i)}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="">Dni</label>
-                  <input
-                    name="dni"
-                    type="text"
-                    onChange={(e) => handleChange(e, i)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="">Teléfono</label>
-                  <input
-                    name="telefono"
-                    type="text"
-                    onChange={(e) => handleChange(e, i)}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="">Placa</label>
-                  <input
-                    name="placa"
-                    type="text"
-                    onChange={(e) => handleChange(e, i)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="">Teletrans</label>
-                  <input
-                    name="teletrans"
-                    type="text"
-                    onChange={(e) => handleChange(e, i)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="">Lugar de Despacho</label>
-                  <input
-                    name="lugar"
-                    type="text"
-                    onChange={(e) => handleChange(e, i)}
-                  />
-                </div>
+            <>
+              <div>
+                <label htmlFor="">Conductor</label>
+                <Input
+                  name="conductor"
+                  type="text"
+                  onChange={(e) => handleChange(e, i)}
+                />
               </div>
-            </section>
+
+              <div>
+                <label htmlFor="">Dni</label>
+                <Input
+                  name="dni"
+                  type="text"
+                  onChange={(e) => handleChange(e, i)}
+                />
+              </div>
+              <div>
+                <label htmlFor="">Teléfono</label>
+                <Input
+                  name="telefono"
+                  type="text"
+                  onChange={(e) => handleChange(e, i)}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="">Placa</label>
+                <Input
+                  name="placa"
+                  type="text"
+                  onChange={(e) => handleChange(e, i)}
+                />
+              </div>
+              <div>
+                <label htmlFor="">Teletrans</label>
+                <Input
+                  name="teletrans"
+                  type="text"
+                  onChange={(e) => handleChange(e, i)}
+                />
+              </div>
+              <div>
+                <label htmlFor="">Trapiche</label>
+                <Input
+                  name="lugar"
+                  type="text"
+                  onChange={(e) => handleChange(e, i)}
+                />
+              </div>
+            </>
           );
         })}
-        <div className="footer">
-          <button>Guardar</button>
-        </div>
       </form>
+      <div className="button-container">
+        <Button>Guardar</Button>
+      </div>
     </MainModal>
   );
 };

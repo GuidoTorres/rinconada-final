@@ -234,7 +234,7 @@ export const tableHistorialContrato = (handleEdit, handleDelete) => {
     {
       id: "Id contrato",
       name: "Id contrato",
-      selector: (row, index) => index+1,
+      selector: (row, index) => index + 1,
     },
     {
       id: "Tipo de Contrato",
@@ -398,9 +398,7 @@ export const personalLayout = (
               e?.contrato?.length
             : "--"} */}
           <>
-            <AiFillEye
-              onClick={() => (contrato ? handleContrato(e) : null)}
-            />
+            <AiFillEye onClick={() => (contrato ? handleContrato(e) : null)} />
             {e?.contrato?.length > 0 &&
             e?.contrato.at(-1)?.finalizado === false ? (
               <AiOutlineCheck
@@ -885,6 +883,8 @@ export const controlPlanilla = (handleContrato) => {
     {
       id: "celular",
       name: "Celular",
+      width: "150px",
+
       sortable: true,
       selector: (row) => (row?.telefono ? row.telefono : "---"),
       center: true,
@@ -892,13 +892,24 @@ export const controlPlanilla = (handleContrato) => {
     {
       id: "fecha_inicio",
       name: "Fecha de inicio",
+      width: "150px",
+
       selector: (row) => row?.contratos?.at(-1)?.fecha_inicio.split("T")[0],
     },
     {
       id: "fecha_fin",
       name: "Fecha de fin",
+      width: "150px",
       button: true,
       selector: (row) => row?.contratos?.at(-1)?.fecha_fin.split("T")[0],
+    },
+    {
+      id: "recomendado_por",
+      name: "Recomendado por",
+      width: "150px",
+
+      button: true,
+      selector: (row) => row?.evaluacion?.at(-1)?.recomendado_por,
     },
     {
       id: "Dias",
@@ -926,6 +937,7 @@ export const controlPlanilla = (handleContrato) => {
 
       center: true,
     },
+
     {
       id: "total",
       name: "Total",

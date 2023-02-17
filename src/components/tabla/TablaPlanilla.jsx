@@ -3,6 +3,8 @@ import DataTable from "react-data-table-component";
 import "./tabla.css";
 
 const TablaPlanilla = ({ columns, table }) => {
+  
+
 
   const paginationComponentOptions = {
     rowsPerPageText: "Filas por página",

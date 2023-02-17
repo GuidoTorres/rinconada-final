@@ -179,7 +179,7 @@ const ModalRegistroEvaluacion = ({
               onChange={(e) => handleData(e, "area")}
               options={area.map((item) => {
                 return {
-                  value: item.id,
+                  value: item.nombre,
                   label: item.nombre,
                 };
               })}
@@ -197,7 +197,7 @@ const ModalRegistroEvaluacion = ({
               onChange={(e) => handleData(e, "campamento")}
               options={campamento?.map((item) => {
                 return {
-                  value: item.id,
+                  value: item.nombre,
                   label: item.nombre,
                 };
               })}

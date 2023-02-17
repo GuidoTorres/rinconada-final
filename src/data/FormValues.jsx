@@ -627,7 +627,8 @@ export const modalRegistroAsociacion = (asociacion, handleData) => {
       name: "tipo",
       rules: [
         {
-          required: false,
+          required: true,
+          message: "Campo obligatorio!",
         },
       ],
       type: (
@@ -651,8 +652,7 @@ export const modalRegistroAsociacion = (asociacion, handleData) => {
       name: "nombre",
       rules: [
         {
-          required: true,
-          message: "Campo obligatorio!",
+          required: false
         },
       ],
 

@@ -66,6 +66,8 @@ export const trabajadorEvaluacionValues = (selected) => {
     medio_ambiente_observacion: "",
     recursos_humanos_observacion: "",
     finalizado: false,
+    area: "",
+    campamento: ""
   };
 };
 
