@@ -13,11 +13,12 @@ import { handleDownloadExcel } from "../../../helpers/tablaExcel";
 const ControlPlanilla = () => {
   const { planillaControl, setPlanillaControl, setUserdata } =
     useContext(PlanillaContext);
-  const { getData, setData, data } = useContext(CrudContext);
+  const { getData, setData, data, setResult } = useContext(CrudContext);
   const [tableData, setTableData] = useState([]);
   const [area, setArea] = useState([]);
   const [cargo, setCargo] = useState([]);
   const [campamento, setCampamento] = useState([]);
+  const [filterData, setFilterData] = useState([]);
   const [filtros, setFiltros] = useState({});
   const { result } = useSearch(data);
 
@@ -44,34 +45,24 @@ const ControlPlanilla = () => {
   }, []);
 
   useEffect(() => {
-    let cargoFilter, areaFilter, campamentoFilter;
-    if (filtros.puesto) {
-      cargoFilter = result?.filter(
-        (item) => item?.contratos?.at(-1)?.puesto === filtros.puesto
+    if (filtros.campamento) {
+      const filter = data?.filter(
+        (item) => item?.campamento === filtros.campamento
       );
-      if (filtros.area) {
-        const filter = cargoFilter?.filter(
-          (item) => item?.contratos?.at(-1)?.area === filtros.area
-        );
-      }
-      if (filtros.campamento) {
-        const filter = cargoFilter?.filter(
-          (item) => item?.contratos?.at(-1)?.campamento === filtros.campamento
-        );
-      }
+      setResult(filter);
+    }
+    if (filtros.area) {
+      const filter = data?.filter(
+        (item) => item?.contratos?.area === filtros.area
+      );
+      setResult(filter);
     }
 
-    // if (filtros.area) {
-    //   areaFilter = result?.filter(
-    //     (item) => item?.contratos?.at(-1)?.area === filtros.area
-    //   );
-    // }
+    if (filtros.puesto) {
+      const filter = data?.filter((item) =>  item?.puesto === filtros.puesto );
 
-    // if (filtros.campamento) {
-    //   campamentoFilter = result?.filter(
-    //     (item) => item?.contratos?.at(-1)?.campamento === filtros.campamento
-    //   );
-    // }
+      setResult(filter);
+    }
   }, [filtros]);
 
   const handleContrato = (e) => {
@@ -87,6 +78,8 @@ const ControlPlanilla = () => {
   };
   const columns = controlPlanilla(handleContrato);
 
+  console.log(result);
+
   return (
     <div>
       <Header text={"Planilla"} user={"Usuario"} ruta={"/planilla"} />
@@ -99,26 +92,6 @@ const ControlPlanilla = () => {
             cargar={false}
           />
           <Select
-            name="area"
-            placeholder="Área"
-            onChange={(e) => handleFilters(e, "area")}
-            style={{ width: "200px" }}
-            options={area.map((item) => {
-              return { id: item.id, value: item.nombre };
-            })}
-          />
-          <br />
-          <Select
-            name="puesto"
-            placeholder="Puesto"
-            onChange={(e) => handleFilters(e, "puesto")}
-            style={{ width: "200px" }}
-            options={cargo.map((item) => {
-              return { id: item.id, value: item.nombre };
-            })}
-          />
-          <br />
-          <Select
             name="campamento"
             placeholder="Campamento"
             onChange={(e) => handleFilters(e, "campamento")}
@@ -127,10 +100,36 @@ const ControlPlanilla = () => {
               return { id: item.id, value: item.nombre };
             })}
           />
+          <Select
+            name="area"
+            placeholder="Área"
+            onChange={(e) => handleFilters(e, "area")}
+            style={{ width: "200px" }}
+            options={area.map((item) => {
+              return { id: item.id, value: item.nombre };
+            })}
+          />
+          <Select
+            name="puesto"
+            placeholder="Puesto"
+            onChange={(e) => handleFilters(e, "puesto")}
+            style={{ width: "200px" }}
+            options={cargo.map((item) => {
+              return (
+                { label: "Ninguno", value: "-1" },
+                { id: item.id, value: item.nombre }
+              );
+            })}
+          />
+          <Button
+            onClick={() => handleDownloadExcel(result, "Planilla", "reporte")}
+          >
+            {" "}
+            Descargar
+          </Button>
         </div>
         {result?.length > 0 ? (
           <>
-            {/* <Button onClick={() => handleDownloadExcel(data, "Planilla", "reporte")}> Descargar</Button> */}
             <TablaPlanilla columns={columns} table={result} />
           </>
         ) : (

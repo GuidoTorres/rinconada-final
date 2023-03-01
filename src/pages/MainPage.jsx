@@ -41,6 +41,10 @@ import MainLayoutFinanzas from "../components/finanzas/MainLayoutFinanzas";
 import Cargando from "../components/cargando/Cargando";
 import PagosLayout from "../components/planillas/pagos/PagosLayout";
 import "./styles/mainPage.css";
+import Trapiche from "../components/personal/trapiche/Trapiche";
+import Volquete from "../components/personal/volquete/Volquete";
+import GenerarPago from "../components/planillas/realizar-pago/GenerarPago";
+import Incentivos from "../components/planillas/incentivos/Incentivos";
 // const AdministracionLayout = lazy(() => import("../components/administracion/AdministracionLayout"))
 // const CampamentoLayout = lazy(() => import("../components/administracion/campamentos/CampamentoLayout"))
 // const RolLayout = lazy(() => import("../components/administracion/roles/RolLayout"))
@@ -70,8 +74,6 @@ const Login = lazy(() => import("../components/login/Login"));
 // const Layout = lazy(() => import("./Layout"))
 // const Denegado = lazy(() => import("../components/denegado/Denegado"))
 // const MainLayoutFinanzas = lazy(() => import("../components/finanzas/MainLayoutFinanzas"))
-
-
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -192,6 +194,8 @@ const MainPage = () => {
                       </ProtectedRoute>
                     }
                   />
+                  <Route path="trapiche" element={<Trapiche />} />
+                  <Route path="volquete" element={<Volquete />} />
                 </Route>
                 <Route path="planilla">
                   <Route index element={<IndexLayout />} />
@@ -234,6 +238,10 @@ const MainPage = () => {
                       </ProtectedRoute>
                     }
                   />
+                  <Route path="pagos/generar" element={<GenerarPago />} />
+                  <Route path="pagos/incentivos" element={<Incentivos />} />
+
+
                 </Route>
                 <Route path="finanzas">
                   <Route index element={<MainLayoutFinanzas />} />
@@ -381,7 +389,7 @@ const MainPage = () => {
         </div>
       )}
       {!localStorage.getItem("user") && (
-        <Suspense fallback={<Cargando/>}>
+        <Suspense fallback={<Cargando />}>
           <Routes>
             <Route path="/" element={<Login />} />
           </Routes>

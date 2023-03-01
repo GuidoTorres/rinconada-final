@@ -652,7 +652,7 @@ export const modalRegistroAsociacion = (asociacion, handleData) => {
       name: "nombre",
       rules: [
         {
-          required: false
+          required: false,
         },
       ],
 
@@ -684,7 +684,6 @@ export const modalRegistroAsociacion = (asociacion, handleData) => {
         />
       ),
     },
-
   ];
 };
 
@@ -1131,10 +1130,10 @@ export const modalRegistroContratoAsociacion = (
           }}
           name="gerencia"
           onChange={(e) => handleData(e, "gerencia")}
-          defaultValue={contrato.gerencia}
+          value={contrato.gerencia}
         >
           {gerencia.map((item) => (
-            <Select.Option value={item.id}>{item.nombre}</Select.Option>
+            <Select.Option value={item.nombre}>{item.nombre}</Select.Option>
           ))}
         </Select>
       ),
@@ -1155,7 +1154,7 @@ export const modalRegistroContratoAsociacion = (
           options={area?.map((item) => {
             return {
               label: item.nombre,
-              value: item.id,
+              value: item.nombre,
             };
           })}
         />
@@ -1199,7 +1198,7 @@ export const modalRegistroContratoAsociacion = (
           options={cargo?.map((item) => {
             return {
               label: item.nombre,
-              value: item.id,
+              value: item.nombre,
             };
           })}
         />

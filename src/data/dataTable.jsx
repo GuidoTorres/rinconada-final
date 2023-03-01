@@ -1,4 +1,12 @@
-import { BsPencil, BsTrash, BsQuestionCircle, BsKey } from "react-icons/bs";
+import {
+  BsPencil,
+  BsTrash,
+  BsQuestionCircle,
+  BsKey,
+  BsPrinter,
+  BsCheck,
+  BsEye,
+} from "react-icons/bs";
 import {
   AiFillEye,
   AiOutlineCheck,
@@ -695,6 +703,89 @@ export const socioLayout = (handleEdit, handleDelete) => {
     },
   ];
 };
+export const volqueteLayout = (handleEdit, handleDelete) => {
+  return [
+    {
+      id: "Nro",
+      name: "Nro",
+      selector: (row, index) => row.id,
+      sortable: true,
+    },
+    {
+      id: "placa",
+      name: "Placa",
+      selector: (row) => row?.placa,
+      sortable: true,
+    },
+    {
+      id: "propietario",
+      name: "Propietario",
+      selector: (row) => row?.propietario,
+      sortable: true,
+    },
+
+    {
+      id: "Acciones",
+      name: "Acciones",
+      button: true,
+      cell: (e) => (
+        <div className="acciones">
+          <BsPencil onClick={() => handleEdit(e)} />
+          <Popconfirm
+            title="Eliminar rol"
+            description="¿Estas seguro de eliminar?"
+            onConfirm={() => handleDelete(e.id)}
+            // onCancel={cancel}
+            okText="Si"
+            cancelText="No"
+            placement="topRight"
+          >
+            <BsTrash />
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
+};
+
+export const trapicheLayout = (handleEdit, handleDelete) => {
+  return [
+    {
+      id: "Nro",
+      name: "Nro",
+      selector: (row, index) => row.id,
+      sortable: true,
+    },
+    {
+      id: "nombre",
+      name: "Nombre",
+      selector: (row) => row?.nombre,
+      sortable: true,
+    },
+
+    {
+      id: "Acciones",
+      name: "Acciones",
+      button: true,
+      cell: (e) => (
+        <div className="acciones">
+          <BsPencil onClick={() => handleEdit(e)} />
+          <Popconfirm
+            title="Eliminar rol"
+            description="¿Estas seguro de eliminar?"
+            onConfirm={() => handleDelete(e.id)}
+            // onCancel={cancel}
+            okText="Si"
+            cancelText="No"
+            placement="topRight"
+          >
+            <BsTrash />
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
+};
 
 //modulo planilla
 export const listaAsistencia = (handleEdit, handleDelete) => {
@@ -788,7 +879,7 @@ export const crearAsistencia = (handleAsistencia) => {
   ];
 };
 
-export const pagosLayout = (handlePagos) => {
+export const pagosLayout = (handleData, postPago) => {
   return [
     {
       id: "Nro",
@@ -799,65 +890,126 @@ export const pagosLayout = (handlePagos) => {
     {
       id: "nombres",
       name: "Nombres y apellidos",
-      width: "15%",
-      selector: (row) =>
-        row?.nombre + " " + row?.apellido_paterno + " " + row?.apellido_materno,
+      width: "180px",
+      selector: (row) => row?.nombre,
+      sortable: true,
+    },
+    {
+      id: "cargo",
+      name: "Cargo",
+      width: "170px",
+      selector: (row) => row?.cargo,
       sortable: true,
     },
     {
       id: "celular",
       name: "Celular",
       sortable: true,
-      width: "15%",
+      width: "100px",
 
       selector: (row) => (row?.telefono ? row?.telefono : "---"),
       center: true,
     },
     {
       id: "fecha_inicio",
-      name: "Fecha de inicio",
-      width: "10%",
-
-      selector: (row) => row?.contratos?.at(-1)?.fecha_inicio.split("T")[0],
+      name: "Inicio",
+      width: "95px",
+      selector: (row) => row?.fecha_inicio?.split("T")[0],
     },
     {
       id: "fecha_fin",
-      name: "Fecha de fin",
-      width: "10%",
-
+      name: "Fin",
+      width: "95px",
       button: true,
-      selector: (row) => row?.contratos?.at(-1)?.fecha_fin.split("T")[0],
+      selector: (row) => row?.fecha_fin?.split("T")[0],
     },
     {
-      id: "Dias",
-      name: "Dias laborados",
-      width: "12%",
-
+      id: "volquete",
+      name: "Volquete",
+      width: "80px",
       button: true,
-      selector: (row) => row?.trabajador_asistencia?.length,
+      selector: (row) => row?.volquete,
     },
     {
-      id: "fecha",
-      name: "Fecha de pago",
-      width: "12%",
-
+      id: "teletran",
+      name: "Teletrans",
+      width: "80px",
       button: true,
-      cell: (e) => (
+      selector: (row) => row?.teletran,
+    },
+    {
+      id: "saldo",
+      name: "Saldo",
+      width: "80px",
+      button: true,
+      selector: (row) => row?.saldo,
+    },
+    {
+      id: "pago",
+      name: "Pago",
+      width: "95px",
+      button: true,
+      cell: (e, i) => (
         <>
-          <Input type="date" />
+          <Input
+            name="teletrans"
+            type="number"
+            style={{width:"70%"}}
+            value={
+              e?.teletrans
+            }
+            onChange={(event) => handleData(event, e, i)}
+          />
         </>
       ),
     },
     {
-      id: "pago",
-      name: "Pagos",
-      width: "10%",
+      id: "observacion",
+      name: "Observación",
+      button: true,
+      width: "120px",
+
+      cell: (e, i) => (
+        <>
+          <Input
+            name="observacion"
+            type="text"
+            value={
+              e?.observacion
+            }
+            onChange={(event) => handleData(event, e, i)}
+          />
+        </>
+      ),
+    },
+    {
+      id: "fecha",
+      name: "Fecha de pago",
+      width: "140px",
 
       button: true,
-      center: true,
+      cell: (e,i) => (
+        <>
+          <Input
+            name="fecha_pago"
+            type="date"
+            style={{ width: "90%" }}
+            value={
+              e?.fecha_pago
+            }
+            onChange={(event) => handleData(event, e, i)}
+          />
+        </>
+      ),
+    },
+    {
+      id: "validar",
+      name: "",
+      width: "30px",
+      button: true,
       cell: (e) => (
         <>
-          <AiFillEye onClick={() => handlePagos(e)} />
+          <BsCheck style={{color:"green", fontSize: "30px"}} onClick={() => postPago(e)}/>
         </>
       ),
     },
@@ -875,8 +1027,7 @@ export const controlPlanilla = (handleContrato) => {
     {
       id: "nombres",
       name: "Nombres y apellidos",
-      selector: (row) =>
-        row?.nombre + " " + row?.apellido_paterno + " " + row?.apellido_materno,
+      selector: (row) => row?.nombre,
       width: "250px",
       sortable: true,
     },
@@ -894,14 +1045,14 @@ export const controlPlanilla = (handleContrato) => {
       name: "Fecha de inicio",
       width: "150px",
 
-      selector: (row) => row?.contratos?.at(-1)?.fecha_inicio.split("T")[0],
+      selector: (row) => row?.fecha_inicio?.split("T")[0],
     },
     {
       id: "fecha_fin",
       name: "Fecha de fin",
       width: "150px",
       button: true,
-      selector: (row) => row?.contratos?.at(-1)?.fecha_fin.split("T")[0],
+      selector: (row) => row?.fecha_fin?.split("T")[0],
     },
     {
       id: "recomendado_por",
@@ -909,7 +1060,10 @@ export const controlPlanilla = (handleContrato) => {
       width: "150px",
 
       button: true,
-      selector: (row) => row?.evaluacion?.at(-1)?.recomendado_por,
+      selector: (row) =>
+        row?.evaluacion?.at(-1)?.recomendado_por
+          ? row?.evaluacion?.at(-1)?.recomendado_por
+          : "---",
     },
     {
       id: "Dias",
@@ -925,7 +1079,7 @@ export const controlPlanilla = (handleContrato) => {
     {
       id: "volquete",
       name: "Volquete",
-      selector: (row) => row?.contratos?.at(-1)?.volquete,
+      selector: (row) => row?.volquete,
 
       center: true,
     },
@@ -933,7 +1087,7 @@ export const controlPlanilla = (handleContrato) => {
     {
       id: "teletrans",
       name: "Teletrans",
-      selector: (row) => row?.contratos?.at(-1)?.volquete,
+      selector: (row) => row?.teletran,
 
       center: true,
     },
@@ -942,9 +1096,7 @@ export const controlPlanilla = (handleContrato) => {
       id: "total",
       name: "Total",
       button: true,
-      selector: (row) =>
-        parseInt(row?.contratos?.at(-1)?.volquete) * 4 +
-        parseInt(row?.contratos?.at(-1)?.volquete),
+      selector: (row) => row?.total,
 
       center: true,
     },
@@ -1061,7 +1213,7 @@ export const tablePlanillaControl = (handleValidacion, handlePagos) => {
       name: "Fecha de inicio",
       width: "150px",
 
-      selector: (row) => row?.contratos?.at(-1)?.fecha_inicio?.split("T")[0],
+      selector: (row) => row?.fecha_inicio?.split("T")[0],
       sortable: true,
     },
 
@@ -1070,7 +1222,7 @@ export const tablePlanillaControl = (handleValidacion, handlePagos) => {
       name: "Fecha de fin",
       width: "135px",
       sortable: true,
-      selector: (row) => row?.contratos?.at(-1)?.fecha_fin?.split("T")[0],
+      selector: (row) => row?.fecha_fin?.split("T")[0],
     },
 
     {
@@ -1107,26 +1259,6 @@ export const tablePlanillaControl = (handleValidacion, handlePagos) => {
         </>
       ),
     },
-    // {
-    //   id: "pagos",
-    //   name: "Pagos",
-    //   button: true,
-    //   center: true,
-    //   cell: (e) => (
-    //     <>
-    //       <AiFillEye
-    //         onClick={() => handlePagos(e)}
-    //         style={{
-    //           pointerEvents: !e?.asistencia
-    //             ? " auto"
-    //             : e?.asistencia == 15
-    //             ? "auto"
-    //             : "none",
-    //         }}
-    //       />
-    //     </>
-    //   ),
-    // },
   ];
 };
 
@@ -1195,6 +1327,62 @@ export const sumarTeletrans = (handleValidacion, handlePagos) => {
     //     </>
     //   ),
     // },
+  ];
+};
+
+export const tablePagosFecha = (openModal, handleDelete) => {
+  return [
+    {
+      id: "Nro",
+      name: "Nro",
+      width: "60px",
+      selector: (row, index) => index + 1,
+    },
+    {
+      id: "nombre",
+      name: "Apellidos y Nombres",
+      width: "220px",
+      selector: (row) =>
+        row.nombre,
+      sortable: true,
+    },
+    {
+      id: "celular",
+      name: "Celular",
+      selector: (row) => row?.celular,
+      sortable: true,
+    },
+    {
+      id: "pago",
+      name: "Pago",
+      selector: (row) => row?.pago,
+      sortable: true,
+    },
+    {
+      id: "observacion",
+      name: "Observación",
+      selector: (row) => row?.observacion,
+      sortable: true,
+    },
+
+    {
+      id: "validacion",
+      name: "Validación",
+      button: true,
+      cell: (e) => <input type="checkbox" />,
+    },
+    {
+      id: "Acciones",
+      name: "Acciones",
+      button: true,
+      cell: (e) => (
+        <div className="acciones">
+          <BsPrinter />
+          <BsEye onClick={() => openModal()}/>
+          <BsTrash onClick={() => handleDelete(e.pago_id)}/>
+        </div>
+      ),
+    },
   ];
 };
 
@@ -1662,7 +1850,7 @@ export const registrarEntrada = (
             type="number"
             disabled={codigo}
             name="cantidad"
-            value={entrada || e.cantidad}
+            value={e.cantidad}
             onChange={(a) => handleData(a, i)}
             style={{ width: "60px" }}
           />
@@ -1834,7 +2022,12 @@ export const mostrarRequerimientoTable = (handleData, handleDelete) => {
   ];
 };
 
-export const requerimientoTable = (handleData, handleDelete) => {
+export const requerimientoTable = (
+  handleData,
+  handleDelete,
+  requerimiento,
+  dataToEdit
+) => {
   return [
     {
       id: "codigo",

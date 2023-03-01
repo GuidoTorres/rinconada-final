@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
-import { AiOutlineClose, AiOutlineCheck } from "react-icons/ai";
+import { AiOutlineCheck } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
 import {
   mostrarProductoEntrada,
@@ -10,10 +10,10 @@ import {
 } from "../../../data/dataTable";
 import { entradaSalidaValues } from "../../../data/initalValues";
 import Tabla from "../../tabla/Tabla";
-import { Select, Modal, Button, Input, DatePicker, Empty } from "antd";
-import "../styles/modalRegistrarEntrada.css";
+import { Select, Modal, Button, Input, Empty } from "antd";
 import { notificacion } from "../../../helpers/mensajes";
 import ModalRegistrarProducto from "./ModalRegistrarProducto";
+import "../styles/modalRegistrarEntrada.css";
 
 const ModalRegistrarEntradaSalida = ({
   almacen_id,
@@ -323,12 +323,21 @@ const ModalRegistrarEntradaSalida = ({
 
     //para actaulizar la cantidad cada vez que se cambia en la tabla
     if (idCantidad !== "" && newJson.length !== 0 && idCantidad !== undefined) {
-      newJson[idCantidad].cantidad = entrada.cantidad;
+      setNewJson((state) =>
+        state.map((item, i) =>
+          i === idCantidad
+            ? {
+                ...item,
+                cantidad: entrada.cantidad,
+                costo:
+                  entrada.cantidad === ""
+                    ? item.costo
+                    : parseFloat(item.costo) * parseInt(entrada.cantidad),
+              }
+            : item
+        )
+      );
 
-      if (entrada.cantidad !== "") {
-        newJson[idCantidad].costo =
-          parseFloat(newJson[idCantidad].costo) * parseInt(entrada.cantidad);
-      }
     }
   }, [text, entrada, key, agregar]);
 

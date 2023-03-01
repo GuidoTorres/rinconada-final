@@ -3,7 +3,6 @@ import { CrudContext } from "../../../context/CrudContext";
 import { PlanillaContext } from "../../../context/PlanillaContext";
 import Tabla from "../../tabla/Tabla";
 import Buscador from "../Buscador";
-import ModalVerificacion from "./ModalVerificacion";
 import { tableValidacionPagos } from "../../../data/dataTable";
 import useSearch from "../../../hooks/useSearch";
 import MainModal from "../../modal/MainModal";
@@ -133,7 +132,6 @@ const ModalValidacionPagos = ({ data }) => {
           Validacion de Trabajador
         </button>
       </section> */}
-      {verificacion && <ModalVerificacion text={text} />}
     </MainModal>
   );
 };

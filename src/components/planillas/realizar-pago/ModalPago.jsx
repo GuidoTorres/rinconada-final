@@ -1,8 +1,7 @@
-import { Button, Input } from "antd";
+import { Button, Input, Select } from "antd";
 import React, { useContext, useState } from "react";
-import { AiOutlineClose, AiFillEye } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
-import { PlanillaContext } from "../../../context/PlanillaContext";
+
 import MainModal from "../../modal/MainModal";
 import "../style/modalPagos.css";
 const ModalPago = ({
@@ -10,9 +9,9 @@ const ModalPago = ({
   selected,
   actualizarTabla,
   evaluacion_id,
-  modal1,
   setPago,
 }) => {
+  const {modal1, setModal1} = useContext(CrudContext)
   const [initialValues, setInitialValues] = useState([
     {
       conductor: "",
@@ -28,8 +27,11 @@ const ModalPago = ({
   const [pagar, setPagar] = useState();
   const [pago2, setPago2] = useState([]);
   const closeModal = () => {
-    setPago(false);
+    setModal1(false);
   };
+  console.log('====================================');
+  console.log(data);
+  console.log('====================================');
   const handleChange = (e, i) => {
     let data = [...initialValues];
     const { name, value } = e.target;
@@ -90,17 +92,17 @@ const ModalPago = ({
     >
       <section className="cabecera">
         <div>
-          <label htmlFor="">Nombre: {data && data?.nombre}</label>
+          <label htmlFor=""><strong>Nombre:</strong> {data && data?.nombre}</label>
         </div>
 
         <div>
-          <label htmlFor="">Dni: {data && data?.dni}</label>
+          <label htmlFor=""><strong>Dni:</strong> {data && data?.dni}</label>
         </div>
         <div>
-          <label htmlFor="">Teléfono: {data && data?.telefono}</label>
+          <label htmlFor=""><strong>Teléfono:</strong> {data && data?.celular}</label>
         </div>
         <div>
-          <label htmlFor="">Cargo:</label>
+          <label htmlFor=""><strong>Cargo:</strong> {data && data?.cargo}</label>
         </div>
       </section>
       {/* <section className="button-container">
@@ -126,27 +128,10 @@ const ModalPago = ({
           return (
             <>
               <div>
-                <label htmlFor="">Conductor</label>
+                <label htmlFor="">Hora</label>
                 <Input
-                  name="conductor"
-                  type="text"
-                  onChange={(e) => handleChange(e, i)}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="">Dni</label>
-                <Input
-                  name="dni"
-                  type="text"
-                  onChange={(e) => handleChange(e, i)}
-                />
-              </div>
-              <div>
-                <label htmlFor="">Teléfono</label>
-                <Input
-                  name="telefono"
-                  type="text"
+                  name="hora"
+                  type="time"
                   onChange={(e) => handleChange(e, i)}
                 />
               </div>
@@ -160,16 +145,35 @@ const ModalPago = ({
                 />
               </div>
               <div>
-                <label htmlFor="">Teletrans</label>
+                <label htmlFor="">Propietario</label>
                 <Input
-                  name="teletrans"
+                  name="propietario"
+                  type="text"
+                  onChange={(e) => handleChange(e, i)}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="">Trapiche</label>
+                <Input
+                  name="trapiche"
                   type="text"
                   onChange={(e) => handleChange(e, i)}
                 />
               </div>
               <div>
-                <label htmlFor="">Trapiche</label>
+                <label htmlFor="">Teletrans</label>
                 <Input
+                  name="teletrans"
+                  type="number"
+                  disabled
+                  value={data.pago.split(" ")[0]}
+                  onChange={(e) => handleChange(e, i)}
+                />
+              </div>
+              <div>
+                <label htmlFor="">Tipo de pago</label>
+                <Select
                   name="lugar"
                   type="text"
                   onChange={(e) => handleChange(e, i)}

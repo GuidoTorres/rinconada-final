@@ -22,7 +22,7 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
     modal,
     cargando,
     setCargando,
-    data3
+    data3,
   } = useContext(CrudContext);
   const [trabajador, setTrabajador] = useState(trabajadorValues);
   const [avatar, setAvatar] = useState(null);
@@ -40,27 +40,29 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
   }, [dataToEdit]);
 
   useEffect(() => {
-    if (data?.length === 0) {
-      setCodTrabajador("CCM00" + 1);
-    }
+    if (dataToEdit === null) {
+      if (data?.length === 0) {
+        setCodTrabajador("CCM00" + 1);
+      }
 
-    if (data?.length > 0) {
-      const id = data?.at(-1)?.codigo_trabajador;
-      const getNumber = id.includes("CCM00")
-        ? id.split("CCM00")[1]
-        : id.includes("CCM0")
-        ? id.split("CCM0")[1]
-        : id.includes("CCM")
-        ? id.split("CCM")[1]
-        : "";
-      const finalId =
-        parseInt(getNumber) < 10
-          ? "CCM00" + (parseInt(getNumber) + 1)
-          : parseInt(getNumber) >= 10 && parseInt(getNumber) < 100
-          ? "CCM0" + (parseInt(getNumber) + 1)
-          : "CCM" + (parseInt(getNumber) + 1);
+      if (data?.length > 0) {
+        const id = data?.at(-1)?.codigo_trabajador;
+        const getNumber = id.includes("CCM00")
+          ? id.split("CCM00")[1]
+          : id.includes("CCM0")
+          ? id.split("CCM0")[1]
+          : id.includes("CCM")
+          ? id.split("CCM")[1]
+          : "";
+        const finalId =
+          parseInt(getNumber) +1  < 10
+            ? "CCM00" + (parseInt(getNumber) + 1)
+            : parseInt(getNumber) +1 >= 10 && parseInt(getNumber)+1 < 100
+            ? "CCM0" + (parseInt(getNumber) + 1)
+            : "CCM" + (parseInt(getNumber) + 1);
 
-      setCodTrabajador(finalId);
+        setCodTrabajador(finalId);
+      }
     }
   }, [data]);
 
@@ -95,7 +97,7 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
   const handleSubmit = async (e) => {
     const formData = new FormData();
     formData.set("dni", trabajador.dni || "");
-    formData.set("codigo_trabajador", codTrabajador || "");
+    formData.set("codigo_trabajador", trabajador.codigo_trabajador || codTrabajador || "");
     formData.set("fecha_nacimiento", trabajador.fecha_nacimiento || "");
     formData.set("telefono", trabajador.telefono || "");
     formData.set("apellido_paterno", trabajador.apellido_paterno || "");
@@ -153,7 +155,8 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
   const formData = modalRegistroTrabajador(
     trabajador,
     handleData,
-    codTrabajador, data3
+    codTrabajador,
+    data3
   );
 
   return (

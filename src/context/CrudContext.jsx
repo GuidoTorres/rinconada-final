@@ -23,6 +23,7 @@ export const CrudProvider = ({ children }) => {
   const [tipo, setTipo] = useState("");
   const [multipleRequerimientos, setMultipleRequerimientos] = useState([]);
   const [sidebar, setSidebar] = useState(false);
+  const [result, setResult] = useState()
   const [prueba, setPrueba] = useState()
   const [header, setHeader] = useState({
     back: "",
@@ -138,6 +139,6 @@ export const CrudProvider = ({ children }) => {
     sidebar,
     setSidebar,
     header,cargando, setCargando,
-    setHeader, user, setUser, permisos, setPermisos}
+    setHeader, user, setUser, permisos, setPermisos, result, setResult}
   return <CrudContext.Provider value={info}>{children}</CrudContext.Provider>;
 };

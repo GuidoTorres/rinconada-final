@@ -78,7 +78,7 @@ const InventarioLayout = () => {
 
       <div className="selector" style={{ padding: "30px 20px" }}>
         <Select
-          placeholder="Seleccione un almacen"
+          placeholder="Seleccione un almacén"
           style={{ width: 300 }}
           name="almacen"
           onChange={(e) => setAlmacen_id(e)}

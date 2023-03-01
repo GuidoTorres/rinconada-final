@@ -5,8 +5,7 @@ import { useState } from "react";
 import { CrudContext } from "../context/CrudContext";
 
 const useSearch = (data) => {
-  const { filterText, filterTextModal } = useContext(CrudContext);
-  const [result, setResult] = useState();
+  const { filterText, filterTextModal, result, setResult } = useContext(CrudContext);
 
   useEffect(() => {
     if (filterText !== "") {

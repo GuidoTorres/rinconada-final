@@ -1,6 +1,6 @@
 import React from "react";
 import MenuOpcion from "../menu-opciones/MenuOpcion";
-import { BsTools } from "react-icons/bs";
+import { BsTools,BsTruck } from "react-icons/bs";
 import { BiBuildings } from "react-icons/bi";
 
 import { GrGroup } from "react-icons/gr";
@@ -58,6 +58,16 @@ const OpcionUsuario = () => {
       ) : (
         ""
       )}
+      <MenuOpcion
+          text={"Trapiches"}
+          path={"trapiche"}
+          img={<FaHandshake className="icon" />}
+        />
+        <MenuOpcion
+          text={"Volquetes"}
+          path={"volquete"}
+          img={<BsTruck className="icon" />}
+        />
     </div>
   );
 };

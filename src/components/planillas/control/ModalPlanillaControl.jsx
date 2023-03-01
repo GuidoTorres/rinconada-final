@@ -6,7 +6,6 @@ import { PlanillaContext } from "../../../context/PlanillaContext";
 import Tabla from "../../tabla/Tabla";
 import Buscador from "../Buscador";
 import "../style/modalPlanillaControl.css";
-import ModalPago from "./ModalPago";
 import ModalValidacionPagos from "./ModalValidacionPagos";
 import ModalValidacionPagosAsociacion from "./ModalValidacionPagosAsociacion";
 import { tablePlanillaControl } from "../../../data/dataTable";
@@ -35,10 +34,6 @@ const ModalPlanillaControl = ({ selected, actualizarTabla }) => {
   useEffect(() => {
     setContrato([selected]);
   }, [selected]);
-
-  console.log('====================================');
-  console.log(selected);
-  console.log('====================================');
 
   const handleValidacion = () => {
     if (selected.codigo) {
@@ -69,14 +64,7 @@ const ModalPlanillaControl = ({ selected, actualizarTabla }) => {
       {validacionPagosAsociacion && (
         <ModalValidacionPagosAsociacion data={selected} />
       )}
-      {pago && (
-        <ModalPago
-          data={selected}
-          selected={dataSelected}
-          evaluacion_id={selected.evaluacion_id}
-          actualizarTabla={actualizarTabla}
-        />
-      )}
+
     </MainModal>
   );
 };

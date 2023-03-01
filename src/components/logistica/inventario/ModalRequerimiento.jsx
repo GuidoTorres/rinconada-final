@@ -62,7 +62,7 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
   };
 
   console.log("====================================");
-  console.log(codRequerimiento);
+  console.log(search);
   console.log("====================================");
 
   useEffect(() => {
@@ -147,8 +147,14 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
     }
 
     if (idRequerimiento !== "" && idRequerimiento !== undefined) {
-      // newJson[idRequerimiento].cantidad = requerimiento.cantidad;
-      // setNewJson(values => ({...values[idRequerimiento], cantidad: requerimiento.cantidad}))
+
+      setNewJson((state) =>
+        state.map((item, i) =>
+          i === idRequerimiento
+            ? { ...item, cantidad: requerimiento.cantidad }
+            : item
+        )
+      );
     }
   }, [text, requerimiento, key, agregar]);
 
@@ -160,7 +166,7 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
   }, [newJson]);
 
   const handleData = (e, i, text) => {
-    if (i) {
+    if (i!== undefined) {
       setIdRequerimiento(i);
     }
 
@@ -224,7 +230,7 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
 
   const column1 = mostrarRequerimientoTable(handleDelete);
 
-  const columns = requerimientoTable(handleData, handleDelete);
+  const columns = requerimientoTable(handleData, handleDelete, requerimiento, dataToEdit);
 
   return (
     <Modal
@@ -375,15 +381,10 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
         )}
       </form>
       <br />
-      {search?.length !== 0 ? (
+      {search && search?.length !== 0 ? (
         <Tabla columns={column1} table={search} />
-      ) : newJson.length > 0 ? (
-        <Tabla columns={columns} table={newJson} />
       ) : (
-        <Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description={<span>No hay productos para mostrar.</span>}
-        />
+        <Tabla columns={columns} table={newJson} />
       )}
       <div className="button-container">
         {newJson?.length !== 0 ? (

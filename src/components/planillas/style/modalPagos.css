@@ -4,7 +4,7 @@
 }
 .modal-pago .cabecera {
   display: grid;
-  grid-template-columns: 30% 1fr 1fr 1fr;
+  grid-template-columns: 33% 15% 22% 30%;
 }
 .modal-pago .form {
   border: 1px solid #d9d9d9;

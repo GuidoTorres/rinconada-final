@@ -100,7 +100,7 @@ const ModalRegistrarProducto = ({ actualizarTabla, id }) => {
       avatar?.file && formData.set("image", avatar.file || "");
 
       const response = await fetch(
-        `${import.meta.env.VITE_APP_BASE}/producto`,
+        `${process.env.REACT_APP_BASE}/producto`,
         {
           method: "POST",
           body: formData,
@@ -128,11 +128,12 @@ const ModalRegistrarProducto = ({ actualizarTabla, id }) => {
       formData.append("precio", producto.precio || "");
       formData.append("stock", producto.stock || "");
       formData.append("unidad_id", producto.unidad_id || "");
+      formData.set("foto", producto.foto || "");
 
       avatar?.file && formData.set("image", avatar.file || "");
 
       const response = await fetch(
-        `${import.meta.env.VITE_APP_BASE}/producto/${dataToEdit.id}`,
+        `${process.env.REACT_APP_BASE}/producto/${dataToEdit.id}`,
         {
           method: "PUT",
           body: formData,

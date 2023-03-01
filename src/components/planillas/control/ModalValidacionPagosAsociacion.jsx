@@ -6,7 +6,6 @@ import Tabla from "../../tabla/Tabla";
 import { PlanillaContext } from "../../../context/PlanillaContext";
 import Fechas from "./Fechas";
 import "../style/modalValidacionPagosAsociacion.css";
-import ModalVerificacionAsociacion from "./ModalVerificacionAsociacion";
 import { useState } from "react";
 const ModalValidacionPagosAsociacion = ({ data }) => {
   const {
@@ -181,7 +180,6 @@ const ModalValidacionPagosAsociacion = ({ data }) => {
           </section>
         </div>
       </div>
-      {verificacion && <ModalVerificacionAsociacion text={text} />}
     </div>
   );
 };

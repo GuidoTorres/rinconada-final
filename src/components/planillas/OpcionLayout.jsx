@@ -30,11 +30,26 @@ const OpcionLayout = () => {
       ) : (
         ""
       )}
-       <MenuOpcion
-          text={"Pagos"}
-          path={"pagos"}
-          img={<BsWallet2 className="icon" />}
-        />
+      <MenuOpcion
+        text={"Programación de pagos"}
+        path={"pagos"}
+        img={<BsWallet2 className="icon" />}
+      />
+      <MenuOpcion
+        text={"Realizar pagos"}
+        path={"pagos/generar"}
+        img={<BsWallet2 className="icon" />}
+      />
+      <MenuOpcion
+        text={"Historial de pagos"}
+        path={"pagos/historial"}
+        img={<BsWallet2 className="icon" />}
+      />
+      <MenuOpcion
+        text={"Incentivos"}
+        path={"pagos/incentivos"}
+        img={<BsWallet2 className="icon" />}
+      />
     </div>
   );
 };

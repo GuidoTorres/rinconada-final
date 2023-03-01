@@ -107,7 +107,7 @@ const ModalHistorialContratoAsociacion = ({
     <MainModal
       title={"Historial de contratos"}
       open={modal1}
-      width={800}
+      width={900}
       closeModal={closeModal}
     >
       <BuscadorEvaluacion abrirModal={setModalContrato} registrar={true} />

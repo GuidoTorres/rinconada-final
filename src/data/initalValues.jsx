@@ -114,6 +114,7 @@ export const valuesContrato = (data, evaluaciones) => {
     puesto: "",
     asociacion_id: data && data?.id,
     estado: false,
+    evaluacion_id: evaluaciones.map(item => item?.evaluacion?.at(-1)?.id)
   };
 };
 
