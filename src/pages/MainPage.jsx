@@ -196,6 +196,8 @@ const MainPage = () => {
                   />
                   <Route path="trapiche" element={<Trapiche />} />
                   <Route path="volquete" element={<Volquete />} />
+                  <Route path="incentivos" element={<Incentivos />} />
+
                 </Route>
                 <Route path="planilla">
                   <Route index element={<IndexLayout />} />

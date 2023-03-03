@@ -36,6 +36,7 @@ const PersonalLayout = () => {
   const { result } = useSearch(data);
   const [trabajorEvaluacion, setTrabajadorEvaluacion] = useState([]);
   const [trabajorContrato, setTrabajadorContrato] = useState([]);
+  const [dataTrabajadores, setDataTrabajadores] = useState([])
 
   const getTrabajadores = async () => {
     setCargando(true);
@@ -43,7 +44,7 @@ const PersonalLayout = () => {
 
     if (response) {
       setCargando(false);
-      setData(response.data);
+      setDataTrabajadores(response.data);
     }
   };
 
@@ -104,8 +105,8 @@ const PersonalLayout = () => {
           registrar={true}
           actualizarTrabajadores={getTrabajadores}
         />
-        {data.length > 0 ? (
-          <Tabla columns={columns} table={data} />
+        {dataTrabajadores.length > 0 ? (
+          <Tabla columns={columns} table={dataTrabajadores} />
         ) : (
           <div className="noData">
             {cargando ? (
@@ -121,7 +122,7 @@ const PersonalLayout = () => {
       </div>
 
       {modal && (
-        <ModalRegistroPersonal actualizarTabla={getTrabajadores} data={data} />
+        <ModalRegistroPersonal actualizarTabla={getTrabajadores} data={dataTrabajadores} />
       )}
 
       {modal1 && (

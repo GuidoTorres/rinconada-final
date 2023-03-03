@@ -13,22 +13,11 @@ const PagosLayout = () => {
   const { getData, createData } = useContext(CrudContext);
   const { juntarTeletrans, setJuntarTeletrans } = useContext(PlanillaContext);
   const [pagos, setPagos] = useState([]);
-  const [dataPagos, setDataPagos] = useState({
-    observacion: "",
-    fecha_pago: "",
-    contrato_id: "",
-    id: "",
-    teletrans: "",
-  });
-
-  console.log(pagos);
 
   const getPAgos = async () => {
     const response = await getData("planilla/pagos");
-
     if (response) {
-      const filterNull = response.data.filter((item) => item !== null);
-      setPagos(filterNull);
+      setPagos(response.data);
     }
   };
 
@@ -38,32 +27,29 @@ const PagosLayout = () => {
 
   const handleData = (event, e, i) => {
     const { name, value } = event.target;
-
-      setPagos((state) =>
-      state.map((item, index) => {
-        if (index === i) {
-          return {
-            ...item,
-            [name]: value,
-            contrato_id: e.pagos.id,
-            id: e?.pagos?.pagos?.at(-1)?.id || "",
-          };
-        }
-      })
-      );
-
+    console.log(pagos);
+    setPagos((state) =>
+      state.map((item, index) =>
+        index === i
+          ? {
+              ...item,
+              [name]: value,
+              contrato_id: e?.contrato_id,
+              id: e?.pagos?.pagos?.at(-1)?.id || "",
+            }
+          : item
+      )
+    );
   };
 
   const postPagos = async (e) => {
-    console.log(e);
     const info = {
-      id: e.pago_id || "",
-      contrato_id: e.contrato_id,
-      observacion: e.observacion,
-      fecha_pago: e.fecha_pago,
-      teletrans: e.teletrans
-
-    }
+      id: e?.pago_id || "",
+      contrato_id: e?.contrato_id,
+      observacion: e?.observacion,
+      fecha_pago: e?.fecha_pago,
+      teletrans: e?.teletrans,
+    };
 
     const response = await createData(info, "pago/programacion");
 

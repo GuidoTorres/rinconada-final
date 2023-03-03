@@ -914,14 +914,14 @@ export const pagosLayout = (handleData, postPago) => {
       id: "fecha_inicio",
       name: "Inicio",
       width: "95px",
-      selector: (row) => row?.fecha_inicio?.split("T")[0],
+      selector: (row) => row?.fecha_inicio,
     },
     {
       id: "fecha_fin",
       name: "Fin",
       width: "95px",
       button: true,
-      selector: (row) => row?.fecha_fin?.split("T")[0],
+      selector: (row) => row?.fecha_fin,
     },
     {
       id: "volquete",
@@ -1274,7 +1274,7 @@ export const sumarTeletrans = (handleValidacion, handlePagos) => {
       id: "nombres",
       name: "Nombres y apellidos",
       selector: (row) =>
-        row?.nombre + " " + row?.apellido_paterno + " " + row?.apellido_materno,
+        row?.nombre,
       sortable: true,
       width: "250px",
     },

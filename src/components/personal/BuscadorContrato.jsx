@@ -19,7 +19,7 @@ const BuscadorContrato = ({ abrirModal, registrar, data }) => {
         }}
       />
       <div className="button-container">
-        {data?.contrato?.length > 0 &&
+        {/* {data?.contrato?.length > 0 &&
         data?.contrato?.at(-1)?.finalizado &&
         data?.evaluacion?.at(-1)?.finalizado === false &&
         data?.evaluacion?.at(-1)?.fiscalizador_aprobado === "si" &&
@@ -28,10 +28,10 @@ const BuscadorContrato = ({ abrirModal, registrar, data }) => {
         data?.evaluacion?.at(-1)?.seguridad === "si" &&
         data?.evaluacion?.at(-1)?.medio_ambiente === "si" &&
         data?.evaluacion?.at(-1)?.recursos_humanos === "si" ? (
-          <Button onClick={() => abrirModal(true)}>+ Registrar</Button>
-        ) : (
-          ""
-        )}
+          ) : (
+            ""
+            )} */}
+            <Button onClick={() => abrirModal(true)}>+ Registrar</Button>
       </div>
     </div>
   );
