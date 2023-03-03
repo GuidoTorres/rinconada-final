@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const usuarioValues = {
 	nombre: "",
 	usuario: "",
@@ -242,14 +244,14 @@ export const requerimientoValues = (id) => {
 	};
 };
 
-export const incentivoValues = (id) => {
+export const incentivoValues = () => {
 	return {
-		codigo: parseInt(id) + 1,
+		id: "",
 		nombre: "",
-		cargo: "",
-		celular: "",
-		descripcion: "",
-		teletrans: "",
+		contrato_id: "",
+		observacion: "",
 		fecha_pago: "",
+		teletrans: "",
+		tipo: "incentivo",
 	};
 };

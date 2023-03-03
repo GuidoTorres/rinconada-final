@@ -13,11 +13,13 @@ import {
 	AiOutlineClose,
 	AiFillFileExcel,
 	AiOutlineSave,
+	AiOutlineDelete,
+	AiOutlineEdit,
 } from "react-icons/ai";
 import { BiUndo } from "react-icons/bi";
 import { HiDownload } from "react-icons/hi";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { Popconfirm, Tag, Checkbox, Input, InputNumber } from "antd";
+import { Popconfirm, Tag, Checkbox, Input, Button, Tooltip } from "antd";
 import Requerimiento from "../helpers/Requerimiento";
 
 //modulo administracion
@@ -1043,7 +1045,7 @@ export const pagosLayout = (handleData, postPago) => {
 	];
 };
 
-export const incentivosLayout = (handleData, postPago) => {
+export const incentivosLayout = (handleEdit, handleDelete) => {
 	return [
 		{
 			id: "Nro",
@@ -1054,14 +1056,12 @@ export const incentivosLayout = (handleData, postPago) => {
 		{
 			id: "nombres",
 			name: "Nombres y apellidos",
-			width: "180px",
 			selector: (row) => row?.nombre,
 			sortable: true,
 		},
 		{
 			id: "cargo",
 			name: "Cargo",
-			width: "170px",
 			selector: (row) => row?.cargo,
 			sortable: true,
 		},
@@ -1077,63 +1077,61 @@ export const incentivosLayout = (handleData, postPago) => {
 			name: "Incentivo(Teletrans)",
 			width: "150px",
 			button: true,
-			cell: (e, i) => (
-				<>
-					<Input
-						name="teletrans"
-						min={0}
-						type="number"
-						value={e?.teletrans}
-						onChange={(event) => handleData(event, e, i)}
-					/>
-				</>
-			),
+			selector: (row) => row?.teletrans,
 		},
 		{
 			id: "observacion",
 			name: "Observación",
 			width: "200px",
 			button: true,
-			cell: (e, i) => (
-				<>
-					<Input
-						name="observacion"
-						type="text"
-						value={e?.observacion}
-						onChange={(event) => handleData(event, e, i)}
-					/>
-				</>
-			),
+			selector: (row) => row?.observacion,
 		},
 		{
 			id: "fecha_pago",
 			name: "Fecha de pago",
 			width: "140px",
 			button: true,
-			cell: (e, i) => (
-				<>
-					<Input
-						name="fecha_pago"
-						type="date"
-						style={{ width: "90%" }}
-						value={e?.fecha_pago}
-						onChange={(event) => handleData(event, e, i)}
-					/>
-				</>
-			),
+			selector: (row) => row?.fecha_pago,
 		},
 		{
 			id: "validar",
 			name: "",
-			width: "30px",
+			width: "100px",
 			button: true,
 			cell: (e) => (
-				<>
-					<AiOutlineSave
-						style={{ color: "green", fontSize: "30px" }}
-						onClick={() => postPago(e)}
-					/>
-				</>
+				<div style={{ display: "flex", gap: 3 }}>
+					<Tooltip placement="top" title="Editar">
+						<Button
+							style={{
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+							icon={
+								<AiOutlineEdit
+									style={{ color: "blue", fontSize: "20px" }}
+								/>
+							}
+							onClick={() => handleEdit(e)}
+						/>
+					</Tooltip>
+					<Tooltip placement="top" title="Eliminar">
+						<Button
+							style={{
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+							danger
+							icon={
+								<AiOutlineDelete
+									style={{ color: "red", fontSize: "20px" }}
+								/>
+							}
+							onClick={() => handleDelete(e)}
+						/>
+					</Tooltip>
+				</div>
 			),
 		},
 	];
