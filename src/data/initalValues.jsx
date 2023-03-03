@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 export const usuarioValues = {
 	nombre: "",
 	usuario: "",
@@ -250,7 +248,7 @@ export const incentivoValues = () => {
 		nombre: "",
 		contrato_id: "",
 		observacion: "",
-		fecha_pago: "",
+		fecha_pago: new Date(),
 		teletrans: "",
 		tipo: "incentivo",
 	};

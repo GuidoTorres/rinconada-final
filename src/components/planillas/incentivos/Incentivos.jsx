@@ -39,41 +39,7 @@ const Incentivos = () => {
 		getIncentivos();
 	}, []);
 
-	// const handleData = (event, e, i) => {
-	// 	const { name, value } = event.target;
-
-	// 	setPagos((state) =>
-	// 		state.map((item, index) => {
-	// 			if (index === i) {
-	// 				return {
-	// 					...item,
-	// 					[name]: value,
-	// 				};
-	// 			}
-	// 		})
-	// 	);
-	// };
-
-	// const postPagos = async (e) => {
-	// 	console.log(e);
-	// 	const info = {
-	// 		constrato_id: e.contrato,
-	// 		observacion: e.observacion,
-	// 		fecha_pago: e.fecha_pago,
-	// 		teletrans: parseFloat(e.teletrans),
-	// 		tipo: "incentivo",
-	// 	};
-
-	// 	// const response = await createData(info, "incentivo");
-
-	// 	// if (response) {
-	// 	// 	notificacion(response.status, response.msg);
-	// 	// 	getIncentivos();
-	// 	// }
-	// };
-
 	const handleEdit = (e) => {
-		console.log("🚀 ~ file: Incentivos.jsx:76 ~ handleEdit ~ e:", e);
 		setModal(true);
 		setDataToEdit(e);
 	};

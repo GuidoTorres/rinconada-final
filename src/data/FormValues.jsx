@@ -1,6 +1,7 @@
-import { Input, Select, DatePicker } from "antd";
+import { Input, Select, DatePicker, ConfigProvider } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import locale from "antd/es/date-picker/locale/es_ES";
+import dayjs from "dayjs";
 
 //=====================ADMINISTRACION=====================
 
@@ -2623,6 +2624,18 @@ export const generarPedido = (pedido, handleData, area) => {
 
 // modal registro de incentivo
 export const modalIncentivo = (incentivo, handleData, trabajadores) => {
+	const dataTrabajadores = trabajadores.map((item) => {
+		return {
+			value: item.codigo_trabajador,
+			label:
+				item.apellido_paterno +
+				" " +
+				item.apellido_materno +
+				" " +
+				item.nombre,
+		};
+	});
+
 	return [
 		{
 			label: <label>Trabajador</label>,
@@ -2646,11 +2659,11 @@ export const modalIncentivo = (incentivo, handleData, trabajadores) => {
 							(item) => item.codigo_trabajador === e
 						);
 						handleData(
-							trabajador.nombre +
+							trabajador.apellido_paterno +
 								" " +
-								trabajador.apellido_paterno +
+								trabajador.apellido_materno +
 								" " +
-								trabajador.apellido_materno,
+								trabajador.nombre,
 							"nombre"
 						);
 						handleData(trabajador.contrato[0]?.id, "contrato_id");
@@ -2661,17 +2674,8 @@ export const modalIncentivo = (incentivo, handleData, trabajadores) => {
 							.toLowerCase()
 							.includes(input.toLowerCase())
 					}
-				>
-					{trabajadores.map((item, index) => (
-						<Select.Option
-							key={index}
-							value={item.codigo_trabajador}
-						>
-							{item.nombre} {item.apellido_paterno}{" "}
-							{item.apellido_materno}
-						</Select.Option>
-					))}
-				</Select>
+					options={dataTrabajadores}
+				/>
 			),
 		},
 		{
@@ -2700,7 +2704,7 @@ export const modalIncentivo = (incentivo, handleData, trabajadores) => {
 			name: "observacion",
 			type: (
 				<Input
-					value={incentivo.usuario}
+					value={incentivo.observacion}
 					type="text"
 					name="observacion"
 					placeholder="Observación"
@@ -2712,18 +2716,19 @@ export const modalIncentivo = (incentivo, handleData, trabajadores) => {
 			label: <label>Fecha Pago</label>,
 			name: "fecha_pago",
 			type: (
-				<DatePicker
-					locale={locale}
-					value={incentivo.fecha_pago}
-					name="fecha_pago"
-					placeholder="Fecha de Pago"
-					picker="day"
-					onChange={(e) => handleData(e, "fecha_pago")}
-					style={{
-						width: "100%",
-					}}
-					format={"YYYY-MM-DD"}
-				/>
+				<ConfigProvider locale={locale}>
+					<DatePicker
+						value={dayjs(incentivo.fecha_pago)}
+						name="fecha_pago"
+						placeholder="Fecha de Pago"
+						picker="day"
+						onChange={(e) => handleData(e, "fecha_pago")}
+						style={{
+							width: "100%",
+						}}
+						format={"YYYY-MM-DD"}
+					/>
+				</ConfigProvider>
 			),
 		},
 	];

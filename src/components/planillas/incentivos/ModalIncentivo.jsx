@@ -21,14 +21,9 @@ function ModalIncentivo({ actualizarTabla }) {
 		setCargando,
 		setDataToEdit,
 		dataToEdit,
-		updateData,
 	} = useContext(CrudContext);
 
 	const [incentivo, setIncentivo] = useState(incentivoValues);
-	console.log(
-		"🚀 ~ file: ModalIncentivo.jsx:28 ~ ModalIncentivo ~ incentivo:",
-		incentivo
-	);
 	const [trabajadores, setTrabajadores] = useState([]);
 
 	const getAllTrabajadores = async () => {
@@ -42,7 +37,11 @@ function ModalIncentivo({ actualizarTabla }) {
 
 	useEffect(() => {
 		if (dataToEdit) {
-			setIncentivo(dataToEdit);
+			setIncentivo({
+				...dataToEdit,
+				id: dataToEdit?.incentivos?.id,
+				contrato_id: dataToEdit?.incentivos?.contrato_id,
+			});
 			form.setFieldsValue(dataToEdit);
 		} else {
 			setIncentivo(incentivoValues);
@@ -60,8 +59,7 @@ function ModalIncentivo({ actualizarTabla }) {
 			});
 		} else {
 			form.setFieldsValue({
-				[text]:
-					text === "fecha_pago" ? dayjs(e).format("YYYY-MM-DD") : e,
+				[text]: e,
 			});
 			setIncentivo((values) => {
 				return { ...values, [text]: e };
@@ -70,34 +68,20 @@ function ModalIncentivo({ actualizarTabla }) {
 	};
 
 	const handleSubmit = async () => {
-		if (dataToEdit === null) {
-			setCargando(true);
-			const incentivoData = {
-				contrato_id: incentivo.contrato_id || "",
-				observacion: incentivo.observacion || "",
-				fecha_pago:
-					dayjs(incentivo.fecha_pago).format("YYYY-MM-DD") || "",
-				teletrans: parseFloat(incentivo.teletrans) || 0,
-				tipo: incentivo.tipo || "incentivo",
-				id: incentivo.id || "",
-			};
-			const response = await createData(incentivoData, route);
-			if (response) {
-				notificacion(response.status, response.msg);
-				actualizarTabla();
-				closeModal();
-			}
-		}
-		if (dataToEdit) {
-			setDataToEdit(true);
-
-			const response = await updateData(incentivo, dataToEdit.id, route);
-
-			if (response) {
-				notificacion(response.status, response.msg);
-				actualizarTabla();
-				closeModal();
-			}
+		setCargando(true);
+		const incentivoData = {
+			contrato_id: incentivo.contrato_id || "",
+			observacion: incentivo.observacion || "",
+			fecha_pago: dayjs(incentivo.fecha_pago).format("YYYY-MM-DD") || "",
+			teletrans: parseFloat(incentivo.teletrans) || 0,
+			tipo: incentivo.tipo || "incentivo",
+			id: incentivo.id || "",
+		};
+		const response = await createData(incentivoData, route);
+		if (response) {
+			notificacion(response.status, response.msg);
+			actualizarTabla();
+			closeModal();
 		}
 	};
 	const closeModal = () => {
