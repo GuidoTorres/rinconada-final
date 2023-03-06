@@ -1,4 +1,4 @@
-import { Button, Col, Empty, Row } from "antd";
+import { Col, Empty, Row } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineForm } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
@@ -9,7 +9,6 @@ import ButtonAdd from "../../Button/ButtonAdd";
 import Cargando from "../../cargando/Cargando";
 import Header from "../../header/Header";
 import Tabla from "../../tabla/Tabla";
-import BuscadorControlPlanilla from "../BuscadorControlPlanilla";
 import ModalJuntarTeletrans from "../control/ModalJuntarTeletrans";
 import ModalIncentivo from "./ModalIncentivo";
 
@@ -47,7 +46,8 @@ const Incentivos = () => {
 	};
 
 	const handleDelete = async (e) => {
-		const response = await deleteData("incentivo", e);
+		console.log("🚀 ~ file: Incentivos.jsx:50 ~ handleDelete ~ e:", e);
+		const response = await deleteData("pago", e);
 		if (response) {
 			notificacion(response.status, response.msg);
 			getIncentivos();
@@ -61,15 +61,7 @@ const Incentivos = () => {
 			<Header text={"Incentivos"} ruta={"/planilla"} />
 			<div className="margenes">
 				<Row align="middle">
-					<Col span={18}>
-						<BuscadorControlPlanilla
-							abrirModal={setJuntarTeletrans}
-							registrar={true}
-							crear={false}
-							exportar={false}
-							cargar={false}
-						/>
-					</Col>
+					<Col span={18}></Col>
 					<Col span={6} align="end">
 						<ButtonAdd
 							title="Crear incentivo"

@@ -41,10 +41,20 @@ function ModalIncentivo({ actualizarTabla }) {
 		if (dataToEdit) {
 			setIncentivo({
 				...dataToEdit,
-				id: dataToEdit?.incentivos?.id,
-				contrato_id: dataToEdit?.incentivos?.contrato_id,
+				teletrans: parseFloat(dataToEdit.pago.teletrans),
+				observacion: dataToEdit.pago.observacion,
+				fecha_pago: dayjs(dataToEdit.pago.fecha_pago).format(
+					"YYYY-MM-DD"
+				),
 			});
-			form.setFieldsValue(dataToEdit);
+			form.setFieldsValue({
+				...dataToEdit,
+				teletrans: parseFloat(dataToEdit.pago.teletrans),
+				observacion: dataToEdit.pago.observacion,
+				fecha_pago: dayjs(dataToEdit.pago.fecha_pago).format(
+					"YYYY-MM-DD"
+				),
+			});
 		} else {
 			setIncentivo(incentivoValues);
 		}

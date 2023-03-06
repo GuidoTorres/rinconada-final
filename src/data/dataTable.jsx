@@ -1117,8 +1117,7 @@ export const incentivosLayout = (handleEdit, handleDelete) => {
 						<Popconfirm
 							title="Eliminar incentivo"
 							description="¿Estas seguro de eliminar?"
-							onConfirm={() => handleDelete(e.incentivos?.id)}
-							// onCancel={cancel}
+							onConfirm={() => handleDelete(e.pago?.id)}
 							okText="Si"
 							cancelText="No"
 							placement="topRight"
