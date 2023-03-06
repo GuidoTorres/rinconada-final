@@ -4,9 +4,11 @@ import { CrudContext } from "../../../context/CrudContext";
 import { incentivoValues } from "../../../data/initalValues";
 import MainModal from "../../modal/MainModal";
 import { notificacion } from "../../../helpers/mensajes";
-import { AiOutlineForm } from "react-icons/ai";
+import { AiOutlineForm, AiOutlineTeam } from "react-icons/ai";
 import { modalIncentivo } from "../../../data/FormValues";
 import dayjs from "dayjs";
+import ModalButtonTitle from "../../modal/ModalButtonTitle";
+import ModalJuntarTeletrans from "./ModalJuntarTeletrans";
 
 function ModalIncentivo({ actualizarTabla }) {
 	const [form] = Form.useForm();
@@ -27,7 +29,7 @@ function ModalIncentivo({ actualizarTabla }) {
 	const [trabajadores, setTrabajadores] = useState([]);
 
 	const getAllTrabajadores = async () => {
-		const response = await getData("trabajador");
+		const response = await getData("incentivo/trabajadores");
 		setTrabajadores(response.data);
 	};
 
@@ -68,6 +70,7 @@ function ModalIncentivo({ actualizarTabla }) {
 	};
 
 	const handleSubmit = async () => {
+		const route = "pago/programacion";
 		setCargando(true);
 		const incentivoData = {
 			contrato_id: incentivo.contrato_id || "",
@@ -91,53 +94,69 @@ function ModalIncentivo({ actualizarTabla }) {
 		setIncentivo(incentivoValues);
 	};
 
-	const formData = modalIncentivo(
-		incentivo,
-		handleData,
-		trabajadores,
-		dataToEdit
-	);
+	const formData = modalIncentivo(incentivo, handleData, trabajadores);
+
+	const [modalTeletrans, setModalTeletrans] = useState(false);
+	const handleOpenModalTeletrans = () => {
+		setModalTeletrans(true);
+	};
+
+	const handleCloseModalTeletrans = () => {
+		setModalTeletrans(false);
+	};
 
 	return (
-		<MainModal
-			className={"modal-usuario"}
-			title={dataToEdit ? "Editar incentivo" : "Registrar incentivo"}
-			open={modal}
-			width={400}
-			closeModal={closeModal}
-		>
-			<Form
-				form={form}
-				className="modal-body"
-				onFinish={handleSubmit}
-				layout="horizontal"
+		<>
+			<ModalButtonTitle
+				className={"modal-usuario"}
+				title={dataToEdit ? "Editar incentivo" : "Registrar incentivo"}
+				open={modal}
+				width={400}
+				closeModal={closeModal}
+				buttonLabel="Juntar Teletrans"
+				onClickButton={handleOpenModalTeletrans}
+				buttonIcon={<AiOutlineTeam />}
 			>
-				{formData.map((item, i) => (
-					<Form.Item
-						className={item.className}
-						key={i}
-						name={item.name}
-						rules={item.rules}
-						style={{ marginBottom: "8px" }}
-					>
-						<>
-							{item.label}
-							{item.type}
-						</>
-					</Form.Item>
-				))}
+				<Form
+					form={form}
+					className="modal-body"
+					onFinish={handleSubmit}
+					layout="horizontal"
+				>
+					{formData.map((item, i) => (
+						<Form.Item
+							className={item.className}
+							key={i}
+							name={item.name}
+							rules={item.rules}
+							style={{ marginBottom: "8px" }}
+						>
+							<>
+								{item.label}
+								{item.type}
+							</>
+						</Form.Item>
+					))}
 
-				<Form.Item className="button-container">
-					<Button
-						htmlType="submit"
-						icon={<AiOutlineForm />}
-						loading={cargando ? true : false}
-					>
-						{dataToEdit ? "Editar" : "Registrar"}
-					</Button>
-				</Form.Item>
-			</Form>
-		</MainModal>
+					<Form.Item className="button-container">
+						<Button
+							htmlType="submit"
+							icon={<AiOutlineForm />}
+							loading={cargando ? true : false}
+						>
+							{dataToEdit ? "Editar" : "Registrar"}
+						</Button>
+					</Form.Item>
+				</Form>
+			</ModalButtonTitle>
+			{modalTeletrans && (
+				<ModalJuntarTeletrans
+					open={modalTeletrans}
+					closeModal={handleCloseModalTeletrans}
+					trabajadores={trabajadores}
+				/>
+			)}
+		</>
 	);
 }
 export default ModalIncentivo;

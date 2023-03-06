@@ -2626,13 +2626,8 @@ export const generarPedido = (pedido, handleData, area) => {
 export const modalIncentivo = (incentivo, handleData, trabajadores) => {
 	const dataTrabajadores = trabajadores.map((item) => {
 		return {
-			value: item.codigo_trabajador,
-			label:
-				item.apellido_paterno +
-				" " +
-				item.apellido_materno +
-				" " +
-				item.nombre,
+			value: item.contrato_id,
+			label: item.nombre,
 		};
 	});
 
@@ -2643,6 +2638,7 @@ export const modalIncentivo = (incentivo, handleData, trabajadores) => {
 			rules: [
 				{
 					required: true,
+					message: "Seleccione un trabajador.",
 				},
 			],
 
@@ -2656,17 +2652,10 @@ export const modalIncentivo = (incentivo, handleData, trabajadores) => {
 					name="nombre"
 					onChange={(e) => {
 						const trabajador = trabajadores.find(
-							(item) => item.codigo_trabajador === e
+							(item) => item.contrato_id === e
 						);
-						handleData(
-							trabajador.apellido_paterno +
-								" " +
-								trabajador.apellido_materno +
-								" " +
-								trabajador.nombre,
-							"nombre"
-						);
-						handleData(trabajador.contrato[0]?.id, "contrato_id");
+						handleData(trabajador.nombre, "nombre");
+						handleData(trabajador.contrato_id, "contrato_id");
 					}}
 					value={incentivo.nombre}
 					filterOption={(input, option) =>

@@ -1077,21 +1077,21 @@ export const incentivosLayout = (handleEdit, handleDelete) => {
 			name: "Incentivo(Teletrans)",
 			width: "150px",
 			button: true,
-			selector: (row) => row?.teletrans,
+			selector: (row) => row?.pago?.teletrans,
 		},
 		{
 			id: "observacion",
 			name: "Observación",
 			width: "200px",
 			button: true,
-			selector: (row) => row?.observacion,
+			selector: (row) => row?.pago?.observacion,
 		},
 		{
 			id: "fecha_pago",
 			name: "Fecha de pago",
 			width: "140px",
 			button: true,
-			selector: (row) => row?.fecha_pago,
+			selector: (row) => row?.pago?.fecha_pago,
 		},
 		{
 			id: "validar",
@@ -1108,28 +1108,38 @@ export const incentivosLayout = (handleEdit, handleDelete) => {
 								alignItems: "center",
 							}}
 							icon={
-								<AiOutlineEdit
-									style={{ color: "blue", fontSize: "20px" }}
-								/>
+								<AiOutlineEdit style={{ fontSize: "20px" }} />
 							}
 							onClick={() => handleEdit(e)}
 						/>
 					</Tooltip>
-					<Tooltip placement="top" title="Eliminar">
-						<Button
-							style={{
-								display: "flex",
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-							danger
-							icon={
-								<AiOutlineDelete
-									style={{ color: "red", fontSize: "20px" }}
-								/>
-							}
-							onClick={() => handleDelete(e)}
-						/>
+					<Tooltip placement="left" title="Eliminar">
+						<Popconfirm
+							title="Eliminar incentivo"
+							description="¿Estas seguro de eliminar?"
+							onConfirm={() => handleDelete(e.incentivos?.id)}
+							// onCancel={cancel}
+							okText="Si"
+							cancelText="No"
+							placement="topRight"
+						>
+							<Button
+								style={{
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+								danger
+								icon={
+									<AiOutlineDelete
+										style={{
+											color: "red",
+											fontSize: "20px",
+										}}
+									/>
+								}
+							/>
+						</Popconfirm>
 					</Tooltip>
 				</div>
 			),

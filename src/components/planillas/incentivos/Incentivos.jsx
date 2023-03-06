@@ -1,9 +1,11 @@
 import { Button, Col, Empty, Row } from "antd";
 import React, { useContext, useEffect, useState } from "react";
+import { AiOutlineForm } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
 import { PlanillaContext } from "../../../context/PlanillaContext";
 import { incentivosLayout } from "../../../data/dataTable";
 import { notificacion } from "../../../helpers/mensajes";
+import ButtonAdd from "../../Button/ButtonAdd";
 import Cargando from "../../cargando/Cargando";
 import Header from "../../header/Header";
 import Tabla from "../../tabla/Tabla";
@@ -24,13 +26,13 @@ const Incentivos = () => {
 
 	const { juntarTeletrans, setJuntarTeletrans } = useContext(PlanillaContext);
 
-	const [pagos, setPagos] = useState([]);
+	const [incentivos, setIncentivos] = useState([]);
 
 	const getIncentivos = async () => {
 		const response = await getData("incentivo");
 		if (response) {
 			const filterNull = response.data.filter((item) => item !== null);
-			setPagos(filterNull);
+			setIncentivos(filterNull);
 			setCargando(false);
 		}
 	};
@@ -45,7 +47,7 @@ const Incentivos = () => {
 	};
 
 	const handleDelete = async (e) => {
-		const response = await deleteData(e, "incentivo");
+		const response = await deleteData("incentivo", e);
 		if (response) {
 			notificacion(response.status, response.msg);
 			getIncentivos();
@@ -69,17 +71,15 @@ const Incentivos = () => {
 						/>
 					</Col>
 					<Col span={6} align="end">
-						<Button
-							type="primary"
-							shape="round"
+						<ButtonAdd
+							title="Crear incentivo"
 							onClick={() => setModal(true)}
-						>
-							Crear incentivo
-						</Button>
+							icon={<AiOutlineForm />}
+						/>
 					</Col>
 				</Row>
-				{pagos?.length > 0 ? (
-					<Tabla columns={columns} table={pagos} />
+				{incentivos?.length > 0 ? (
+					<Tabla columns={columns} table={incentivos} />
 				) : (
 					<>
 						{cargando ? (
