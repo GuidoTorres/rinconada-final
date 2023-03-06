@@ -46,7 +46,6 @@ const Incentivos = () => {
 	};
 
 	const handleDelete = async (e) => {
-		console.log("🚀 ~ file: Incentivos.jsx:50 ~ handleDelete ~ e:", e);
 		const response = await deleteData("pago", e);
 		if (response) {
 			notificacion(response.status, response.msg);
