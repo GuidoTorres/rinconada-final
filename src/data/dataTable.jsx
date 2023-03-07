@@ -1060,7 +1060,7 @@ export const incentivosLayout = (handleEdit, handleDelete) => {
 				row?.trabajadores.length < 2 ? (
 					row?.trabajadores[0]?.nombre
 				) : (
-					<Alert message="Teletrans en conjunto" type="success" />
+					<Alert message="Pagos en grupo" type="success" />
 				),
 			sortable: true,
 		},
