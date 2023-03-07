@@ -264,3 +264,15 @@ export const incentivosVariosValues = () => {
 		trabajadores: [],
 	};
 };
+
+export const casaValues = () => {
+	return {
+		id: "",
+		razon_social: "",
+		contrato_id: "",
+		observacion: "",
+		fecha_pago: new Date(),
+		teletrans: "",
+		tipo: "casa",
+	};
+};

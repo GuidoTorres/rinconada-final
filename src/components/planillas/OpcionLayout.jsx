@@ -13,44 +13,56 @@ const OpcionLayout = () => {
 	).planillas_control;
 	return (
 		<div className="opciones">
-			{asistencia ? (
+			<div>
+				{asistencia ? (
+					<MenuOpcion
+						text={"Listas de asistencia"}
+						path={"asistencia"}
+						img={<BsCalendarWeek className="icon" />}
+					/>
+				) : (
+					""
+				)}
+				{control ? (
+					<MenuOpcion
+						text={"Planillas"}
+						path={"control"}
+						img={<BsListOl className="icon" />}
+					/>
+				) : (
+					""
+				)}
 				<MenuOpcion
-					text={"Listas de asistencia"}
-					path={"asistencia"}
-					img={<BsCalendarWeek className="icon" />}
+					text={"Programación de pagos"}
+					path={"pagos"}
+					img={<BsWallet2 className="icon" />}
 				/>
-			) : (
-				""
-			)}
-			{control ? (
 				<MenuOpcion
-					text={"Planillas"}
-					path={"control"}
-					img={<BsListOl className="icon" />}
+					text={"Realizar pagos"}
+					path={"pagos/generar"}
+					img={<BsWallet2 className="icon" />}
 				/>
-			) : (
-				""
-			)}
-			<MenuOpcion
-				text={"Programación de pagos"}
-				path={"pagos"}
-				img={<BsWallet2 className="icon" />}
-			/>
-			<MenuOpcion
-				text={"Realizar pagos"}
-				path={"pagos/generar"}
-				img={<BsWallet2 className="icon" />}
-			/>
-			<MenuOpcion
-				text={"Historial de pagos"}
-				path={"pagos/historial"}
-				img={<BsWallet2 className="icon" />}
-			/>
-			<MenuOpcion
-				text={"Incentivos"}
-				path={"pagos/incentivos"}
-				img={<BsWallet2 className="icon" />}
-			/>
+				<MenuOpcion
+					text={"Historial de pagos"}
+					path={"pagos/historial"}
+					img={<BsWallet2 className="icon" />}
+				/>
+				<MenuOpcion
+					text={"Incentivos"}
+					path={"pagos/incentivos"}
+					img={<BsWallet2 className="icon" />}
+				/>
+				<MenuOpcion
+					text={"Casa"}
+					path={"pagos/casa"}
+					img={<BsWallet2 className="icon" />}
+				/>
+				<MenuOpcion
+					text={"Asociaciones"}
+					path={"pagos/incentivos"}
+					img={<BsWallet2 className="icon" />}
+				/>
+			</div>
 		</div>
 	);
 };

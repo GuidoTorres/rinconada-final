@@ -2713,6 +2713,7 @@ export const modalIncentivo = (
 			type: (
 				<ConfigProvider locale={locale}>
 					<DatePicker
+						allowClear={false}
 						value={dayjs(incentivo.fecha_pago)}
 						name="fecha_pago"
 						placeholder="Fecha de Pago"
@@ -2729,5 +2730,101 @@ export const modalIncentivo = (
 	];
 };
 
-// modal registro de incentivos varios juntos
-export const modalIncentivoVarios = (incentivo, handleData, trabajadores) => {};
+// modal registro de casa
+export const modalCasa = (casa, handleData, empresas, dataToEdit) => {
+	const dataEmpresa = empresas.map((item) => {
+		return {
+			value: item.id,
+			label: item.razon_social,
+		};
+	});
+
+	return [
+		{
+			label: <label>Razon Social</label>,
+			name: "razon_social",
+			rules: [
+				{
+					required: true,
+					message: "Campo obligatorio!",
+				},
+			],
+			type: (
+				<Select
+					showSearch
+					disabled={dataToEdit}
+					placeholder="Razon Social"
+					style={{
+						width: "100%",
+					}}
+					name="razon_social"
+					onChange={(e) => {
+						const empresa = empresas.find((item) => item.id === e);
+						handleData(empresa.razon_social, "razon_social");
+						handleData(empresa.contrato_id, "contrato_id");
+					}}
+					value={casa.razon_social}
+					filterOption={(input, option) =>
+						(option?.label ?? "")
+							.toLowerCase()
+							.includes(input.toLowerCase())
+					}
+					options={dataEmpresa}
+				/>
+			),
+		},
+		{
+			label: <label>Teletrans</label>,
+			name: "teletrans",
+			rules: [
+				{
+					required: true,
+					message: "Campo obligatorio!",
+				},
+			],
+			type: (
+				<Input
+					value={casa.teletrans}
+					type="number"
+					name="teletrans"
+					min={0}
+					placeholder="Teletrans"
+					onChange={handleData}
+				/>
+			),
+		},
+		{
+			label: <label>Observación</label>,
+			name: "observacion",
+			type: (
+				<Input
+					value={casa.observacion}
+					type="text"
+					name="observacion"
+					placeholder="Observación"
+					onChange={handleData}
+				/>
+			),
+		},
+		{
+			label: <label>Fecha Pago</label>,
+			name: "fecha_pago",
+			type: (
+				<ConfigProvider locale={locale}>
+					<DatePicker
+						allowClear={false}
+						value={dayjs(casa.fecha_pago)}
+						name="fecha_pago"
+						placeholder="Fecha de Pago"
+						picker="day"
+						onChange={(e) => handleData(e, "fecha_pago")}
+						style={{
+							width: "100%",
+						}}
+						format={"YYYY-MM-DD"}
+					/>
+				</ConfigProvider>
+			),
+		},
+	];
+};

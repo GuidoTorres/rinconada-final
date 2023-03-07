@@ -12,15 +12,14 @@ import {
 	AiOutlineCheck,
 	AiOutlineClose,
 	AiFillFileExcel,
-	AiOutlineSave,
-	AiOutlineDelete,
-	AiOutlineEdit,
 } from "react-icons/ai";
 import { BiUndo } from "react-icons/bi";
 import { HiDownload } from "react-icons/hi";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Popconfirm, Tag, Checkbox, Input, Button, Tooltip, Alert } from "antd";
 import Requerimiento from "../helpers/Requerimiento";
+import ButtonEdit from "../components/Button/ButtonEdit";
+import ButtonDelete from "../components/Button/ButtonDelete";
 
 //modulo administracion
 export const usuario = (handleEdit, handleDelete) => {
@@ -1117,46 +1116,70 @@ export const incentivosLayout = (handleEdit, handleDelete) => {
 			button: true,
 			cell: (e) => (
 				<div style={{ display: "flex", gap: 3 }}>
-					<Tooltip placement="top" title="Editar">
-						<Button
-							style={{
-								display: "flex",
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-							icon={
-								<AiOutlineEdit style={{ fontSize: "20px" }} />
-							}
-							onClick={() => handleEdit(e)}
-						/>
-					</Tooltip>
-					<Tooltip placement="left" title="Eliminar">
-						<Popconfirm
-							title="Eliminar incentivo"
-							description="¿Estas seguro de eliminar?"
-							onConfirm={() => handleDelete(e.pago_id)}
-							okText="Si"
-							cancelText="No"
-							placement="topRight"
-						>
-							<Button
-								style={{
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-								danger
-								icon={
-									<AiOutlineDelete
-										style={{
-											color: "red",
-											fontSize: "20px",
-										}}
-									/>
-								}
-							/>
-						</Popconfirm>
-					</Tooltip>
+					<ButtonEdit onClick={() => handleEdit(e)} />
+					<ButtonDelete
+						onClick={() => handleDelete(e.pago_id)}
+						title="Eliminar incentivo"
+					/>
+				</div>
+			),
+		},
+	];
+};
+
+export const casaLayout = (handleEdit, handleDelete) => {
+	return [
+		{
+			id: "Nro",
+			name: "Nro",
+			width: "60px",
+			selector: (row, index) => index + 1,
+		},
+		{
+			id: "razon_social",
+			name: "Razon Social",
+			selector: (row) => row?.razon_social,
+			sortable: true,
+		},
+		{
+			id: "ruc",
+			name: "RUC",
+			selector: (row) => row?.ruc,
+			sortable: true,
+		},
+		{
+			id: "teletrans",
+			name: "Teletrans",
+			width: "150px",
+			button: true,
+			selector: (row) => row?.contrato_pago?.teletrans,
+		},
+		{
+			id: "observacion",
+			name: "Observación",
+			width: "200px",
+			button: true,
+			selector: (row) => row?.contrato_pago?.pago?.observacion,
+		},
+		{
+			id: "fecha_pago",
+			name: "Fecha de pago",
+			width: "140px",
+			button: true,
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "validar",
+			name: "",
+			width: "100px",
+			button: true,
+			cell: (e) => (
+				<div style={{ display: "flex", gap: 3 }}>
+					<ButtonEdit onClick={() => handleEdit(e)} />
+					<ButtonDelete
+						onClick={() => handleDelete(e.contrato_pago?.pago_id)}
+						title="Eliminar casa"
+					/>
 				</div>
 			),
 		},

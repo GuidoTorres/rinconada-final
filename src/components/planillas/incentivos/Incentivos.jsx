@@ -112,6 +112,7 @@ const Incentivos = () => {
 					open={modalJuntar}
 					actualizarTabla={getIncentivos}
 					dataToEdit={dataToEdit}
+					setDataToEdit={setDataToEdit}
 					trabajadores={trabajadores}
 				/>
 			)}

@@ -28,8 +28,9 @@ function ModalJuntarTeletrans({
 	closeModal,
 	trabajadores,
 	actualizarTabla,
-	closeModalSubmit,
+	closeModalSubmit = () => {},
 	dataToEdit,
+	setDataToEdit = () => {},
 }) {
 	const [form] = Form.useForm();
 	const { Text } = Typography;
@@ -153,16 +154,14 @@ function ModalJuntarTeletrans({
 			if (response) {
 				notificacion(response.status, response.msg);
 				actualizarTabla();
-				closeModal();
-				closeModalSubmit();
+				handleClose();
 			}
 		} else {
 			const response = await createData(data, route);
 			if (response) {
 				notificacion(response.status, response.msg);
 				actualizarTabla();
-				closeModal();
-				closeModalSubmit();
+				handleClose();
 			}
 		}
 	};
@@ -180,10 +179,16 @@ function ModalJuntarTeletrans({
 		}
 	}, [dataToEdit]);
 
+	const handleClose = () => {
+		setDataToEdit(null);
+		closeModal();
+		closeModalSubmit();
+	};
+
 	return (
 		<MainModal
 			open={open}
-			closeModal={closeModal}
+			closeModal={dataToEdit ? handleClose : closeModal}
 			title="Juntar Teletrans"
 			width={800}
 		>
