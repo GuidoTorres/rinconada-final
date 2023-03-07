@@ -1091,23 +1091,24 @@ export const incentivosLayout = (handleEdit, handleDelete) => {
 			selector: (row) =>
 				row?.trabajadores.length < 2
 					? row?.trabajadores[0]?.teletrans
-					: "",
+					: row?.trabajadores.reduce(
+							(a, b) => a + parseFloat(b.teletrans),
+							0
+					  ),
 		},
 		{
 			id: "observacion",
 			name: "Observación",
 			width: "200px",
 			button: true,
-			selector: (row) =>
-				row?.trabajadores.length < 2 ? row?.observacion : "",
+			selector: (row) => row?.observacion,
 		},
 		{
 			id: "fecha_pago",
 			name: "Fecha de pago",
 			width: "140px",
 			button: true,
-			selector: (row) =>
-				row?.trabajadores.length < 2 ? row?.fecha_pago : "",
+			selector: (row) => row?.fecha_pago,
 		},
 		{
 			id: "validar",

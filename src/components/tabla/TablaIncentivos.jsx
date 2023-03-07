@@ -34,13 +34,14 @@ const TablaIncentivos = ({ columns, table, filas }) => {
 
 	const ExpandedComponent = ({ data }) => (
 		<Table
-			columns={columnsExpandable}
+			columns={columnsExpandable.filter(
+				(item) =>
+					item.key !== "fecha_pago" && item.key !== "observacion"
+			)}
 			dataSource={data.trabajadores.map((item, index) => {
 				return {
 					Nro: index + 1,
 					incentivo: data.incentivo,
-					fecha_pago: data.fecha_pago,
-					observacion: data.observacion,
 					nombres: item.nombre,
 					teletrans: item.teletrans,
 					...item,

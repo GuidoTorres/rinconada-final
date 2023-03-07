@@ -145,19 +145,17 @@ function ModalJuntarTeletrans({
 			}),
 		};
 		if (dataToEdit) {
-			console.log(
-				"🚀 ~ file: ModalJuntarTeletrans.jsx:147 ~ handleSubmit ~ data:",
-				data
+			const response = await updateData(
+				data,
+				incentivo.pago_id,
+				"pago/multiple"
 			);
-			// TODO al editar el teletrans total lo ambos teletrans separados
-
-			// const response = await updateData(data, incentivo.pago_id, "pago");
-			// if (response) {
-			// 	notificacion(response.status, response.msg);
-			// 	actualizarTabla();
-			// 	closeModal();
-			// 	closeModalSubmit();
-			// }
+			if (response) {
+				notificacion(response.status, response.msg);
+				actualizarTabla();
+				closeModal();
+				closeModalSubmit();
+			}
 		} else {
 			const response = await createData(data, route);
 			if (response) {

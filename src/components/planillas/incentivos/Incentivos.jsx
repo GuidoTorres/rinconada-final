@@ -46,7 +46,6 @@ const Incentivos = () => {
 	}, []);
 
 	const handleEdit = (e) => {
-		console.log("🚀 ~ file: Incentivos.jsx:40 ~ handleEdit ~ e:", e);
 		if (e.trabajadores.length > 1) {
 			handleOpenModalJuntar(true);
 		} else {
