@@ -6,7 +6,6 @@ import { extraordinarioLayout } from "../../../data/dataTable";
 import { notificacion } from "../../../helpers/mensajes";
 import ButtonAdd from "../../Button/ButtonAdd";
 import Cargando from "../../cargando/Cargando";
-import Header from "../../header/Header";
 import Tabla from "../../tabla/Tabla";
 import ModalPagoExtraordinario from "./ModalPagoExtraordinario";
 

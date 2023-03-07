@@ -2867,10 +2867,6 @@ export const modalPagoExtraordinario = (
 						const trabajador = trabajadores.find(
 							(item) => item.dni === e
 						);
-						console.log(
-							"🚀 ~ file: FormValues.jsx:2874 ~ trabajador:",
-							trabajador
-						);
 						handleData(trabajador.nombre, "nombre");
 						handleData(trabajador.dni, "trabajador_dni");
 					}}
@@ -2885,7 +2881,7 @@ export const modalPagoExtraordinario = (
 			),
 		},
 		{
-			label: <label>Teletrans</label>,
+			label: <label>Teletrans </label>,
 			name: "teletrans",
 			rules: [
 				{
@@ -2893,13 +2889,14 @@ export const modalPagoExtraordinario = (
 					message: "Campo obligatorio!",
 				},
 			],
+
 			type: (
 				<Input
 					value={pagoExtraordinario.teletrans}
 					type="number"
 					name="teletrans"
 					min={0}
-					placeholder="Teletrans"
+					placeholder="Incentivo"
 					onChange={handleData}
 				/>
 			),

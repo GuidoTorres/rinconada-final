@@ -1,7 +1,7 @@
 import { Button, Form } from "antd";
 import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
-import { AiOutlineSave } from "react-icons/ai";
+import { AiOutlineForm } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
 import { modalPagoExtraordinario } from "../../../data/FormValues";
 import { pagoExtraordinarioValues } from "../../../data/initalValues";
@@ -23,10 +23,7 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 		updateData,
 	} = useContext(CrudContext);
 
-	const [pagoExtraordinario, setPagoExtraordinario] = useState(
-		pagoExtraordinarioValues
-	);
-
+	const [pagoAyuda, setPagoAyuda] = useState(pagoExtraordinarioValues);
 	const [trabajadores, setTrabajadores] = useState([]);
 
 	const getAllTrabajadores = async () => {
@@ -40,73 +37,63 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 
 	useEffect(() => {
 		if (dataToEdit) {
-			setPagoExtraordinario({
+			setPagoAyuda({
 				...dataToEdit,
-				trabajador_dni: dataToEdit.trabajador_dni,
-				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
-				teletrans: parseFloat(dataToEdit.teletrans),
+				nombre: dataToEdit.trabajadores[0].nombre,
+				teletrans: parseFloat(dataToEdit.trabajadores[0].teletrans),
 				observacion: dataToEdit.observacion,
+				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
 			});
 			form.setFieldsValue({
 				...dataToEdit,
-				trabajador_dni: dataToEdit.trabajador_dni,
-				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
-				teletrans: parseFloat(dataToEdit.teletrans),
+				nombre: dataToEdit.trabajadores[0].nombre,
+				teletrans: parseFloat(dataToEdit.trabajadores[0].teletrans),
 				observacion: dataToEdit.observacion,
+				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
 			});
 		} else {
-			setPagoExtraordinario(pagoExtraordinarioValues);
+			setPagoAyuda(pagoExtraordinarioValues);
 		}
 	}, [dataToEdit]);
 
 	const handleData = (e, text) => {
 		if (!text && e.target) {
 			const { name, value } = e.target;
-			form.setFieldValue({
+			form.setFieldsValue({
 				[name]: value,
 			});
-			setPagoExtraordinario((values) => {
-				return {
-					...values,
-					[name]: value,
-				};
+			setPagoAyuda((values) => {
+				return { ...values, [name]: value };
 			});
 		} else {
-			form.setFieldValue({
+			form.setFieldsValue({
 				[text]: e,
 			});
-			setPagoExtraordinario((values) => {
-				return {
-					...values,
-					[text]: e,
-				};
+			setPagoAyuda((values) => {
+				return { ...values, [text]: e };
 			});
 		}
 	};
 
 	const handleSubmit = async () => {
+		const route = "ayuda/programacion";
 		setCargando(true);
 		const data = {
-			trabajador_dni: pagoExtraordinario.trabajador_dni || "",
-			fecha_pago:
-				dayjs(pagoExtraordinario.fecha_pago).format("YYYY-MM-DD") || "",
-			teletrans: parseFloat(pagoExtraordinario.teletrans) || 0,
-			observacion: pagoExtraordinario.observacion || "",
-			tipo: "ayuda",
+			trabajador_dni: pagoAyuda.trabajador_dni || "",
+			observacion: pagoAyuda.observacion || "",
+			fecha_pago: dayjs(pagoAyuda.fecha_pago).format("YYYY-MM-DD") || "",
+			teletrans: parseFloat(pagoAyuda.teletrans) || 0,
+			tipo: pagoAyuda.tipo || "ayuda",
 		};
 		if (dataToEdit) {
-			const response = await updateData(
-				data,
-				dataToEdit.id,
-				"ayuda/programacion"
-			);
+			const response = await updateData(data, dataToEdit.pago_id, "pago");
 			if (response) {
 				notificacion(response.status, response.msg);
 				actualizarTabla();
 				closeModal();
 			}
 		} else {
-			const response = await createData(data, "ayuda/programacion");
+			const response = await createData(data, route);
 			if (response) {
 				notificacion(response.status, response.msg);
 				actualizarTabla();
@@ -114,16 +101,15 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 			}
 		}
 	};
-
 	const closeModal = () => {
 		setModal(false);
 		setDataToEdit(null);
 		setCargando(false);
-		setPagoExtraordinario(pagoExtraordinarioValues);
+		setPagoAyuda(pagoExtraordinarioValues);
 	};
 
 	const formData = modalPagoExtraordinario(
-		pagoExtraordinario,
+		pagoAyuda,
 		handleData,
 		trabajadores,
 		dataToEdit
@@ -133,11 +119,7 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 		<>
 			<MainModal
 				className={"modal-usuario"}
-				title={
-					dataToEdit
-						? "Editar Pago Extraordinario"
-						: "Nuevo Pago Extraordinario"
-				}
+				title={dataToEdit ? "Editar incentivo" : "Registrar incentivo"}
 				open={modal}
 				width={400}
 				closeModal={closeModal}
@@ -148,9 +130,10 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 					onFinish={handleSubmit}
 					layout="horizontal"
 				>
-					{formData.map((item, index) => (
+					{formData.map((item, i) => (
 						<Form.Item
-							key={index}
+							className={item.className}
+							key={i}
 							name={item.name}
 							rules={item.rules}
 							style={{ marginBottom: "8px" }}
@@ -161,13 +144,14 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 							</>
 						</Form.Item>
 					))}
+
 					<Form.Item className="button-container">
 						<Button
 							htmlType="submit"
-							icon={<AiOutlineSave />}
-							loading={cargando}
+							icon={<AiOutlineForm />}
+							loading={cargando ? true : false}
 						>
-							{dataToEdit ? "Actualizar" : "Guardar"}
+							{dataToEdit ? "Editar" : "Registrar"}
 						</Button>
 					</Form.Item>
 				</Form>
