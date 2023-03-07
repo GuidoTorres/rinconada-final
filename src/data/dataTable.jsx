@@ -1186,6 +1186,50 @@ export const casaLayout = (handleEdit, handleDelete) => {
 	];
 };
 
+export const historialLayout = () => {
+	return [
+		{
+			id: "Nro",
+			name: "Nro",
+			width: "60px",
+			selector: (row, index) => index + 1,
+		},
+		{
+			id: "razon_social",
+			name: "Razon Social",
+			selector: (row) => row?.razon_social,
+			sortable: true,
+		},
+		{
+			id: "ruc",
+			name: "RUC",
+			selector: (row) => row?.ruc,
+			sortable: true,
+		},
+		{
+			id: "teletrans",
+			name: "Teletrans",
+			width: "150px",
+			button: true,
+			selector: (row) => row?.contrato_pago?.teletrans,
+		},
+		{
+			id: "observacion",
+			name: "Observación",
+			width: "200px",
+			button: true,
+			selector: (row) => row?.contrato_pago?.pago?.observacion,
+		},
+		{
+			id: "fecha_pago",
+			name: "Fecha de pago",
+			width: "140px",
+			button: true,
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+	];
+};
+
 export const controlPlanilla = (handleContrato) => {
 	return [
 		{
