@@ -1186,6 +1186,17 @@ export const casaLayout = (handleEdit, handleDelete) => {
 	];
 };
 
+export const extraordinarioLayout = (handleEdit, handleDelete) => {
+	return [
+		{
+			id: "Nro",
+			name: "Nro",
+			width: "60px",
+			selector: (row, index) => index + 1,
+		},
+	];
+};
+
 export const historialLayout = () => {
 	return [
 		{

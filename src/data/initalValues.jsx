@@ -276,3 +276,15 @@ export const casaValues = () => {
 		tipo: "casa",
 	};
 };
+
+export const pagoExtraordinarioValues = () => {
+	return {
+		id: "",
+		nombre: "",
+		trabajador_dni: "",
+		observacion: "",
+		fecha_pago: new Date(),
+		teletrans: "",
+		tipo: "ayuda",
+	};
+};

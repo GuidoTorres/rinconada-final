@@ -2828,3 +2828,114 @@ export const modalCasa = (casa, handleData, empresas, dataToEdit) => {
 		},
 	];
 };
+
+// modal registro de pago extraordinario
+export const modalPagoExtraordinario = (
+	pagoExtraordinario,
+	handleData,
+	trabajadores,
+	dataToEdit
+) => {
+	const dataTrabajadores = trabajadores.map((item) => {
+		return {
+			value: item.dni,
+			label: item.nombre,
+		};
+	});
+
+	return [
+		{
+			label: <label>Trabajador</label>,
+			name: "nombre",
+			rules: [
+				{
+					required: true,
+					message: "Seleccione un trabajador.",
+				},
+			],
+
+			type: (
+				<Select
+					showSearch
+					disabled={dataToEdit ? true : false}
+					placeholder="Trabajadores"
+					style={{
+						width: "100%",
+					}}
+					name="nombre"
+					onChange={(e) => {
+						const trabajador = trabajadores.find(
+							(item) => item.dni === e
+						);
+						console.log(
+							"🚀 ~ file: FormValues.jsx:2874 ~ trabajador:",
+							trabajador
+						);
+						handleData(trabajador.nombre, "nombre");
+						handleData(trabajador.dni, "trabajador_dni");
+					}}
+					value={pagoExtraordinario.nombre}
+					filterOption={(input, option) =>
+						(option?.label ?? "")
+							.toLowerCase()
+							.includes(input.toLowerCase())
+					}
+					options={dataTrabajadores}
+				/>
+			),
+		},
+		{
+			label: <label>Teletrans</label>,
+			name: "teletrans",
+			rules: [
+				{
+					required: true,
+					message: "Campo obligatorio!",
+				},
+			],
+			type: (
+				<Input
+					value={pagoExtraordinario.teletrans}
+					type="number"
+					name="teletrans"
+					min={0}
+					placeholder="Teletrans"
+					onChange={handleData}
+				/>
+			),
+		},
+		{
+			label: <label>Observación</label>,
+			name: "observacion",
+			type: (
+				<Input
+					value={pagoExtraordinario.observacion}
+					type="text"
+					name="observacion"
+					placeholder="Observación"
+					onChange={handleData}
+				/>
+			),
+		},
+		{
+			label: <label>Fecha Pago</label>,
+			name: "fecha_pago",
+			type: (
+				<ConfigProvider locale={locale}>
+					<DatePicker
+						allowClear={false}
+						value={dayjs(pagoExtraordinario.fecha_pago)}
+						name="fecha_pago"
+						placeholder="Fecha de Pago"
+						picker="day"
+						onChange={(e) => handleData(e, "fecha_pago")}
+						style={{
+							width: "100%",
+						}}
+						format={"YYYY-MM-DD"}
+					/>
+				</ConfigProvider>
+			),
+		},
+	];
+};
