@@ -19,7 +19,7 @@ import {
 import { BiUndo } from "react-icons/bi";
 import { HiDownload } from "react-icons/hi";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { Popconfirm, Tag, Checkbox, Input, Button, Tooltip } from "antd";
+import { Popconfirm, Tag, Checkbox, Input, Button, Tooltip, Alert } from "antd";
 import Requerimiento from "../helpers/Requerimiento";
 
 //modulo administracion
@@ -1056,13 +1056,19 @@ export const incentivosLayout = (handleEdit, handleDelete) => {
 		{
 			id: "nombres",
 			name: "Nombres y apellidos",
-			selector: (row) => row?.nombre,
+			selector: (row) =>
+				row?.trabajadores.length < 2 ? (
+					row?.trabajadores[0]?.nombre
+				) : (
+					<Alert message="Teletrans en conjunto" type="success" />
+				),
 			sortable: true,
 		},
 		{
 			id: "cargo",
 			name: "Cargo",
-			selector: (row) => row?.cargo,
+			selector: (row) =>
+				row?.trabajadores.length < 2 ? row?.trabajadores[0]?.cargo : "",
 			sortable: true,
 		},
 		{
@@ -1070,28 +1076,38 @@ export const incentivosLayout = (handleEdit, handleDelete) => {
 			name: "Celular",
 			sortable: true,
 			width: "100px",
-			selector: (row) => (row?.celular ? row?.celular : "---"),
+			selector: (row) =>
+				row?.trabajadores.length < 2
+					? row?.trabajadores[0]?.celular
+						? row?.trabajadores[0]?.celular
+						: "---"
+					: "",
 		},
 		{
 			id: "incentivo",
 			name: "Incentivo(Teletrans)",
 			width: "150px",
 			button: true,
-			selector: (row) => row?.pago?.teletrans,
+			selector: (row) =>
+				row?.trabajadores.length < 2
+					? row?.trabajadores[0]?.teletrans
+					: "",
 		},
 		{
 			id: "observacion",
 			name: "Observación",
 			width: "200px",
 			button: true,
-			selector: (row) => row?.pago?.observacion,
+			selector: (row) =>
+				row?.trabajadores.length < 2 ? row?.observacion : "",
 		},
 		{
 			id: "fecha_pago",
 			name: "Fecha de pago",
 			width: "140px",
 			button: true,
-			selector: (row) => row?.pago?.fecha_pago,
+			selector: (row) =>
+				row?.trabajadores.length < 2 ? row?.fecha_pago : "",
 		},
 		{
 			id: "validar",
@@ -1117,7 +1133,7 @@ export const incentivosLayout = (handleEdit, handleDelete) => {
 						<Popconfirm
 							title="Eliminar incentivo"
 							description="¿Estas seguro de eliminar?"
-							onConfirm={() => handleDelete(e.pago?.id)}
+							onConfirm={() => handleDelete(e.pago_id)}
 							okText="Si"
 							cancelText="No"
 							placement="topRight"

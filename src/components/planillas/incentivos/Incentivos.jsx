@@ -2,19 +2,19 @@ import { Col, Empty, Row } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineForm } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
-import { PlanillaContext } from "../../../context/PlanillaContext";
 import { incentivosLayout } from "../../../data/dataTable";
 import { notificacion } from "../../../helpers/mensajes";
 import ButtonAdd from "../../Button/ButtonAdd";
 import Cargando from "../../cargando/Cargando";
 import Header from "../../header/Header";
-import Tabla from "../../tabla/Tabla";
-import ModalJuntarTeletrans from "../control/ModalJuntarTeletrans";
+import TablaIncentivos from "../../tabla/TablaIncentivos";
 import ModalIncentivo from "./ModalIncentivo";
+import ModalJuntarTeletrans from "./ModalJuntarTeletrans";
 
 const Incentivos = () => {
 	const {
 		getData,
+		dataToEdit,
 		setDataToEdit,
 		modal,
 		setModal,
@@ -22,8 +22,6 @@ const Incentivos = () => {
 		setCargando,
 		deleteData,
 	} = useContext(CrudContext);
-
-	const { juntarTeletrans, setJuntarTeletrans } = useContext(PlanillaContext);
 
 	const [incentivos, setIncentivos] = useState([]);
 
@@ -36,12 +34,24 @@ const Incentivos = () => {
 		}
 	};
 
+	const [trabajadores, setTrabajadores] = useState([]);
+
+	const getAllTrabajadores = async () => {
+		const response = await getData("incentivo/trabajadores");
+		setTrabajadores(response.data);
+	};
 	useEffect(() => {
 		getIncentivos();
+		getAllTrabajadores();
 	}, []);
 
 	const handleEdit = (e) => {
-		setModal(true);
+		console.log("🚀 ~ file: Incentivos.jsx:40 ~ handleEdit ~ e:", e);
+		if (e.trabajadores.length > 1) {
+			handleOpenModalJuntar(true);
+		} else {
+			setModal(true);
+		}
 		setDataToEdit(e);
 	};
 
@@ -54,6 +64,16 @@ const Incentivos = () => {
 	};
 
 	const columns = incentivosLayout(handleEdit, handleDelete);
+
+	const [modalJuntar, setModalJuntar] = useState(false);
+
+	const handleOpenModalJuntar = () => {
+		setModalJuntar(true);
+	};
+
+	const handleCloseModalJuntar = () => {
+		setModalJuntar(false);
+	};
 
 	return (
 		<>
@@ -70,7 +90,7 @@ const Incentivos = () => {
 					</Col>
 				</Row>
 				{incentivos?.length > 0 ? (
-					<Tabla columns={columns} table={incentivos} />
+					<TablaIncentivos columns={columns} table={incentivos} />
 				) : (
 					<>
 						{cargando ? (
@@ -85,15 +105,17 @@ const Incentivos = () => {
 						)}
 					</>
 				)}
-				{/* {juntarTeletrans && (
-					<ModalJuntarTeletrans
-						open={juntarTeletrans}
-						//   selected={tableData}
-						//   actualizarTabla={getTrabajadores}
-					/>
-				)} */}
 			</div>
 			{modal && <ModalIncentivo actualizarTabla={getIncentivos} />}
+			{modalJuntar && (
+				<ModalJuntarTeletrans
+					closeModal={handleCloseModalJuntar}
+					open={modalJuntar}
+					actualizarTabla={getIncentivos}
+					dataToEdit={dataToEdit}
+					trabajadores={trabajadores}
+				/>
+			)}
 		</>
 	);
 };

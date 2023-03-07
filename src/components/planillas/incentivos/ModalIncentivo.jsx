@@ -1,4 +1,4 @@
-import { Button, Form } from "antd";
+import { Button, Form, Space } from "antd";
 import { useContext, useEffect, useState } from "react";
 import { CrudContext } from "../../../context/CrudContext";
 import { incentivoValues } from "../../../data/initalValues";
@@ -7,12 +7,11 @@ import { notificacion } from "../../../helpers/mensajes";
 import { AiOutlineForm, AiOutlineTeam } from "react-icons/ai";
 import { modalIncentivo } from "../../../data/FormValues";
 import dayjs from "dayjs";
-import ModalButtonTitle from "../../modal/ModalButtonTitle";
 import ModalJuntarTeletrans from "./ModalJuntarTeletrans";
+import ButtonAdd from "../../Button/ButtonAdd";
 
 function ModalIncentivo({ actualizarTabla }) {
 	const [form] = Form.useForm();
-	const route = "incentivo";
 
 	const {
 		createData,
@@ -23,6 +22,7 @@ function ModalIncentivo({ actualizarTabla }) {
 		setCargando,
 		setDataToEdit,
 		dataToEdit,
+		updateData,
 	} = useContext(CrudContext);
 
 	const [incentivo, setIncentivo] = useState(incentivoValues);
@@ -41,19 +41,17 @@ function ModalIncentivo({ actualizarTabla }) {
 		if (dataToEdit) {
 			setIncentivo({
 				...dataToEdit,
-				teletrans: parseFloat(dataToEdit.pago.teletrans),
-				observacion: dataToEdit.pago.observacion,
-				fecha_pago: dayjs(dataToEdit.pago.fecha_pago).format(
-					"YYYY-MM-DD"
-				),
+				nombre: dataToEdit.trabajadores[0].nombre,
+				teletrans: parseFloat(dataToEdit.trabajadores[0].teletrans),
+				observacion: dataToEdit.observacion,
+				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
 			});
 			form.setFieldsValue({
 				...dataToEdit,
-				teletrans: parseFloat(dataToEdit.pago.teletrans),
-				observacion: dataToEdit.pago.observacion,
-				fecha_pago: dayjs(dataToEdit.pago.fecha_pago).format(
-					"YYYY-MM-DD"
-				),
+				nombre: dataToEdit.trabajadores[0].nombre,
+				teletrans: parseFloat(dataToEdit.trabajadores[0].teletrans),
+				observacion: dataToEdit.observacion,
+				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
 			});
 		} else {
 			setIncentivo(incentivoValues);
@@ -88,13 +86,25 @@ function ModalIncentivo({ actualizarTabla }) {
 			fecha_pago: dayjs(incentivo.fecha_pago).format("YYYY-MM-DD") || "",
 			teletrans: parseFloat(incentivo.teletrans) || 0,
 			tipo: incentivo.tipo || "incentivo",
-			id: incentivo.id || "",
 		};
-		const response = await createData(incentivoData, route);
-		if (response) {
-			notificacion(response.status, response.msg);
-			actualizarTabla();
-			closeModal();
+		if (dataToEdit) {
+			const response = await updateData(
+				incentivoData,
+				dataToEdit.pago_id,
+				"pago"
+			);
+			if (response) {
+				notificacion(response.status, response.msg);
+				actualizarTabla();
+				closeModal();
+			}
+		} else {
+			const response = await createData(incentivoData, route);
+			if (response) {
+				notificacion(response.status, response.msg);
+				actualizarTabla();
+				closeModal();
+			}
 		}
 	};
 	const closeModal = () => {
@@ -104,7 +114,12 @@ function ModalIncentivo({ actualizarTabla }) {
 		setIncentivo(incentivoValues);
 	};
 
-	const formData = modalIncentivo(incentivo, handleData, trabajadores);
+	const formData = modalIncentivo(
+		incentivo,
+		handleData,
+		trabajadores,
+		dataToEdit
+	);
 
 	const [modalTeletrans, setModalTeletrans] = useState(false);
 	const handleOpenModalTeletrans = () => {
@@ -117,16 +132,25 @@ function ModalIncentivo({ actualizarTabla }) {
 
 	return (
 		<>
-			<ModalButtonTitle
+			<MainModal
 				className={"modal-usuario"}
 				title={dataToEdit ? "Editar incentivo" : "Registrar incentivo"}
 				open={modal}
 				width={400}
 				closeModal={closeModal}
-				buttonLabel="Juntar Teletrans"
-				onClickButton={handleOpenModalTeletrans}
-				buttonIcon={<AiOutlineTeam />}
 			>
+				{!dataToEdit && (
+					<Space
+						direction="horizontal"
+						style={{ width: "100%", justifyContent: "end" }}
+					>
+						<ButtonAdd
+							title="Juntar Teletrans"
+							onClick={handleOpenModalTeletrans}
+							icon={<AiOutlineTeam />}
+						/>
+					</Space>
+				)}
 				<Form
 					form={form}
 					className="modal-body"
@@ -158,12 +182,14 @@ function ModalIncentivo({ actualizarTabla }) {
 						</Button>
 					</Form.Item>
 				</Form>
-			</ModalButtonTitle>
+			</MainModal>
 			{modalTeletrans && (
 				<ModalJuntarTeletrans
 					open={modalTeletrans}
 					closeModal={handleCloseModalTeletrans}
 					trabajadores={trabajadores}
+					actualizarTabla={actualizarTabla}
+					closeModalSubmit={closeModal}
 				/>
 			)}
 		</>

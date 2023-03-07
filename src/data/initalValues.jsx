@@ -253,3 +253,14 @@ export const incentivoValues = () => {
 		tipo: "incentivo",
 	};
 };
+
+export const incentivosVariosValues = () => {
+	return {
+		id: "",
+		observacion: "",
+		fecha_pago: new Date(),
+		teletrans: "",
+		tipo: "incentivo",
+		trabajadores: [],
+	};
+};

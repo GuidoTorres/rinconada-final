@@ -2623,7 +2623,12 @@ export const generarPedido = (pedido, handleData, area) => {
 // ==================== Planilla
 
 // modal registro de incentivo
-export const modalIncentivo = (incentivo, handleData, trabajadores) => {
+export const modalIncentivo = (
+	incentivo,
+	handleData,
+	trabajadores,
+	dataToEdit
+) => {
 	const dataTrabajadores = trabajadores.map((item) => {
 		return {
 			value: item.contrato_id,
@@ -2645,6 +2650,7 @@ export const modalIncentivo = (incentivo, handleData, trabajadores) => {
 			type: (
 				<Select
 					showSearch
+					disabled={dataToEdit ? true : false}
 					placeholder="Trabajadores"
 					style={{
 						width: "100%",
@@ -2722,3 +2728,6 @@ export const modalIncentivo = (incentivo, handleData, trabajadores) => {
 		},
 	];
 };
+
+// modal registro de incentivos varios juntos
+export const modalIncentivoVarios = (incentivo, handleData, trabajadores) => {};
