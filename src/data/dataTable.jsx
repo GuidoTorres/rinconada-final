@@ -1201,6 +1201,21 @@ export const extraordinarioLayout = (handleEdit, handleDelete) => {
 			width: "60px",
 			selector: (row, index) => index + 1,
 		},
+		{
+			id: "validar",
+			name: "",
+			width: "100px",
+			button: true,
+			cell: (e) => (
+				<div style={{ display: "flex", gap: 3 }}>
+					<ButtonEdit onClick={() => handleEdit(e)} />
+					<ButtonDelete
+						onClick={() => handleDelete(e.pago?.id)}
+						title="Eliminar casa"
+					/>
+				</div>
+			),
+		},
 	];
 };
 

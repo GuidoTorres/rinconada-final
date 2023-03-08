@@ -43,7 +43,7 @@ function PagoExtraordinario() {
 	};
 
 	const handleDelete = async (e) => {
-		const response = await deleteData("extraordinario", e);
+		const response = await deleteData("ayuda", e);
 		if (response) {
 			notificacion(response.status, response.msg);
 			getPagosExtraordinarios();
