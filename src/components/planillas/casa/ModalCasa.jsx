@@ -42,25 +42,23 @@ function ModalCasa({ actualizarTabla }) {
 				...dataToEdit,
 				razon_social: dataToEdit.razon_social,
 				contrato_id: dataToEdit.contrato_id,
-				teletrans: parseFloat(
-					dataToEdit.contrato_pago?.pago?.teletrans
+				teletrans: parseFloat(dataToEdit.pago?.teletrans),
+				volquetes: parseFloat(dataToEdit.pago?.volquetes),
+				observacion: dataToEdit.pago?.observacion,
+				fecha_pago: dayjs(dataToEdit.pago?.fecha_pago).format(
+					"YYYY-MM-DD"
 				),
-				observacion: dataToEdit.contrato_pago?.pago?.observacion,
-				fecha_pago: dayjs(
-					dataToEdit.contrato_pago?.pago?.fecha_pago
-				).format("YYYY-MM-DD"),
 			});
 			form.setFieldsValue({
 				...dataToEdit,
 				razon_social: dataToEdit.razon_social,
 				contrato_id: dataToEdit.contrato_id,
-				teletrans: parseFloat(
-					dataToEdit.contrato_pago?.pago?.teletrans
+				teletrans: parseFloat(dataToEdit.pago?.teletrans),
+				volquetes: parseFloat(dataToEdit.pago?.volquetes),
+				observacion: dataToEdit.pago?.observacion,
+				fecha_pago: dayjs(dataToEdit.pago?.fecha_pago).format(
+					"YYYY-MM-DD"
 				),
-				observacion: dataToEdit.contrato_pago?.pago?.observacion,
-				fecha_pago: dayjs(
-					dataToEdit.contrato_pago?.pago?.fecha_pago
-				).format("YYYY-MM-DD"),
 			});
 		} else {
 			setCasa(casaValues);
@@ -94,12 +92,14 @@ function ModalCasa({ actualizarTabla }) {
 			observacion: casa.observacion || "",
 			fecha_pago: dayjs(casa.fecha_pago).format("YYYY-MM-DD") || "",
 			teletrans: parseFloat(casa.teletrans) || 0,
+			volquetes: parseFloat(casa.volquetes) || 0,
 			tipo: "casa",
 		};
+		// console.log("🚀 ~ file: ModalCasa.jsx:98 ~ handleSubmit ~ data:", data);
 		if (dataToEdit) {
 			const response = await updateData(
 				data,
-				dataToEdit.contrato_pago?.pago_id,
+				dataToEdit.pago?.id,
 				"casa/programacion"
 			);
 			if (response) {

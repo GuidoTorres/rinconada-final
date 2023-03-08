@@ -273,6 +273,7 @@ export const casaValues = () => {
 		observacion: "",
 		fecha_pago: new Date(),
 		teletrans: "",
+		volquetes: "",
 		tipo: "casa",
 	};
 };

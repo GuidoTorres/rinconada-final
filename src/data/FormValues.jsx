@@ -2776,12 +2776,6 @@ export const modalCasa = (casa, handleData, empresas, dataToEdit) => {
 		{
 			label: <label>Teletrans</label>,
 			name: "teletrans",
-			rules: [
-				{
-					required: true,
-					message: "Campo obligatorio!",
-				},
-			],
 			type: (
 				<Input
 					value={casa.teletrans}
@@ -2789,6 +2783,21 @@ export const modalCasa = (casa, handleData, empresas, dataToEdit) => {
 					name="teletrans"
 					min={0}
 					placeholder="Teletrans"
+					onChange={handleData}
+				/>
+			),
+		},
+		{
+			label: <label>Volquetes </label>,
+			name: "volquetes",
+
+			type: (
+				<Input
+					value={casa.volquetes}
+					type="number"
+					name="volquetes"
+					min={0}
+					placeholder="Volquetes"
 					onChange={handleData}
 				/>
 			),
@@ -2896,7 +2905,7 @@ export const modalPagoExtraordinario = (
 					type="number"
 					name="teletrans"
 					min={0}
-					placeholder="Incentivo"
+					placeholder="Teletrans"
 					onChange={handleData}
 				/>
 			),

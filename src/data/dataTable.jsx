@@ -1152,21 +1152,28 @@ export const casaLayout = (handleEdit, handleDelete) => {
 			name: "Teletrans",
 			width: "150px",
 			button: true,
-			selector: (row) => row?.contrato_pago?.teletrans,
+			selector: (row) => row?.pago?.teletrans,
+		},
+		{
+			id: "volquetes",
+			name: "Volquetes",
+			width: "150px",
+			button: true,
+			selector: (row) => row?.pago?.volquetes,
 		},
 		{
 			id: "observacion",
 			name: "Observación",
 			width: "200px",
 			button: true,
-			selector: (row) => row?.contrato_pago?.pago?.observacion,
+			selector: (row) => row?.pago?.observacion,
 		},
 		{
 			id: "fecha_pago",
 			name: "Fecha de pago",
 			width: "140px",
 			button: true,
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			selector: (row) => row?.pago?.fecha_pago,
 		},
 		{
 			id: "validar",
@@ -1177,7 +1184,7 @@ export const casaLayout = (handleEdit, handleDelete) => {
 				<div style={{ display: "flex", gap: 3 }}>
 					<ButtonEdit onClick={() => handleEdit(e)} />
 					<ButtonDelete
-						onClick={() => handleDelete(e.contrato_pago?.pago_id)}
+						onClick={() => handleDelete(e.pago?.id)}
 						title="Eliminar casa"
 					/>
 				</div>

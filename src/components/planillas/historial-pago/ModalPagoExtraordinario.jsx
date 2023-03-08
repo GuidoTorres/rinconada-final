@@ -39,15 +39,15 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 		if (dataToEdit) {
 			setPagoAyuda({
 				...dataToEdit,
-				nombre: dataToEdit.trabajadores[0].nombre,
-				teletrans: parseFloat(dataToEdit.trabajadores[0].teletrans),
+				nombre: dataToEdit.nombre,
+				teletrans: parseFloat(dataToEdit.teletrans),
 				observacion: dataToEdit.observacion,
 				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
 			});
 			form.setFieldsValue({
 				...dataToEdit,
-				nombre: dataToEdit.trabajadores[0].nombre,
-				teletrans: parseFloat(dataToEdit.trabajadores[0].teletrans),
+				nombre: dataToEdit.nombre,
+				teletrans: parseFloat(dataToEdit.teletrans),
 				observacion: dataToEdit.observacion,
 				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
 			});
