@@ -23,7 +23,7 @@ function PagoExtraordinario() {
 	const [pagosExtraordinarios, setPagosExtraordinarios] = useState([]);
 
 	const getPagosExtraordinarios = async () => {
-		const route = "ayuda/programacion";
+		const route = "ayuda/lista";
 		setCargando(true);
 		const response = await getData(route);
 		if (response) {
@@ -34,7 +34,7 @@ function PagoExtraordinario() {
 	};
 
 	useEffect(() => {
-		// getPagosExtraordinarios();
+		getPagosExtraordinarios();
 	}, []);
 
 	const handleEdit = (e) => {
