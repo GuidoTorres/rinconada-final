@@ -4,12 +4,12 @@ import DataTable from "react-data-table-component";
 
 import "./tabla.css";
 
-const TablaIncentivos = ({ columns, table, filas }) => {
+const TablaPagosDiarios = ({ columns, table, filas }) => {
 	const columnsExpandable = columns.map((item) => {
 		return {
 			title: item.name,
-			dataIndex: item.id === "incentivo" ? "teletrans" : item.id,
-			key: item.id === "incentivo" ? "teletrans" : item.id,
+			dataIndex: item.id,
+			key: item.id,
 		};
 	});
 
@@ -37,15 +37,15 @@ const TablaIncentivos = ({ columns, table, filas }) => {
 			size="small"
 			columns={columnsExpandable.filter(
 				(item) =>
-					item.key !== "fecha_pago" && item.key !== "observacion"
+					item.key !== "tipo" &&
+					item.key !== "observacion" &&
+					item.key !== "Acciones"
 			)}
 			dataSource={data.trabajadores.map((item, index) => {
 				return {
 					Nro: index + 1,
-					incentivo: data.incentivo,
-					nombres: item.nombre,
-					teletrans: item.teletrans,
-					...item,
+					nombre: item.nombre,
+					pago: item.teletrans,
 				};
 			})}
 		/>
@@ -72,4 +72,4 @@ const TablaIncentivos = ({ columns, table, filas }) => {
 	);
 };
 
-export default TablaIncentivos;
+export default TablaPagosDiarios;

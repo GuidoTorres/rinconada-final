@@ -222,6 +222,7 @@ function ModalJuntarTeletrans({
 					<Form.Item label="Fecha">
 						<ConfigProvider locale={locale}>
 							<DatePicker
+								allowClear={false}
 								value={dayjs(incentivo.fecha_pago)}
 								name="fecha_pago"
 								placeholder="Fecha de Pago"

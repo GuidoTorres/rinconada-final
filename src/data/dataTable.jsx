@@ -3,9 +3,7 @@ import {
 	BsTrash,
 	BsQuestionCircle,
 	BsKey,
-	BsPrinter,
 	BsCheck,
-	BsEye,
 } from "react-icons/bs";
 import {
 	AiFillEye,
@@ -16,10 +14,11 @@ import {
 import { BiUndo } from "react-icons/bi";
 import { HiDownload } from "react-icons/hi";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { Popconfirm, Tag, Checkbox, Input, Button, Tooltip, Alert } from "antd";
+import { Popconfirm, Tag, Checkbox, Input, Alert } from "antd";
 import Requerimiento from "../helpers/Requerimiento";
 import ButtonEdit from "../components/Button/ButtonEdit";
 import ButtonDelete from "../components/Button/ButtonDelete";
+import ButtonPagar from "../components/Button/ButtonPagar";
 
 //modulo administracion
 export const usuario = (handleEdit, handleDelete) => {
@@ -1585,7 +1584,7 @@ export const sumarTeletrans = (handleValidacion, handlePagos) => {
 	];
 };
 
-export const tablePagosFecha = (openModal, handleDelete) => {
+export const tablePagosFecha = (handlePagar, handleDelete) => {
 	return [
 		{
 			id: "Nro",
@@ -1597,19 +1596,49 @@ export const tablePagosFecha = (openModal, handleDelete) => {
 			id: "nombre",
 			name: "Apellidos y Nombres",
 			width: "220px",
-			selector: (row) => row.nombre,
+			selector: (row) =>
+				row?.trabajadores.length < 2 ? (
+					row?.trabajadores[0]?.nombre
+				) : (
+					<Alert message="Pagos en grupo" type="success" />
+				),
 			sortable: true,
 		},
+		// {
+		// 	id: "celular",
+		// 	name: "Celular",
+		// 	selector: (row) =>
+		// 		row?.trabajadores.length < 2
+		// 			? row?.trabajadores[0]?.celular
+		// 				? row?.trabajadores[0]?.celular
+		// 				: "---"
+		// 			: "",
+		// 	sortable: true,
+		// },
 		{
-			id: "celular",
-			name: "Celular",
-			selector: (row) => row?.celular,
-			sortable: true,
+			id: "tipo",
+			name: "Tipo",
+			selector: (row) =>
+				row?.tipo === "casa" ? (
+					<Tag color="green">Casa</Tag>
+				) : row?.tipo === "incentivo" ? (
+					<Tag color="gold">Incentivo</Tag>
+				) : row?.tipo === "asociacion" ? (
+					<Tag color="purple">Asociación</Tag>
+				) : (
+					""
+				),
 		},
 		{
 			id: "pago",
 			name: "Pago",
-			selector: (row) => row?.pago,
+			selector: (row) =>
+				row?.trabajadores.length < 2
+					? row?.trabajadores[0]?.teletrans
+					: row?.trabajadores.reduce(
+							(a, b) => a + parseFloat(b.teletrans),
+							0
+					  ),
 			sortable: true,
 		},
 		{
@@ -1619,21 +1648,22 @@ export const tablePagosFecha = (openModal, handleDelete) => {
 			sortable: true,
 		},
 
-		{
-			id: "validacion",
-			name: "Validación",
-			button: true,
-			cell: (e) => <input type="checkbox" />,
-		},
+		// {
+		// 	id: "validacion",
+		// 	name: "Validación",
+		// 	button: true,
+		// 	cell: (e) => <input type="checkbox" />,
+		// },
 		{
 			id: "Acciones",
 			name: "Acciones",
-			button: true,
 			cell: (e) => (
-				<div className="acciones">
-					<BsPrinter />
-					<BsEye onClick={() => openModal()} />
-					<BsTrash onClick={() => handleDelete(e.pago_id)} />
+				<div style={{ display: "flex", gap: 3 }}>
+					<ButtonPagar onClick={() => handlePagar(e)} />
+					<ButtonDelete
+						onClick={() => handleDelete(e.trabajadores[0].pago_id)}
+						title="Eliminar Pago"
+					/>
 				</div>
 			),
 		},
