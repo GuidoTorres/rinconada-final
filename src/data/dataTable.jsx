@@ -1227,36 +1227,89 @@ export const historialLayout = () => {
 			selector: (row, index) => index + 1,
 		},
 		{
-			id: "razon_social",
-			name: "Razon Social",
+			id: "fecha_pago",
+			name: "Fecha de Pago",
 			selector: (row) => row?.razon_social,
 			sortable: true,
 		},
 		{
-			id: "ruc",
-			name: "RUC",
+			id: "hora",
+			name: "Hora",
 			selector: (row) => row?.ruc,
 			sortable: true,
 		},
 		{
-			id: "teletrans",
-			name: "Teletrans",
+			id: "placa",
+			name: "Placa",
 			width: "150px",
 			button: true,
 			selector: (row) => row?.contrato_pago?.teletrans,
 		},
 		{
-			id: "observacion",
-			name: "Observación",
+			id: "propietario",
+			name: "Propietario del Volquete",
 			width: "200px",
 			button: true,
 			selector: (row) => row?.contrato_pago?.pago?.observacion,
 		},
 		{
-			id: "fecha_pago",
-			name: "Fecha de pago",
+			id: "codigo_tareaje",
+			name: "Código de Tareaje",
 			width: "140px",
 			button: true,
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "nombres",
+			name: "Nombres y Apellidos",
+			width: "200px",
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "cargo",
+			name: "Cargo",
+			width: "200px",
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "pago",
+			name: "Pago/Incentivo",
+			width: "200px",
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "volquetes",
+			name: "Volquetes",
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "teletrans",
+			name: "Teletrans",
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "inicio",
+			name: "Inicio",
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "fin",
+			name: "Fin",
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "planta",
+			name: "Planta de Beneficio",
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "codigo_pago",
+			name: "Código de Pago",
+			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "observacion",
+			name: "Observación",
 			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
 		},
 	];
@@ -1597,8 +1650,8 @@ export const tablePagosFecha = (handlePagar, handleDelete) => {
 			name: "Apellidos y Nombres",
 			width: "220px",
 			selector: (row) =>
-				row?.trabajadores.length < 2 ? (
-					row?.trabajadores[0]?.nombre
+				row?.asociacion.length < 2 ? (
+					row?.asociacion[0]?.nombre
 				) : (
 					<Alert message="Pagos en grupo" type="success" />
 				),
@@ -1633,9 +1686,9 @@ export const tablePagosFecha = (handlePagar, handleDelete) => {
 			id: "pago",
 			name: "Pago",
 			selector: (row) =>
-				row?.trabajadores.length < 2
-					? row?.trabajadores[0]?.teletrans
-					: row?.trabajadores.reduce(
+				row?.asociacion.length < 2
+					? row?.asociacion[0]?.teletrans
+					: row?.asociacion.reduce(
 							(a, b) => a + parseFloat(b.teletrans),
 							0
 					  ),
@@ -1661,7 +1714,7 @@ export const tablePagosFecha = (handlePagar, handleDelete) => {
 				<div style={{ display: "flex", gap: 3 }}>
 					<ButtonPagar onClick={() => handlePagar(e)} />
 					<ButtonDelete
-						onClick={() => handleDelete(e.trabajadores[0].pago_id)}
+						onClick={() => handleDelete(e.asociacion[0].pago_id)}
 						title="Eliminar Pago"
 					/>
 				</div>

@@ -10,10 +10,14 @@ function Historial() {
 	const { getData, cargando, setCargando } = useContext(CrudContext);
 
 	const [historial, setHistorial] = useState([]);
+	console.log(
+		"🚀 ~ file: Historial.jsx:13 ~ Historial ~ historial:",
+		historial
+	);
 
 	const getHistorial = async () => {
 		setCargando(true);
-		const route = "historial";
+		const route = "pago/historial";
 		const response = await getData(route);
 		if (response) {
 			const filterNull = response.data.filter((item) => item !== null);
@@ -23,7 +27,7 @@ function Historial() {
 	};
 
 	useEffect(() => {
-		// getHistorial();
+		getHistorial();
 	}, []);
 
 	const columns = historialLayout();
@@ -67,7 +71,7 @@ function Historial() {
 				</Col>
 			</Row>
 			{historial?.length > 0 ? (
-				<Tabla columns={columns} data={historial} />
+				<Tabla columns={columns} table={historial} />
 			) : (
 				<>
 					{cargando ? (

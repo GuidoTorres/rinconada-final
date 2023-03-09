@@ -3,6 +3,7 @@ import {
 	Button,
 	Card,
 	Col,
+	ConfigProvider,
 	Divider,
 	Form,
 	Input,
@@ -10,50 +11,44 @@ import {
 	Select,
 	Space,
 	Tag,
+	TimePicker,
 	Typography,
 } from "antd";
+import locale from "antd/es/date-picker/locale/es_ES";
+import dayjs from "dayjs";
 import { Fragment, useContext, useEffect, useState } from "react";
+import { AiOutlineForm } from "react-icons/ai";
 import { BsCalendar2Check } from "react-icons/bs";
 import { CrudContext } from "../../../context/CrudContext";
+import { pagoValues } from "../../../data/initalValues";
+import { notificacion } from "../../../helpers/mensajes";
 import MainModal from "../../modal/MainModal";
 import "../style/modalPagos.css";
-const ModalPago = ({ open, closeModal, data = {} }) => {
+const ModalPago = ({ open, closeModal, data = {}, actualizarTabla }) => {
 	const { Text } = Typography;
-	console.log("🚀 ~ file: ModalPago.jsx:6 ~ ModalPago ~ data:", data);
+	const [form] = Form.useForm();
+
 	const [volquetes, setVolquetes] = useState([]);
-	console.log(
-		"🚀 ~ file: ModalPago.jsx:22 ~ ModalPago ~ volquetes:",
-		volquetes
-	);
 
 	useEffect(() => {
-		if (data?.trabajadores[0]?.teletrans !== null) {
+		if (data?.asociacion[0]?.teletrans !== null) {
 			let arreglo = [];
 			for (
 				let index = 0;
-				index < parseFloat(data?.trabajadores[0]?.teletrans) / 4;
+				index < parseFloat(data?.asociacion[0]?.teletrans) / 4;
 				index++
 			) {
-				arreglo.push({
-					hora: "",
-					placa: "",
-					propietario: "",
-					trapiche: "",
-					volquetes: "",
-					teletrans: "",
-				});
+				arreglo.push({ index, ...pagoValues() });
 			}
 			setVolquetes(arreglo);
 		}
 	}, [data]);
 
-	const { getData } = useContext(CrudContext);
+	const { getData, createData } = useContext(CrudContext);
+
+	const [cargando, setCargando] = useState(false);
 
 	const [conductores, setConductores] = useState([]);
-	console.log(
-		"🚀 ~ file: ModalPago.jsx:53 ~ ModalPago ~ conductores:",
-		conductores
-	);
 	const [trapiches, setTrapiches] = useState([]);
 
 	const getConductores = async () => {
@@ -67,7 +62,8 @@ const ModalPago = ({ open, closeModal, data = {} }) => {
 	const getTrapiches = async () => {
 		const response = await getData("trapiche");
 		if (response) {
-			setTrapiches(response);
+			const filterNull = response.data.filter((item) => item !== null);
+			setTrapiches(filterNull);
 		}
 	};
 
@@ -76,76 +72,60 @@ const ModalPago = ({ open, closeModal, data = {} }) => {
 		getTrapiches();
 	}, []);
 
-	// const [initialValues, setInitialValues] = useState([
-	//   {
-	//     conductor: "",
-	//     dni: "",
-	//     telefono: "",
-	//     placa: "",
-	//     teletrans: "",
-	//     lugar: "",
-	//     contrato_id: selected?.id,
-	//     evaluacion_id: parseInt(evaluacion_id),
-	//   },
-	// ]);
-	// const [pagar, setPagar] = useState();
-	// const [pago2, setPago2] = useState([]);
-	// const closeModal = () => {
-	//   setModal1(false);
-	// };
-	// console.log('====================================');
-	// console.log(data);
-	// console.log('====================================');
-	// const handleChange = (e, i) => {
-	//   let data = [...initialValues];
-	//   const { name, value } = e.target;
-	//   data[i][name] = value;
+	const handleData = (index, e, text) => {
+		setVolquetes((prev) => {
+			return prev.map((item) => {
+				if (item.index === index) {
+					return { ...item, [text]: e };
+				} else {
+					return item;
+				}
+			});
+		});
+	};
 
-	//   setInitialValues(data);
-	// };
-	// const addFields = () => {
-	//   let object = {
-	//     conductor: "",
-	//     dni: "",
-	//     telefono: "",
-	//     placa: "",
-	//     teletrans: "",
-	//     lugar: "",
-	//     contrato_id: selected?.id,
-	//   };
-	//   setInitialValues([...initialValues, object]);
-	// };
-	// const handleSubmit = async (e) => {
-	//   const route = "pago";
-	//   const route2 = "pago/multiple";
+	const handleSubmit = async () => {
+		const route = "casa/pago";
+		setCargando(true);
+		const destinos = volquetes.map((item) => {
+			return {
+				hora: dayjs(item.hora).format("HH:mm"),
+				placa: item.placa || "",
+				propietario: item.propietario || "",
+				trapiche: item.trapiche || "",
+				volquetes: 1,
+				teletrans: 4,
+			};
+		});
 
-	//   console.log(initialValues);
-	//   e.preventDefault();
+		const dataSave = {
+			pago_id: data?.asociacion[0]?.pago_id,
+			volquetes: volquetes.length,
+			destino: destinos,
+		};
 
-	// if (data.asociacion !== null) {
-	//   createData(initialValues, route2).then((res) => {
-	//     if (res.status) {
-	//       alertaExito(res.msg, res.status).then((res) => {
-	//         closeModal();
-	//         if (res.isConfirmed) {
-	//           actualizarTabla();
-	//         }
-	//       });
-	//     }
-	//   });
-	// } else {
-	//   createData(initialValues, route).then((res) => {
-	//     if (res.status) {
-	//       alertaExito(res.msg, res.status).then((res) => {
-	//         closeModal();
-	//         if (res.isConfirmed) {
-	//           // actualizarTabla();
-	//         }
-	//       });
-	//     }
-	//   });
-	// }
-	// };
+		const response = await createData(dataSave, route);
+		if (response) {
+			notificacion(response.status, response.msg);
+			actualizarTabla();
+			closeModal();
+		}
+	};
+
+	const dataConductores = conductores.map((item) => {
+		return {
+			value: item.propietario,
+			label: item.propietario,
+		};
+	});
+
+	const dataTrapiches = trapiches.map((item) => {
+		return {
+			value: item.nombre,
+			label: item.nombre,
+		};
+	});
+
 	return (
 		<MainModal
 			className={"modal-pago"}
@@ -187,7 +167,7 @@ const ModalPago = ({ open, closeModal, data = {} }) => {
 				</Row>
 			</Card>
 			<Card style={{ width: "100%" }}>
-				{data?.trabajadores?.map((item, i) => {
+				{data?.asociacion?.map((item, i) => {
 					return (
 						<Fragment key={i}>
 							<Row justify="space-between">
@@ -228,158 +208,131 @@ const ModalPago = ({ open, closeModal, data = {} }) => {
 									</Space>
 								</Col>
 							</Row>
-							{data?.trabajadores?.length !== i + 1 && (
-								<Divider />
-							)}
+							{data?.asociacion?.length !== i + 1 && <Divider />}
 						</Fragment>
 					);
 				})}
 			</Card>
 			<Divider orientation="left">Vehículo/s</Divider>
-			<Form>
+			<Form
+				form={form}
+				layout="vertical"
+				name="form_in_modal"
+				onFinish={handleSubmit}
+			>
 				{volquetes.map((item, i) => (
 					<Badge.Ribbon key={i} text={`Vehículo ${i + 1}`}>
 						<Card style={{ width: "100%" }}>
 							<Form.Item
-								label="Conductor"
-								name={["conductor", i]}
+								name={`conductor${i}`}
+								label="Propietario"
 								rules={[
 									{
 										required: true,
-										message:
-											"Ingrese el nombre del conductor",
+										message: "Ingrese el propietario",
 									},
 								]}
 							>
 								<Select
 									showSearch
-									placeholder="Conductores"
+									placeholder="Propietario"
 									style={{
 										width: "100%",
 									}}
-									name="nombre"
-									onChange={(e) => {}}
-									value={""}
+									onChange={(e) => {
+										const propietario = conductores.find(
+											(item) => item.propietario === e
+										);
+										handleData(
+											item.index,
+											propietario.placa,
+											"placa"
+										);
+										handleData(
+											item.index,
+											propietario.propietario,
+											"propietario"
+										);
+									}}
+									value={item.propietario}
 									filterOption={(input, option) =>
 										(option?.label ?? "")
 											.toLowerCase()
 											.includes(input.toLowerCase())
 									}
-									options={conductores.map((item) => ({
-										label: item.placa,
-										value: item.propietario,
-									}))}
+									options={dataConductores}
 								/>
+							</Form.Item>
+							<Form.Item label="Placa">
+								<Input
+									placeholder="Placa"
+									value={item.placa}
+									readOnly
+								/>
+							</Form.Item>
+							<Form.Item
+								name={`trapiche${i}`}
+								label="Trapiche"
+								rules={[
+									{
+										required: true,
+										message: "Ingrese el trapiche",
+									},
+								]}
+							>
+								<Select
+									showSearch
+									placeholder="Trapiche"
+									style={{
+										width: "100%",
+									}}
+									name="trapiche"
+									onChange={(e) => {
+										const trapiche = trapiches.find(
+											(item) => item.nombre === e
+										);
+										handleData(
+											item.index,
+											trapiche.nombre,
+											"trapiche"
+										);
+									}}
+									value={item.trapiche}
+									filterOption={(input, option) =>
+										(option?.label ?? "")
+											.toLowerCase()
+											.includes(input.toLowerCase())
+									}
+									options={dataTrapiches}
+								/>
+							</Form.Item>
+							<Form.Item name={`hora${i}`} label="Hora">
+								<ConfigProvider locale={locale}>
+									<TimePicker
+										name="hora"
+										allowClear={false}
+										format="HH:mm"
+										style={{ width: "100%" }}
+										onChange={(e) => {
+											handleData(item.index, e, "hora");
+										}}
+										value={dayjs(item.hora)}
+									/>
+								</ConfigProvider>
 							</Form.Item>
 						</Card>
 					</Badge.Ribbon>
 				))}
+				<Form.Item className="button-container">
+					<Button
+						htmlType="submit"
+						icon={<AiOutlineForm />}
+						loading={cargando}
+					>
+						Realizar Pago
+					</Button>
+				</Form.Item>
 			</Form>
-
-			{/* <section className="cabecera">
-				<div>
-					<label htmlFor="">
-						<strong>Nombre:</strong> {data && data?.nombre}
-					</label>
-				</div>
-
-				<div>
-					<label htmlFor="">
-						<strong>Dni:</strong> {data && data?.dni}
-					</label>
-				</div>
-				<div>
-					<label htmlFor="">
-						<strong>Teléfono:</strong> {data && data?.celular}
-					</label>
-				</div>
-				<div>
-					<label htmlFor="">
-						<strong>Cargo:</strong> {data && data?.cargo}
-					</label>
-				</div>
-			</section> */}
-			{/* <section className="button-container">
-        {data && data?.asociacion !== null ? (
-          <button
-            onClick={addFields}
-            style={{
-              border: "1px solid grey",
-              width: "120px",
-              height: "30px",
-              backgroundColor: "white",
-              borderRadius: "6px",
-            }}
-          >
-            Añadir
-          </button>
-        ) : (
-          ""
-        )}
-      </section> */}
-			{/* <form className="form" onSubmit={handleSubmit}>
-        {initialValues.map((input, i) => {
-          return (
-            <>
-              <div>
-                <label htmlFor="">Hora</label>
-                <Input
-                  name="hora"
-                  type="time"
-                  onChange={(e) => handleChange(e, i)}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="">Placa</label>
-                <Input
-                  name="placa"
-                  type="text"
-                  onChange={(e) => handleChange(e, i)}
-                />
-              </div>
-              <div>
-                <label htmlFor="">Propietario</label>
-                <Input
-                  name="propietario"
-                  type="text"
-                  onChange={(e) => handleChange(e, i)}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="">Trapiche</label>
-                <Input
-                  name="trapiche"
-                  type="text"
-                  onChange={(e) => handleChange(e, i)}
-                />
-              </div>
-              <div>
-                <label htmlFor="">Teletrans</label>
-                <Input
-                  name="teletrans"
-                  type="number"
-                  disabled
-                  value={data.pago.split(" ")[0]}
-                  onChange={(e) => handleChange(e, i)}
-                />
-              </div>
-              <div>
-                <label htmlFor="">Tipo de pago</label>
-                <Select
-                  name="lugar"
-                  type="text"
-                  onChange={(e) => handleChange(e, i)}
-                />
-              </div>
-            </>
-          );
-        })}
-      </form> */}
-			<div className="button-container">
-				<Button>Guardar</Button>
-			</div>
 		</MainModal>
 	);
 };

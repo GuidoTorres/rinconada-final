@@ -15,7 +15,7 @@ const TablaPagosDiarios = ({ columns, table, filas }) => {
 
 	const data = table.map((item) => {
 		let disabled = false;
-		if (item.trabajadores.length < 2) {
+		if (item?.asociacion?.length < 2) {
 			disabled = true;
 		}
 
@@ -41,7 +41,7 @@ const TablaPagosDiarios = ({ columns, table, filas }) => {
 					item.key !== "observacion" &&
 					item.key !== "Acciones"
 			)}
-			dataSource={data.trabajadores.map((item, index) => {
+			dataSource={data.asociacion.map((item, index) => {
 				return {
 					Nro: index + 1,
 					nombre: item.nombre,

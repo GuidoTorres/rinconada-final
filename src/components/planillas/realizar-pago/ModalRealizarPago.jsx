@@ -6,11 +6,7 @@ import MainModal from "../../modal/MainModal";
 import TablaPagosDiarios from "../../tabla/TablaPagosDiarios";
 import ModalPago from "../realizar-pago/ModalPago";
 
-const ModalRealizarPago = ({ fecha, data }) => {
-	console.log(
-		"🚀 ~ file: ModalRealizarPago.jsx:10 ~ ModalRealizarPago ~ data:",
-		data
-	);
+const ModalRealizarPago = ({ fecha, data, actualizarTabla }) => {
 	const { modal, setModal, deleteData } = useContext(CrudContext);
 	const closeModal = () => {
 		setModal(false);
@@ -56,6 +52,7 @@ const ModalRealizarPago = ({ fecha, data }) => {
 					open={modalPagar}
 					closeModal={handleCloseModalPagar}
 					data={dataPago}
+					actualizarTabla={actualizarTabla}
 				/>
 			)}
 		</>

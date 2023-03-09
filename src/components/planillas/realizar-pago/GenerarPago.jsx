@@ -21,7 +21,6 @@ const GenerarPago = () => {
 	};
 
 	const onSelect = async (e) => {
-		console.log("click");
 		const fecha = dayjs(e).format("YYYY-MM-DD");
 		setFechaPago(fecha);
 

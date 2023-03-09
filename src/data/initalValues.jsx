@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const usuarioValues = {
 	nombre: "",
 	usuario: "",
@@ -287,5 +289,17 @@ export const pagoExtraordinarioValues = () => {
 		fecha_pago: new Date(),
 		teletrans: "",
 		tipo: "ayuda",
+	};
+};
+
+export const pagoValues = () => {
+	return {
+		id: "",
+		hora: new Date(),
+		placa: "",
+		propietario: "",
+		trapiche: "",
+		volquetes: "",
+		teletrans: "",
 	};
 };
