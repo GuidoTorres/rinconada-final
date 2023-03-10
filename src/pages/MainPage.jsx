@@ -47,6 +47,7 @@ import GenerarPago from "../components/planillas/realizar-pago/GenerarPago";
 import Incentivos from "../components/planillas/incentivos/Incentivos";
 import Casa from "../components/planillas/casa/Casa";
 import HistorialPagos from "../components/planillas/historial-pago/HistorialPagos";
+import VisualizadorPdf from "../components/planillas/realizar-pago/VisualizadorPdf";
 // const AdministracionLayout = lazy(() => import("../components/administracion/AdministracionLayout"))
 // const CampamentoLayout = lazy(() => import("../components/administracion/campamentos/CampamentoLayout"))
 // const RolLayout = lazy(() => import("../components/administracion/roles/RolLayout"))
@@ -299,6 +300,10 @@ const MainPage = () => {
 									<Route
 										path="pagos/historial"
 										element={<HistorialPagos />}
+									/>
+									<Route
+										path="pagos/imprimir"
+										element={<VisualizadorPdf />}
 									/>
 								</Route>
 								<Route path="finanzas">

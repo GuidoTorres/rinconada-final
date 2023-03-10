@@ -53,6 +53,7 @@ const ModalRealizarPago = ({ fecha, data, actualizarTabla }) => {
 					closeModal={handleCloseModalPagar}
 					data={dataPago}
 					actualizarTabla={actualizarTabla}
+					closeModalTablaPagos={closeModal}
 				/>
 			)}
 		</>

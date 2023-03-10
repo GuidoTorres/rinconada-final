@@ -80,7 +80,7 @@ const GenerarPago = () => {
 				<Calendar
 					fullscreen={true}
 					onSelect={onSelect}
-					dateCellRender={dataCellRender}
+					// dateCellRender={dataCellRender}
 				/>
 			</div>
 			{modal && (

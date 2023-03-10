@@ -22,10 +22,16 @@ import { BsCalendar2Check } from "react-icons/bs";
 import { CrudContext } from "../../../context/CrudContext";
 import { pagoValues } from "../../../data/initalValues";
 import { notificacion } from "../../../helpers/mensajes";
+import VisualizadorPdf from "./VisualizadorPdf";
 import MainModal from "../../modal/MainModal";
-import VisualizadorPdf from "../../modal/VisualizadorPdf";
 import "../style/modalPagos.css";
-const ModalPago = ({ open, closeModal, data = {}, actualizarTabla }) => {
+const ModalPago = ({
+	open,
+	closeModal,
+	data = {},
+	actualizarTabla,
+	closeModalTablaPagos,
+}) => {
 	const { Text } = Typography;
 	const [form] = Form.useForm();
 
@@ -110,6 +116,8 @@ const ModalPago = ({ open, closeModal, data = {}, actualizarTabla }) => {
 			notificacion(response.status, response.msg);
 			actualizarTabla();
 			closeModal();
+			closeModalTablaPagos();
+			handleImprimir();
 		}
 	};
 
@@ -127,18 +135,8 @@ const ModalPago = ({ open, closeModal, data = {}, actualizarTabla }) => {
 		};
 	});
 
-	const [modalVisualizadorPdf, setModalVisualizadorPdf] = useState(false);
-
-	const handleOpenModalVisualizadorPdf = () => {
-		setModalVisualizadorPdf(true);
-	};
-
-	const handleCloseModalVisualizadorPdf = () => {
-		setModalVisualizadorPdf(false);
-	};
-
 	const handleImprimir = () => {
-		handleOpenModalVisualizadorPdf();
+		window.open("imprimir", "_blank");
 	};
 
 	return (
@@ -349,8 +347,7 @@ const ModalPago = ({ open, closeModal, data = {}, actualizarTabla }) => {
 					))}
 					<Form.Item className="button-container">
 						<Button type="primary" onClick={handleImprimir}>
-							{" "}
-							Imprimir
+							imprimir
 						</Button>
 						<Button
 							htmlType="submit"
@@ -362,13 +359,6 @@ const ModalPago = ({ open, closeModal, data = {}, actualizarTabla }) => {
 					</Form.Item>
 				</Form>
 			</MainModal>
-			{modalVisualizadorPdf && (
-				<VisualizadorPdf
-					open={modalVisualizadorPdf}
-					closeModal={handleCloseModalVisualizadorPdf}
-					data={volquetes}
-				/>
-			)}
 		</>
 	);
 };
