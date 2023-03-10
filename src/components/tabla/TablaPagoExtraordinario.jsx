@@ -15,6 +15,7 @@ const TablaPagoExtraordinario = ({ columns, table, filas }) => {
 			item.id === "observacion" ||
 			item.id === "pago_id" ||
 			item.id === "tipo" ||
+			item.id === "teletrans" ||
 			item.id === "volquetes" ||
 			item.id === "estado" ||
 			item.id === "Acciones"

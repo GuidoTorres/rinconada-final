@@ -1263,7 +1263,12 @@ export const extraordinarioLayout = (handleEdit, handleDelete) => {
 		{
 			id: "teletrans",
 			name: "Teletrans",
-			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			selector: (row) => row?.pago?.teletrans,
+		},
+		{
+			id: "volquetes",
+			name: "Volquetes",
+			selector: (row) => row?.pago?.volquetes,
 		},
 		{
 			id: "inicio",
