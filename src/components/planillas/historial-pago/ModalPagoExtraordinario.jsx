@@ -126,18 +126,34 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 		if (dataToEdit) {
 			setPagoAyuda({
 				...dataToEdit,
-				nombre: dataToEdit.nombre,
+				nombre: dataToEdit.trabajador.nombre,
 				teletrans: parseFloat(dataToEdit.teletrans),
-				observacion: dataToEdit.observacion,
-				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
+				volquetes: parseFloat(dataToEdit.pago.volquetes) || 0,
+				observacion: dataToEdit.pago.observacion,
+				fecha_pago: dayjs(dataToEdit.pago.fecha_pago).format(
+					"YYYY-MM-DD"
+				),
 			});
 			form.setFieldsValue({
 				...dataToEdit,
-				nombre: dataToEdit.nombre,
+				nombre: dataToEdit.trabajador.nombre,
 				teletrans: parseFloat(dataToEdit.teletrans),
-				observacion: dataToEdit.observacion,
-				fecha_pago: dayjs(dataToEdit.fecha_pago).format("YYYY-MM-DD"),
+				volquetes: parseFloat(dataToEdit.pago.volquetes) || 0,
+				observacion: dataToEdit.pago.observacion,
+				fecha_pago: dayjs(dataToEdit.pago.fecha_pago).format(
+					"YYYY-MM-DD"
+				),
 			});
+
+			const volquetes = dataToEdit.pago.destino_pagos.map((item) => {
+				return {
+					hora: item.destino.hora,
+					placa: item.destino.placa,
+					propietario: item.destino.propietario,
+					trapiche: item.destino.trapiche,
+				};
+			});
+			setVolquetes(volquetes);
 		} else {
 			setPagoAyuda(pagoExtraordinarioValues);
 		}
@@ -197,10 +213,6 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 			tipo: pagoAyuda.tipo || "extraordinario",
 			destino: destinos,
 		};
-		console.log(
-			"🚀 ~ file: ModalPagoExtraordinario.jsx:200 ~ handleSubmit ~ data:",
-			data
-		);
 
 		if (dataToEdit) {
 			const response = await updateData(data, dataToEdit.pago_id, "pago");
@@ -236,7 +248,11 @@ function ModalPagoExtraordinario({ actualizarTabla }) {
 		<>
 			<MainModal
 				className={"modal-usuario"}
-				title={dataToEdit ? "Editar incentivo" : "Registrar incentivo"}
+				title={
+					dataToEdit
+						? "Editar pago extraordinario"
+						: "Registrar pago extraordinario"
+				}
 				open={modal}
 				width={400}
 				closeModal={closeModal}

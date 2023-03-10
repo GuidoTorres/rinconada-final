@@ -6,7 +6,7 @@ import { extraordinarioLayout } from "../../../data/dataTable";
 import { notificacion } from "../../../helpers/mensajes";
 import ButtonAdd from "../../Button/ButtonAdd";
 import Cargando from "../../cargando/Cargando";
-import Tabla from "../../tabla/Tabla";
+import TablaPagoExtraordinario from "../../tabla/TablaPagoExtraordinario";
 import ModalPagoExtraordinario from "./ModalPagoExtraordinario";
 
 function PagoExtraordinario() {
@@ -59,7 +59,10 @@ function PagoExtraordinario() {
 				</Col>
 			</Row>
 			{pagosExtraordinarios.length > 0 ? (
-				<Tabla columns={columns} table={pagosExtraordinarios} />
+				<TablaPagoExtraordinario
+					columns={columns}
+					table={pagosExtraordinarios}
+				/>
 			) : (
 				<>
 					{cargando ? (

@@ -1204,7 +1204,119 @@ export const extraordinarioLayout = (handleEdit, handleDelete) => {
 			selector: (row, index) => index + 1,
 		},
 		{
-			id: "validar",
+			id: "fecha_pago",
+			name: "Fecha de Pago",
+			selector: (row) => row?.pago?.fecha_pago,
+			sortable: true,
+		},
+		{
+			id: "hora",
+			name: "Hora",
+			// selector: (row) => row?.destino[0]?.destino?.hora,
+			sortable: true,
+		},
+		{
+			id: "placa",
+			name: "Placa",
+			width: "150px",
+			button: true,
+			// selector: (row) => row?.destino[0]?.destino?.placa,
+		},
+		{
+			id: "propietario",
+			name: "Propietario del Volquete",
+			width: "200px",
+			button: true,
+			// selector: (row) => row?.destino[0]?.destino?.propietario,
+		},
+		{
+			id: "nombres",
+			name: "Nombres y Apellidos",
+			width: "200px",
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "cargo",
+			name: "Cargo",
+			width: "200px",
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "area",
+			name: "Área",
+		},
+		{
+			id: "tipo",
+			name: "Tipo",
+			selector: (row) => <Tag color="green">Extraordinario</Tag>,
+		},
+		{
+			id: "pago",
+			name: "Pago/Incentivo",
+			width: "200px",
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "trapiche",
+			name: "Trapiche",
+		},
+		{
+			id: "teletrans",
+			name: "Teletrans",
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "inicio",
+			name: "Inicio",
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "fin",
+			name: "Fin",
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "planta",
+			name: "Planta de Beneficio",
+			// selector: (row) => row?.destino[0]?.destino?.trapiche,
+		},
+		{
+			id: "pago_id",
+			name: "Código de Pago",
+			selector: (row) => row?.pago?.destino_pagos[0]?.pago_id,
+		},
+		// {
+		// 	id: "volquetes",
+		// 	name: "Volquetes",
+		// 	// selector: (row) => row?.volquete,
+		// },
+		{
+			id: "observacion",
+			name: "Observación",
+			selector: (row) => row?.pago?.observacion,
+		},
+		// {
+		// 	id: "estado",
+		// 	name: "Estado",
+		// selector: (row) =>
+		// 	row?.estado === "pagado" ? (
+		// 		<Tag
+		// 			icon={<BiCheckCircle style={{ marginRight: 5 }} />}
+		// 			color="success"
+		// 		>
+		// 			Pagado
+		// 		</Tag>
+		// 	) : (
+		// 		<Tag
+		// 			icon={<BsClockHistory style={{ marginRight: 5 }} />}
+		// 			color="default"
+		// 		>
+		// 			Pendiente
+		// 		</Tag>
+		// 	),
+		// },
+		{
+			id: "Acciones",
 			name: "",
 			width: "100px",
 			button: true,
@@ -1213,12 +1325,35 @@ export const extraordinarioLayout = (handleEdit, handleDelete) => {
 					<ButtonEdit onClick={() => handleEdit(e)} />
 					<ButtonDelete
 						onClick={() => handleDelete(e.pago?.id)}
-						title="Eliminar casa"
+						title="Eliminar pago extraordinario"
 					/>
 				</div>
 			),
 		},
 	];
+	// return [
+	// 	{
+	// 		id: "Nro",
+	// 		name: "Nro",
+	// 		width: "60px",
+	// 		selector: (row, index) => index + 1,
+	// 	},
+	// 	{
+	// 		id: "validar",
+	// 		name: "",
+	// 		width: "100px",
+	// 		button: true,
+	// 		cell: (e) => (
+	// 			<div style={{ display: "flex", gap: 3 }}>
+	// 				<ButtonEdit onClick={() => handleEdit(e)} />
+	// 				<ButtonDelete
+	// 					onClick={() => handleDelete(e.pago?.id)}
+	// 					title="Eliminar casa"
+	// 				/>
+	// 			</div>
+	// 		),
+	// 	},
+	// ];
 };
 
 export const historialLayout = (handleValidar, handleReprogramar) => {

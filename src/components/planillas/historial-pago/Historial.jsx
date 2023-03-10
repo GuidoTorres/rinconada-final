@@ -57,11 +57,9 @@ function Historial() {
 	const columns = historialLayout(handleValidar, handleReprogramar);
 
 	const options = [
-		{ value: "1", label: "Pago de casa" },
-		{ value: "2", label: "Pago de agua" },
-		{ value: "3", label: "Pago de luz" },
-		{ value: "4", label: "Pago de gas" },
-		{ value: "5", label: "Pago de internet" },
+		{ value: "1", label: "Pago tipo casa" },
+		{ value: "2", label: "Pago tipo incentivo" },
+		{ value: "3", label: "Pago tipo asociacion" },
 	];
 	return (
 		<div>
