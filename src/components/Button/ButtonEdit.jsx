@@ -1,16 +1,17 @@
 import { Button, Tooltip } from "antd";
-import { AiOutlineEdit } from "react-icons/ai";
+import { BsPencil } from "react-icons/bs";
 
 function ButtonEdit({ onClick }) {
 	return (
 		<Tooltip placement="top" title="Editar">
 			<Button
+				type="text"
 				style={{
 					display: "flex",
 					justifyContent: "center",
 					alignItems: "center",
 				}}
-				icon={<AiOutlineEdit style={{ fontSize: "20px" }} />}
+				icon={<BsPencil style={{ fontSize: "20px" }} />}
 				onClick={onClick}
 			/>
 		</Tooltip>

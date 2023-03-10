@@ -1,5 +1,5 @@
 import { Button, Popconfirm, Tooltip } from "antd";
-import { AiOutlineDelete } from "react-icons/ai";
+import { BsTrash } from "react-icons/bs";
 
 function ButtonDelete({ title, onClick }) {
 	return (
@@ -18,11 +18,11 @@ function ButtonDelete({ title, onClick }) {
 						justifyContent: "center",
 						alignItems: "center",
 					}}
-					danger
+					type="text"
 					icon={
-						<AiOutlineDelete
+						<BsTrash
 							style={{
-								color: "red",
+								// color: "red",
 								fontSize: "20px",
 							}}
 						/>

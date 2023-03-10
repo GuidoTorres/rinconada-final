@@ -6,6 +6,7 @@ import { historialLayout } from "../../../data/dataTable";
 import { notificacion } from "../../../helpers/mensajes";
 import Cargando from "../../cargando/Cargando";
 import TablaHistorial from "../../tabla/TablaHistorial";
+import { ModalReprogramar } from "./ModalReprogramar";
 
 function Historial() {
 	const { updateData, getData, cargando, setCargando } =
@@ -33,11 +34,24 @@ function Historial() {
 		const response = await updateData(e, e.destino[0].pago_id, route);
 		if (response) {
 			notificacion(response.status, response.msg);
+			getHistorial();
 		}
 	};
 
+	const [modalReprogramar, setModalReprogramar] = useState(false);
+	const [dataReprogramar, setDataReprogramar] = useState({});
+
+	const handleOpenModalReprogramar = () => {
+		setModalReprogramar(true);
+	};
+
+	const handleCloseModalReprogramar = () => {
+		setModalReprogramar(false);
+	};
+
 	const handleReprogramar = (e) => {
-		console.log("reprogramar", e);
+		setDataReprogramar(e);
+		handleOpenModalReprogramar();
 	};
 
 	const columns = historialLayout(handleValidar, handleReprogramar);
@@ -95,6 +109,14 @@ function Historial() {
 						/>
 					)}
 				</>
+			)}
+			{modalReprogramar && (
+				<ModalReprogramar
+					data={dataReprogramar}
+					open={modalReprogramar}
+					onClose={handleCloseModalReprogramar}
+					actualizarTabla={getHistorial}
+				/>
 			)}
 		</div>
 	);

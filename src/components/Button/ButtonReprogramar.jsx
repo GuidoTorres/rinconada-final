@@ -1,8 +1,8 @@
 import { Button } from "antd";
 
-function ButtonReprogramar({ onClick }) {
+function ButtonReprogramar({ onClick, disabled }) {
 	return (
-		<Button type="primary" onClick={onClick}>
+		<Button type="primary" onClick={onClick} disabled={disabled}>
 			Reprogramar
 		</Button>
 	);

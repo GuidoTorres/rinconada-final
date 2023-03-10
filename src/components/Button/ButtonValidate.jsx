@@ -4,7 +4,7 @@ import { BsCheckLg } from "react-icons/bs";
 function ButtonValidate({ onClick }) {
 	return (
 		<Tooltip title="Validar">
-			<Button onClick={onClick}>
+			<Button type="text" onClick={onClick}>
 				<BsCheckLg />
 			</Button>
 		</Tooltip>

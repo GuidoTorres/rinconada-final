@@ -1365,7 +1365,10 @@ export const historialLayout = (handleValidar, handleReprogramar) => {
 					}}
 				>
 					<ButtonValidate onClick={() => handleValidar(e)} />
-					<ButtonReprogramar onClick={() => handleReprogramar(e)} />
+					<ButtonReprogramar
+						onClick={() => handleReprogramar(e)}
+						disabled={e.estado === "pagado"}
+					/>
 				</div>
 			),
 		},
@@ -1755,7 +1758,6 @@ export const tablePagosFecha = (handlePagar, handleDelete) => {
 			id: "observacion",
 			name: "Observación",
 			selector: (row) => row?.observacion,
-			sortable: true,
 		},
 
 		// {
