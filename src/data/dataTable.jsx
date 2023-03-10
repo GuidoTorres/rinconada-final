@@ -4,6 +4,7 @@ import {
 	BsQuestionCircle,
 	BsKey,
 	BsCheck,
+	BsClockHistory,
 } from "react-icons/bs";
 import {
 	AiFillEye,
@@ -11,7 +12,7 @@ import {
 	AiOutlineClose,
 	AiFillFileExcel,
 } from "react-icons/ai";
-import { BiUndo } from "react-icons/bi";
+import { BiCheckCircle, BiUndo } from "react-icons/bi";
 import { HiDownload } from "react-icons/hi";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Popconfirm, Tag, Checkbox, Input, Alert } from "antd";
@@ -19,6 +20,8 @@ import Requerimiento from "../helpers/Requerimiento";
 import ButtonEdit from "../components/Button/ButtonEdit";
 import ButtonDelete from "../components/Button/ButtonDelete";
 import ButtonPagar from "../components/Button/ButtonPagar";
+import ButtonValidate from "../components/Button/ButtonValidate";
+import ButtonReprogramar from "../components/Button/ButtonReprogramar";
 
 //modulo administracion
 export const usuario = (handleEdit, handleDelete) => {
@@ -1218,7 +1221,7 @@ export const extraordinarioLayout = (handleEdit, handleDelete) => {
 	];
 };
 
-export const historialLayout = () => {
+export const historialLayout = (handleValidar, handleReprogramar) => {
 	return [
 		{
 			id: "Nro",
@@ -1229,13 +1232,13 @@ export const historialLayout = () => {
 		{
 			id: "fecha_pago",
 			name: "Fecha de Pago",
-			selector: (row) => row?.razon_social,
+			selector: (row) => row?.fecha_pago,
 			sortable: true,
 		},
 		{
 			id: "hora",
 			name: "Hora",
-			selector: (row) => row?.ruc,
+			// selector: (row) => row?.destino[0]?.destino?.hora,
 			sortable: true,
 		},
 		{
@@ -1243,74 +1246,128 @@ export const historialLayout = () => {
 			name: "Placa",
 			width: "150px",
 			button: true,
-			selector: (row) => row?.contrato_pago?.teletrans,
+			// selector: (row) => row?.destino[0]?.destino?.placa,
 		},
 		{
 			id: "propietario",
 			name: "Propietario del Volquete",
 			width: "200px",
 			button: true,
-			selector: (row) => row?.contrato_pago?.pago?.observacion,
-		},
-		{
-			id: "codigo_tareaje",
-			name: "Código de Tareaje",
-			width: "140px",
-			button: true,
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			// selector: (row) => row?.destino[0]?.destino?.propietario,
 		},
 		{
 			id: "nombres",
 			name: "Nombres y Apellidos",
 			width: "200px",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
 		},
 		{
 			id: "cargo",
 			name: "Cargo",
 			width: "200px",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+		},
+		{
+			id: "area",
+			name: "Área",
+		},
+		{
+			id: "tipo",
+			name: "Tipo",
+			selector: (row) =>
+				row?.tipo === "casa" ? (
+					<Tag color="green">Casa</Tag>
+				) : row?.tipo === "incentivo" ? (
+					<Tag color="gold">Incentivo</Tag>
+				) : row?.tipo === "asociacion" ? (
+					<Tag color="purple">Asociación</Tag>
+				) : (
+					""
+				),
 		},
 		{
 			id: "pago",
 			name: "Pago/Incentivo",
 			width: "200px",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
 		},
 		{
-			id: "volquetes",
-			name: "Volquetes",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			id: "trapiche",
+			name: "Trapiche",
 		},
 		{
 			id: "teletrans",
 			name: "Teletrans",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
 		},
 		{
 			id: "inicio",
 			name: "Inicio",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
 		},
 		{
 			id: "fin",
 			name: "Fin",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			// selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
 		},
 		{
 			id: "planta",
 			name: "Planta de Beneficio",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			// selector: (row) => row?.destino[0]?.destino?.trapiche,
 		},
 		{
-			id: "codigo_pago",
+			id: "pago_id",
 			name: "Código de Pago",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			selector: (row) => row?.destino[0]?.pago_id,
+		},
+		{
+			id: "volquetes",
+			name: "Volquetes",
+			selector: (row) => row?.volquete,
 		},
 		{
 			id: "observacion",
 			name: "Observación",
-			selector: (row) => row?.contrato_pago?.pago?.fecha_pago,
+			selector: (row) => row?.observacion,
+		},
+		{
+			id: "estado",
+			name: "Estado",
+			selector: (row) =>
+				row?.estado === "pagado" ? (
+					<Tag
+						icon={<BiCheckCircle style={{ marginRight: 5 }} />}
+						color="success"
+					>
+						Pagado
+					</Tag>
+				) : (
+					<Tag
+						icon={<BsClockHistory style={{ marginRight: 5 }} />}
+						color="default"
+					>
+						Pendiente
+					</Tag>
+				),
+		},
+		{
+			id: "Acciones",
+			name: "",
+			width: "200px",
+			button: true,
+			cell: (e) => (
+				<div
+					style={{
+						display: "flex",
+						gap: 15,
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				>
+					<ButtonValidate onClick={() => handleValidar(e)} />
+					<ButtonReprogramar onClick={() => handleReprogramar(e)} />
+				</div>
+			),
 		},
 	];
 };

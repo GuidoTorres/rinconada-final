@@ -3,17 +3,15 @@ import Search from "antd/es/input/Search";
 import { useContext, useEffect, useState } from "react";
 import { CrudContext } from "../../../context/CrudContext";
 import { historialLayout } from "../../../data/dataTable";
+import { notificacion } from "../../../helpers/mensajes";
 import Cargando from "../../cargando/Cargando";
-import Tabla from "../../tabla/Tabla";
+import TablaHistorial from "../../tabla/TablaHistorial";
 
 function Historial() {
-	const { getData, cargando, setCargando } = useContext(CrudContext);
+	const { updateData, getData, cargando, setCargando } =
+		useContext(CrudContext);
 
 	const [historial, setHistorial] = useState([]);
-	console.log(
-		"🚀 ~ file: Historial.jsx:13 ~ Historial ~ historial:",
-		historial
-	);
 
 	const getHistorial = async () => {
 		setCargando(true);
@@ -30,7 +28,19 @@ function Historial() {
 		getHistorial();
 	}, []);
 
-	const columns = historialLayout();
+	const handleValidar = async (e) => {
+		const route = "pago/validacion";
+		const response = await updateData(e, e.destino[0].pago_id, route);
+		if (response) {
+			notificacion(response.status, response.msg);
+		}
+	};
+
+	const handleReprogramar = (e) => {
+		console.log("reprogramar", e);
+	};
+
+	const columns = historialLayout(handleValidar, handleReprogramar);
 
 	const options = [
 		{ value: "1", label: "Pago de casa" },
@@ -71,7 +81,7 @@ function Historial() {
 				</Col>
 			</Row>
 			{historial?.length > 0 ? (
-				<Tabla columns={columns} table={historial} />
+				<TablaHistorial columns={columns} table={historial} />
 			) : (
 				<>
 					{cargando ? (
