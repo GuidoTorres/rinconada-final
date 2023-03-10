@@ -117,7 +117,7 @@ const ModalPago = ({
 			actualizarTabla();
 			closeModal();
 			closeModalTablaPagos();
-			handleImprimir();
+			// handleImprimir();
 		}
 	};
 
@@ -346,9 +346,9 @@ const ModalPago = ({
 						</Badge.Ribbon>
 					))}
 					<Form.Item className="button-container">
-						<Button type="primary" onClick={handleImprimir}>
+						{/* <Button type="primary" onClick={handleImprimir}>
 							imprimir
-						</Button>
+						</Button> */}
 						<Button
 							htmlType="submit"
 							icon={<AiOutlineForm />}

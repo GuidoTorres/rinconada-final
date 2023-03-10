@@ -10,7 +10,6 @@ import Header from "../../header/Header";
 import Tabla from "../../tabla/Tabla";
 import BuscadorControlPlanilla from "../BuscadorControlPlanilla";
 import ModalJuntarTeletrans from "../control/ModalJuntarTeletrans";
-import ModalPagoAsociacion from "./ModalPagoAsociacion";
 import ModalPagosIndividual from "./ModalPagosIndividual";
 
 const PagosLayout = () => {
@@ -103,7 +102,7 @@ const PagosLayout = () => {
 				<Row align="middle">
 					<Col span={12}></Col>
 					<Col span={12} align="end">
-						<ButtonAdd
+						{/* <ButtonAdd
 							title="Crear Pago Individual"
 							onClick={handleOpenModalIndivudual}
 							icon={<AiOutlineForm />}
@@ -112,7 +111,7 @@ const PagosLayout = () => {
 							title="Crear Pago Asociación"
 							onClick={() => {}}
 							icon={<AiOutlineForm />}
-						/>
+						/> */}
 					</Col>
 				</Row>
 				{pagos?.length > 0 ? (
@@ -130,13 +129,6 @@ const PagosLayout = () => {
 				<ModalPagosIndividual
 					open={openModalIndivudual}
 					closeModal={handleCloseModalIndivudual}
-					actualizarTabla={getPagos}
-				/>
-			)}
-			{openModalAsociacion && (
-				<ModalPagoAsociacion
-					open={openModalAsociacion}
-					closeModal={handleCloseModalAsociacion}
 					actualizarTabla={getPagos}
 				/>
 			)}
