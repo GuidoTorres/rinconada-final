@@ -1,18 +1,41 @@
-import { Empty } from "antd";
+import { Col, Empty, Row } from "antd";
 import React, { useContext, useEffect, useState } from "react";
+import { AiOutlineForm } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
 import { PlanillaContext } from "../../../context/PlanillaContext";
 import { pagosLayout } from "../../../data/dataTable";
 import { notificacion } from "../../../helpers/mensajes";
+import ButtonAdd from "../../Button/ButtonAdd";
 import Header from "../../header/Header";
 import Tabla from "../../tabla/Tabla";
 import BuscadorControlPlanilla from "../BuscadorControlPlanilla";
 import ModalJuntarTeletrans from "../control/ModalJuntarTeletrans";
+import ModalPagoAsociacion from "./ModalPagoAsociacion";
+import ModalPagosIndividual from "./ModalPagosIndividual";
 
 const PagosLayout = () => {
 	const { getData, createData } = useContext(CrudContext);
-	const { juntarTeletrans, setJuntarTeletrans } = useContext(PlanillaContext);
+	// const { juntarTeletrans, setJuntarTeletrans } = useContext(PlanillaContext);
 	const [pagos, setPagos] = useState([]);
+
+	const [openModalIndivudual, setOpenModalIndivudual] = useState(false);
+
+	const handleOpenModalIndivudual = () => {
+		setOpenModalIndivudual(true);
+	};
+	const handleCloseModalIndivudual = () => {
+		setOpenModalIndivudual(false);
+	};
+
+	const [openModalAsociacion, setOpenModalAsociacion] = useState(false);
+
+	const handleOpenModalAsociacion = () => {
+		setOpenModalAsociacion(true);
+	};
+	const handleCloseModalAsociacion = () => {
+		setOpenModalAsociacion(false);
+	};
+
 	const [dataPagos, setDataPagos] = useState({
 		observacion: "",
 		fecha_pago: "",
@@ -23,7 +46,7 @@ const PagosLayout = () => {
 
 	console.log(pagos);
 
-	const getPAgos = async () => {
+	const getPagos = async () => {
 		const response = await getData("planilla/pagos");
 
 		if (response) {
@@ -33,7 +56,7 @@ const PagosLayout = () => {
 	};
 
 	useEffect(() => {
-		getPAgos();
+		getPagos();
 	}, []);
 
 	const handleData = (event, e, i) => {
@@ -67,23 +90,31 @@ const PagosLayout = () => {
 
 		if (response) {
 			notificacion(response.status, response.msg);
-			getPAgos();
+			getPagos();
 		}
 	};
 
 	const columns = pagosLayout(handleData, postPagos);
 
 	return (
-		<div>
+		<>
 			<Header text={"Programación de pagos"} ruta={"/planilla"} />
 			<div className="margenes">
-				<BuscadorControlPlanilla
-					abrirModal={setJuntarTeletrans}
-					registrar={true}
-					crear={false}
-					exportar={false}
-					cargar={false}
-				/>
+				<Row align="middle">
+					<Col span={12}></Col>
+					<Col span={12} align="end">
+						<ButtonAdd
+							title="Crear Pago Individual"
+							onClick={handleOpenModalIndivudual}
+							icon={<AiOutlineForm />}
+						/>
+						<ButtonAdd
+							title="Crear Pago Asociación"
+							onClick={() => {}}
+							icon={<AiOutlineForm />}
+						/>
+					</Col>
+				</Row>
 				{pagos?.length > 0 ? (
 					<Tabla columns={columns} table={pagos} />
 				) : (
@@ -95,15 +126,21 @@ const PagosLayout = () => {
 					/>
 				)}
 			</div>
-
-			{juntarTeletrans && (
-				<ModalJuntarTeletrans
-					open={juntarTeletrans}
-					//   selected={tableData}
-					//   actualizarTabla={getTrabajadores}
+			{openModalIndivudual && (
+				<ModalPagosIndividual
+					open={openModalIndivudual}
+					closeModal={handleCloseModalIndivudual}
+					actualizarTabla={getPagos}
 				/>
 			)}
-		</div>
+			{openModalAsociacion && (
+				<ModalPagoAsociacion
+					open={openModalAsociacion}
+					closeModal={handleCloseModalAsociacion}
+					actualizarTabla={getPagos}
+				/>
+			)}
+		</>
 	);
 };
 

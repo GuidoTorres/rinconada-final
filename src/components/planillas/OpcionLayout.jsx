@@ -57,11 +57,6 @@ const OpcionLayout = () => {
 					path={"pagos/casa"}
 					img={<BsWallet2 className="icon" />}
 				/>
-				<MenuOpcion
-					text={"Asociaciones"}
-					path={"pagos/incentivos"}
-					img={<BsWallet2 className="icon" />}
-				/>
 			</div>
 		</div>
 	);
