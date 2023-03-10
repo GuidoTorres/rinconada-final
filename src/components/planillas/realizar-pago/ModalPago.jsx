@@ -23,6 +23,7 @@ import { CrudContext } from "../../../context/CrudContext";
 import { pagoValues } from "../../../data/initalValues";
 import { notificacion } from "../../../helpers/mensajes";
 import MainModal from "../../modal/MainModal";
+import VisualizadorPdf from "../../modal/VisualizadorPdf";
 import "../style/modalPagos.css";
 const ModalPago = ({ open, closeModal, data = {}, actualizarTabla }) => {
 	const { Text } = Typography;
@@ -126,214 +127,249 @@ const ModalPago = ({ open, closeModal, data = {}, actualizarTabla }) => {
 		};
 	});
 
+	const [modalVisualizadorPdf, setModalVisualizadorPdf] = useState(false);
+
+	const handleOpenModalVisualizadorPdf = () => {
+		setModalVisualizadorPdf(true);
+	};
+
+	const handleCloseModalVisualizadorPdf = () => {
+		setModalVisualizadorPdf(false);
+	};
+
+	const handleImprimir = () => {
+		handleOpenModalVisualizadorPdf();
+	};
+
 	return (
-		<MainModal
-			className={"modal-pago"}
-			title={"Generar pago"}
-			open={open}
-			width={800}
-			closeModal={closeModal}
-		>
-			<Card
-				style={{
-					width: "100%",
-				}}
+		<>
+			<MainModal
+				className={"modal-pago"}
+				title={"Generar pago"}
+				open={open}
+				width={800}
+				closeModal={closeModal}
 			>
-				<Row justify="space-between">
-					<Col span={8}>
-						<Space direction="horizontal">
-							<BsCalendar2Check />
-							<Text>{data?.fecha_pago}</Text>
-						</Space>
-					</Col>
-					<Col span={8}>
-						<Space direction="horizontal">
-							<Text>Tipo:</Text>
-							{data?.tipo === "casa" ? (
-								<Tag color="green">Casa</Tag>
-							) : data?.tipo === "incentivo" ? (
-								<Tag color="gold">Incentivo</Tag>
-							) : data?.tipo === "asociacion" ? (
-								<Tag color="purple">Asociación</Tag>
-							) : (
-								""
-							)}
-						</Space>
-					</Col>
-					<Col span={24}>
-						<Text strong>Observación: </Text>
-						<Text>{data?.observacion}</Text>
-					</Col>
-				</Row>
-			</Card>
-			<Card style={{ width: "100%" }}>
-				{data?.asociacion?.map((item, i) => {
-					return (
-						<Fragment key={i}>
-							<Row justify="space-between">
-								<Col span={12}>
-									<Space direction="horizontal">
-										<Text strong>Nombre:</Text>
-										<Text>{item?.nombre}</Text>
-									</Space>
-								</Col>
-								<Col span={12}>
-									<Space direction="horizontal">
-										<Text strong>Dni:</Text>
-										<Text>{item?.dni}</Text>
-									</Space>
-								</Col>
-								<Col span={12}>
-									<Space direction="horizontal">
-										<Text strong>Celular:</Text>
-										<Text>{item?.celular}</Text>
-									</Space>
-								</Col>
-								<Col span={12}>
-									<Space direction="horizontal">
-										<Text strong>Cargo:</Text>
-										<Text>{item?.cargo}</Text>
-									</Space>
-								</Col>
-								<Col span={12}>
-									<Space direction="horizontal">
-										<Text strong>Area:</Text>
-										<Text>{item?.area}</Text>
-									</Space>
-								</Col>
-								<Col span={12}>
-									<Space direction="horizontal">
-										<Text strong>Pago:</Text>
-										<Text>{item?.teletrans}</Text>
-									</Space>
-								</Col>
-							</Row>
-							{data?.asociacion?.length !== i + 1 && <Divider />}
-						</Fragment>
-					);
-				})}
-			</Card>
-			<Divider orientation="left">Vehículo/s</Divider>
-			<Form
-				form={form}
-				layout="vertical"
-				name="form_in_modal"
-				onFinish={handleSubmit}
-			>
-				{volquetes.map((item, i) => (
-					<Badge.Ribbon key={i} text={`Vehículo ${i + 1}`}>
-						<Card style={{ width: "100%" }}>
-							<Form.Item
-								name={`conductor${i}`}
-								label="Propietario"
-								rules={[
-									{
-										required: true,
-										message: "Ingrese el propietario",
-									},
-								]}
-							>
-								<Select
-									showSearch
-									placeholder="Propietario"
-									style={{
-										width: "100%",
-									}}
-									onChange={(e) => {
-										const propietario = conductores.find(
-											(item) => item.propietario === e
-										);
-										handleData(
-											item.index,
-											propietario.placa,
-											"placa"
-										);
-										handleData(
-											item.index,
-											propietario.propietario,
-											"propietario"
-										);
-									}}
-									value={item.propietario}
-									filterOption={(input, option) =>
-										(option?.label ?? "")
-											.toLowerCase()
-											.includes(input.toLowerCase())
-									}
-									options={dataConductores}
-								/>
-							</Form.Item>
-							<Form.Item label="Placa">
-								<Input
-									placeholder="Placa"
-									value={item.placa}
-									readOnly
-								/>
-							</Form.Item>
-							<Form.Item
-								name={`trapiche${i}`}
-								label="Trapiche"
-								rules={[
-									{
-										required: true,
-										message: "Ingrese el trapiche",
-									},
-								]}
-							>
-								<Select
-									showSearch
-									placeholder="Trapiche"
-									style={{
-										width: "100%",
-									}}
-									name="trapiche"
-									onChange={(e) => {
-										const trapiche = trapiches.find(
-											(item) => item.nombre === e
-										);
-										handleData(
-											item.index,
-											trapiche.nombre,
-											"trapiche"
-										);
-									}}
-									value={item.trapiche}
-									filterOption={(input, option) =>
-										(option?.label ?? "")
-											.toLowerCase()
-											.includes(input.toLowerCase())
-									}
-									options={dataTrapiches}
-								/>
-							</Form.Item>
-							<Form.Item name={`hora${i}`} label="Hora">
-								<ConfigProvider locale={locale}>
-									<TimePicker
-										name="hora"
-										allowClear={false}
-										format="HH:mm"
-										style={{ width: "100%" }}
-										onChange={(e) => {
-											handleData(item.index, e, "hora");
+				<Card
+					style={{
+						width: "100%",
+					}}
+				>
+					<Row justify="space-between">
+						<Col span={8}>
+							<Space direction="horizontal">
+								<BsCalendar2Check />
+								<Text>{data?.fecha_pago}</Text>
+							</Space>
+						</Col>
+						<Col span={8}>
+							<Space direction="horizontal">
+								<Text>Tipo:</Text>
+								{data?.tipo === "casa" ? (
+									<Tag color="green">Casa</Tag>
+								) : data?.tipo === "incentivo" ? (
+									<Tag color="gold">Incentivo</Tag>
+								) : data?.tipo === "asociacion" ? (
+									<Tag color="purple">Asociación</Tag>
+								) : (
+									""
+								)}
+							</Space>
+						</Col>
+						<Col span={24}>
+							<Text strong>Observación: </Text>
+							<Text>{data?.observacion}</Text>
+						</Col>
+					</Row>
+				</Card>
+				<Card style={{ width: "100%" }}>
+					{data?.asociacion?.map((item, i) => {
+						return (
+							<Fragment key={i}>
+								<Row justify="space-between">
+									<Col span={12}>
+										<Space direction="horizontal">
+											<Text strong>Nombre:</Text>
+											<Text>{item?.nombre}</Text>
+										</Space>
+									</Col>
+									<Col span={12}>
+										<Space direction="horizontal">
+											<Text strong>Dni:</Text>
+											<Text>{item?.dni}</Text>
+										</Space>
+									</Col>
+									<Col span={12}>
+										<Space direction="horizontal">
+											<Text strong>Celular:</Text>
+											<Text>{item?.celular}</Text>
+										</Space>
+									</Col>
+									<Col span={12}>
+										<Space direction="horizontal">
+											<Text strong>Cargo:</Text>
+											<Text>{item?.cargo}</Text>
+										</Space>
+									</Col>
+									<Col span={12}>
+										<Space direction="horizontal">
+											<Text strong>Area:</Text>
+											<Text>{item?.area}</Text>
+										</Space>
+									</Col>
+									<Col span={12}>
+										<Space direction="horizontal">
+											<Text strong>Pago:</Text>
+											<Text>{item?.teletrans}</Text>
+										</Space>
+									</Col>
+								</Row>
+								{data?.asociacion?.length !== i + 1 && (
+									<Divider />
+								)}
+							</Fragment>
+						);
+					})}
+				</Card>
+				<Divider orientation="left">Vehículo/s</Divider>
+				<Form
+					form={form}
+					layout="vertical"
+					name="form_in_modal"
+					onFinish={handleSubmit}
+				>
+					{volquetes.map((item, i) => (
+						<Badge.Ribbon key={i} text={`Vehículo ${i + 1}`}>
+							<Card style={{ width: "100%" }}>
+								<Form.Item
+									name={`conductor${i}`}
+									label="Propietario"
+									rules={[
+										{
+											required: true,
+											message: "Ingrese el propietario",
+										},
+									]}
+								>
+									<Select
+										showSearch
+										placeholder="Propietario"
+										style={{
+											width: "100%",
 										}}
-										value={dayjs(item.hora)}
+										onChange={(e) => {
+											const propietario =
+												conductores.find(
+													(item) =>
+														item.propietario === e
+												);
+											handleData(
+												item.index,
+												propietario.placa,
+												"placa"
+											);
+											handleData(
+												item.index,
+												propietario.propietario,
+												"propietario"
+											);
+										}}
+										value={item.propietario}
+										filterOption={(input, option) =>
+											(option?.label ?? "")
+												.toLowerCase()
+												.includes(input.toLowerCase())
+										}
+										options={dataConductores}
 									/>
-								</ConfigProvider>
-							</Form.Item>
-						</Card>
-					</Badge.Ribbon>
-				))}
-				<Form.Item className="button-container">
-					<Button
-						htmlType="submit"
-						icon={<AiOutlineForm />}
-						loading={cargando}
-					>
-						Realizar Pago
-					</Button>
-				</Form.Item>
-			</Form>
-		</MainModal>
+								</Form.Item>
+								<Form.Item label="Placa">
+									<Input
+										placeholder="Placa"
+										value={item.placa}
+										readOnly
+									/>
+								</Form.Item>
+								<Form.Item
+									name={`trapiche${i}`}
+									label="Trapiche"
+									rules={[
+										{
+											required: true,
+											message: "Ingrese el trapiche",
+										},
+									]}
+								>
+									<Select
+										showSearch
+										placeholder="Trapiche"
+										style={{
+											width: "100%",
+										}}
+										name="trapiche"
+										onChange={(e) => {
+											const trapiche = trapiches.find(
+												(item) => item.nombre === e
+											);
+											handleData(
+												item.index,
+												trapiche.nombre,
+												"trapiche"
+											);
+										}}
+										value={item.trapiche}
+										filterOption={(input, option) =>
+											(option?.label ?? "")
+												.toLowerCase()
+												.includes(input.toLowerCase())
+										}
+										options={dataTrapiches}
+									/>
+								</Form.Item>
+								<Form.Item name={`hora${i}`} label="Hora">
+									<ConfigProvider locale={locale}>
+										<TimePicker
+											name="hora"
+											allowClear={false}
+											format="HH:mm"
+											style={{ width: "100%" }}
+											onChange={(e) => {
+												handleData(
+													item.index,
+													e,
+													"hora"
+												);
+											}}
+											value={dayjs(item.hora)}
+										/>
+									</ConfigProvider>
+								</Form.Item>
+							</Card>
+						</Badge.Ribbon>
+					))}
+					<Form.Item className="button-container">
+						<Button type="primary" onClick={handleImprimir}>
+							{" "}
+							Imprimir
+						</Button>
+						<Button
+							htmlType="submit"
+							icon={<AiOutlineForm />}
+							loading={cargando}
+						>
+							Realizar Pago
+						</Button>
+					</Form.Item>
+				</Form>
+			</MainModal>
+			{modalVisualizadorPdf && (
+				<VisualizadorPdf
+					open={modalVisualizadorPdf}
+					closeModal={handleCloseModalVisualizadorPdf}
+					data={volquetes}
+				/>
+			)}
+		</>
 	);
 };
 
