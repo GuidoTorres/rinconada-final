@@ -9,9 +9,9 @@ import TablaHistorial from "../../tabla/TablaHistorial";
 import { ModalReprogramar } from "./ModalReprogramar";
 
 function Historial() {
-	const { updateData, getData, cargando, setCargando } =
-		useContext(CrudContext);
+	const { updateData, getData } = useContext(CrudContext);
 
+	const [cargando, setCargando] = useState(false);
 	const [historial, setHistorial] = useState([]);
 
 	const getHistorial = async () => {

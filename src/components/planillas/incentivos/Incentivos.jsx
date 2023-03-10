@@ -12,16 +12,10 @@ import ModalIncentivo from "./ModalIncentivo";
 import ModalJuntarTeletrans from "./ModalJuntarTeletrans";
 
 const Incentivos = () => {
-	const {
-		getData,
-		dataToEdit,
-		setDataToEdit,
-		modal,
-		setModal,
-		cargando,
-		setCargando,
-		deleteData,
-	} = useContext(CrudContext);
+	const { getData, dataToEdit, setDataToEdit, modal, setModal, deleteData } =
+		useContext(CrudContext);
+
+	const [cargando, setCargando] = useState(false);
 
 	const [incentivos, setIncentivos] = useState([]);
 

@@ -27,6 +27,10 @@ export const ModalReprogramar = ({ data, open, onClose, actualizarTabla }) => {
 			estado: data.estado,
 			observacion: observacion,
 		};
+		console.log(
+			"🚀 ~ file: ModalReprogramar.jsx:30 ~ handleSubmit ~ dataReprogramacion:",
+			dataReprogramacion
+		);
 
 		const response = await createData(dataReprogramacion, route);
 		if (response) {

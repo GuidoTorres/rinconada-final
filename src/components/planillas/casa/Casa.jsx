@@ -11,15 +11,10 @@ import { casaLayout } from "../../../data/dataTable";
 import Tabla from "../../tabla/Tabla";
 
 function Casa() {
-	const {
-		getData,
-		setDataToEdit,
-		modal,
-		setModal,
-		cargando,
-		setCargando,
-		deleteData,
-	} = useContext(CrudContext);
+	const { getData, setDataToEdit, modal, setModal, deleteData } =
+		useContext(CrudContext);
+
+	const [cargando, setCargando] = useState(false);
 
 	const [pagosCasa, setPagosCasa] = useState([]);
 

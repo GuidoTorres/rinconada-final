@@ -10,16 +10,10 @@ import Tabla from "../../tabla/Tabla";
 import ModalPagoExtraordinario from "./ModalPagoExtraordinario";
 
 function PagoExtraordinario() {
-	const {
-		getData,
-		setDataToEdit,
-		modal,
-		setModal,
-		cargando,
-		setCargando,
-		deleteData,
-	} = useContext(CrudContext);
+	const { getData, setDataToEdit, modal, setModal, deleteData } =
+		useContext(CrudContext);
 
+	const [cargando, setCargando] = useState(false);
 	const [pagosExtraordinarios, setPagosExtraordinarios] = useState([]);
 
 	const getPagosExtraordinarios = async () => {
