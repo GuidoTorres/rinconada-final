@@ -2911,6 +2911,27 @@ export const modalPagoExtraordinario = (
 			),
 		},
 		{
+			label: <label>Volquetes </label>,
+			name: "volquetes",
+			rules: [
+				{
+					required: true,
+					message: "Campo obligatorio!",
+				},
+			],
+
+			type: (
+				<Input
+					value={pagoExtraordinario.volquetes}
+					type="number"
+					name="volquetes"
+					min={0}
+					placeholder="Volquetes"
+					onChange={handleData}
+				/>
+			),
+		},
+		{
 			label: <label>Observación</label>,
 			name: "observacion",
 			type: (

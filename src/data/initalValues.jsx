@@ -287,8 +287,13 @@ export const pagoExtraordinarioValues = () => {
 		trabajador_dni: "",
 		observacion: "",
 		fecha_pago: new Date(),
+		hora: new Date(),
+		placa: "",
+		propietario: "",
+		trapiche: "",
+		volquetes: "",
 		teletrans: "",
-		tipo: "ayuda",
+		tipo: "extraordinario",
 	};
 };
 
