@@ -1,11 +1,11 @@
 import React, { useContext, Suspense, lazy, useEffect } from "react";
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
-  Navigate,
-  useNavigate,
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Outlet,
+	Navigate,
+	useNavigate,
 } from "react-router-dom";
 import { ProtectedRoute } from "../components/routes/ProtectedRoutes";
 import { CrudContext } from "../context/CrudContext";
@@ -45,6 +45,9 @@ import Trapiche from "../components/personal/trapiche/Trapiche";
 import Volquete from "../components/personal/volquete/Volquete";
 import GenerarPago from "../components/planillas/realizar-pago/GenerarPago";
 import Incentivos from "../components/planillas/incentivos/Incentivos";
+import Casa from "../components/planillas/casa/Casa";
+import HistorialPagos from "../components/planillas/historial-pago/HistorialPagos";
+import VisualizadorPdf from "../components/planillas/realizar-pago/VisualizadorPdf";
 // const AdministracionLayout = lazy(() => import("../components/administracion/AdministracionLayout"))
 // const CampamentoLayout = lazy(() => import("../components/administracion/campamentos/CampamentoLayout"))
 // const RolLayout = lazy(() => import("../components/administracion/roles/RolLayout"))
@@ -76,329 +79,426 @@ const Login = lazy(() => import("../components/login/Login"));
 // const MainLayoutFinanzas = lazy(() => import("../components/finanzas/MainLayoutFinanzas"))
 
 const MainPage = () => {
-  const navigate = useNavigate();
-  const { sidebar, user, permisos } = useContext(CrudContext);
+	const navigate = useNavigate();
+	const { sidebar, user, permisos } = useContext(CrudContext);
 
-  let permiso;
+	let permiso;
 
-  useEffect(() => {
-    permiso = JSON.parse(localStorage.getItem("permisos"));
-    if (localStorage.getItem("permisos") === null) {
-      navigate("/");
-    }
-  }, []);
+	useEffect(() => {
+		permiso = JSON.parse(localStorage.getItem("permisos"));
+		if (localStorage.getItem("permisos") === null) {
+			navigate("/");
+		}
+	}, []);
 
-  return (
-    <>
-      {localStorage.getItem("user") && (
-        <div className={sidebar ? "responsive-active" : "main-container"}>
-          <section className="sidebar">
-            <Sidebar />
-          </section>
-          <section className="main">
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route path="administracion">
-                  <Route index element={<AdministracionLayout />} />
-                  <Route
-                    path="usuarios"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .administracion_usuario
-                        }
-                      >
-                        <UsuarioLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="roles"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .administracion_rol
-                        }
-                      >
-                        <RolLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="campamentos"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .administracion_campamento
-                        }
-                      >
-                        <CampamentoLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Route>
-                <Route path="personal">
-                  <Route index element={<PersonalTipoLayout />} />
-                  <Route
-                    path="trabajador"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .personal_trabajador
-                        }
-                      >
-                        <PersonalLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="asociacion"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .personal_grupal
-                        }
-                      >
-                        <AsociacionLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="empresa"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .personal_empresa
-                        }
-                      >
-                        <EmpresaLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="socio"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .personal_socio
-                        }
-                      >
-                        <SocioLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="trapiche" element={<Trapiche />} />
-                  <Route path="volquete" element={<Volquete />} />
-                  <Route path="incentivos" element={<Incentivos />} />
+	return (
+		<>
+			{localStorage.getItem("user") && (
+				<div
+					className={sidebar ? "responsive-active" : "main-container"}
+				>
+					<section className="sidebar">
+						<Sidebar />
+					</section>
+					<section className="main">
+						<Routes>
+							<Route path="/" element={<Layout />}>
+								<Route path="administracion">
+									<Route
+										index
+										element={<AdministracionLayout />}
+									/>
+									<Route
+										path="usuarios"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).administracion_usuario
+												}
+											>
+												<UsuarioLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="roles"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).administracion_rol
+												}
+											>
+												<RolLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="campamentos"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).administracion_campamento
+												}
+											>
+												<CampamentoLayout />
+											</ProtectedRoute>
+										}
+									/>
+								</Route>
+								<Route path="personal">
+									<Route
+										index
+										element={<PersonalTipoLayout />}
+									/>
+									<Route
+										path="trabajador"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).personal_trabajador
+												}
+											>
+												<PersonalLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="asociacion"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).personal_grupal
+												}
+											>
+												<AsociacionLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="empresa"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).personal_empresa
+												}
+											>
+												<EmpresaLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="socio"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).personal_socio
+												}
+											>
+												<SocioLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="trapiche"
+										element={<Trapiche />}
+									/>
+									<Route
+										path="volquete"
+										element={<Volquete />}
+									/>
+								</Route>
+								<Route path="planilla">
+									<Route index element={<IndexLayout />} />
+									<Route
+										path="asistencia"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).planillas_asistencia
+												}
+											>
+												<ListaAsistencia />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="control"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).planillas_control
+												}
+											>
+												<ControlPlanilla />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="pagos"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).planillas_control
+												}
+											>
+												<PagosLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="pagos/generar"
+										element={<GenerarPago />}
+									/>
+									<Route
+										path="pagos/incentivos"
+										element={<Incentivos />}
+									/>
+									<Route
+										path="pagos/casa"
+										element={<Casa />}
+									/>
+									<Route
+										path="pagos/historial"
+										element={<HistorialPagos />}
+									/>
+									<Route
+										path="pagos/imprimir"
+										element={<VisualizadorPdf />}
+									/>
+								</Route>
+								<Route path="finanzas">
+									<Route
+										index
+										element={<MainLayoutFinanzas />}
+									/>
+									<Route
+										path="saldo"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).finanzas_ingreso
+												}
+											>
+												<Finanzas />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="proveedor"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).finanzas_proveedor
+												}
+											>
+												<Proveedores />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="sucursal"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).finanzas_sucursal
+												}
+											>
+												<Sucursales />
+											</ProtectedRoute>
+										}
+									/>
+								</Route>
+								<Route path="logistica">
+									<Route
+										index
+										element={<MainLayoutInventario />}
+									/>
+									<Route
+										path="inventario"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).logistica_inventario
+												}
+											>
+												<InventarioLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="almacen"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).logistica_almacen
+												}
+											>
+												<AlmacenLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="sucursal"
+										element={<Sucursales />}
+									/>
+									<Route
+										path="requerimiento"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).logistica_requerimiento
+												}
+											>
+												<RequerimientoLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="aprobacion"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).logistica_aprobacion
+												}
+											>
+												<AprobacionLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="transferencia"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).logistica_transferencia
+												}
+											>
+												<TransferenciaLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="categoria"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).logistica_categoria
+												}
+											>
+												<CategoriaLayout />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="estadistica"
+										element={
+											<ProtectedRoute
+												role={
+													JSON.parse(
+														localStorage.getItem(
+															"permisos"
+														)
+													).logistica_estadistica
+												}
+											>
+												<EstadisticasLayout />
+											</ProtectedRoute>
+										}
+									/>
+								</Route>
+							</Route>
 
-                </Route>
-                <Route path="planilla">
-                  <Route index element={<IndexLayout />} />
-                  <Route
-                    path="asistencia"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .planillas_asistencia
-                        }
-                      >
-                        <ListaAsistencia />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="control"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .planillas_control
-                        }
-                      >
-                        <ControlPlanilla />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="pagos"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .planillas_control
-                        }
-                      >
-                        <PagosLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="pagos/generar" element={<GenerarPago />} />
-                  <Route path="pagos/incentivos" element={<Incentivos />} />
-
-
-                </Route>
-                <Route path="finanzas">
-                  <Route index element={<MainLayoutFinanzas />} />
-                  <Route
-                    path="saldo"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .finanzas_ingreso
-                        }
-                      >
-                        <Finanzas />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="proveedor"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .finanzas_proveedor
-                        }
-                      >
-                        <Proveedores />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="sucursal"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .finanzas_sucursal
-                        }
-                      >
-                        <Sucursales />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Route>
-                <Route path="logistica">
-                  <Route index element={<MainLayoutInventario />} />
-                  <Route
-                    path="inventario"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .logistica_inventario
-                        }
-                      >
-                        <InventarioLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="almacen"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .logistica_almacen
-                        }
-                      >
-                        <AlmacenLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="sucursal" element={<Sucursales />} />
-                  <Route
-                    path="requerimiento"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .logistica_requerimiento
-                        }
-                      >
-                        <RequerimientoLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="aprobacion"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .logistica_aprobacion
-                        }
-                      >
-                        <AprobacionLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="transferencia"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .logistica_transferencia
-                        }
-                      >
-                        <TransferenciaLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="categoria"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .logistica_categoria
-                        }
-                      >
-                        <CategoriaLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="estadistica"
-                    element={
-                      <ProtectedRoute
-                        role={
-                          JSON.parse(localStorage.getItem("permisos"))
-                            .logistica_estadistica
-                        }
-                      >
-                        <EstadisticasLayout />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Route>
-              </Route>
-
-              <Route path="denegado" element={<Denegado />} />
-              <Route path="*" element={<Error />} />
-            </Routes>
-          </section>
-        </div>
-      )}
-      {!localStorage.getItem("user") && (
-        <Suspense fallback={<Cargando />}>
-          <Routes>
-            <Route path="/" element={<Login />} />
-          </Routes>
-        </Suspense>
-      )}
-    </>
-  );
+							<Route path="denegado" element={<Denegado />} />
+							<Route path="*" element={<Error />} />
+						</Routes>
+					</section>
+				</div>
+			)}
+			{!localStorage.getItem("user") && (
+				<Suspense fallback={<Cargando />}>
+					<Routes>
+						<Route path="/" element={<Login />} />
+					</Routes>
+				</Suspense>
+			)}
+		</>
+	);
 };
 
 export default MainPage;
