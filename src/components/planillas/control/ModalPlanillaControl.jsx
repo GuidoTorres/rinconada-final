@@ -26,7 +26,9 @@ const ModalPlanillaControl = ({ selected, actualizarTabla }) => {
     planillaControl,
     
   } = useContext(PlanillaContext);
-  const {modal, setModal} = useContext(CrudContext)
+  const [modalValidacion, setModalValidacion] = useState(false)
+  const [modalValidacionAsociacion, setModalValidacionAsociacion] = useState(false)
+  const {modal, setModal, modal2, setModal2} = useContext(CrudContext)
   const closeModal = () => {
     setPlanillaControl(false);
   };
@@ -37,9 +39,9 @@ const ModalPlanillaControl = ({ selected, actualizarTabla }) => {
 
   const handleValidacion = () => {
     if (selected.codigo) {
-      setValidacionPagosAsociacion(true);
+      setModalValidacionAsociacion(true);
     } else {
-      setModal(true);
+      setModalValidacion(true);
     }
   };
 
@@ -60,9 +62,9 @@ const ModalPlanillaControl = ({ selected, actualizarTabla }) => {
     >
       <Tabla columns={columns} table={contrato} />
 
-      {modal && <ModalValidacionPagos data={selected} />}
-      {validacionPagosAsociacion && (
-        <ModalValidacionPagosAsociacion data={selected} />
+      {modalValidacion && <ModalValidacionPagos data={selected} modal={modalValidacion} setModal={setModalValidacion}  />}
+      {modalValidacionAsociacion && (
+        <ModalValidacionPagosAsociacion data={selected} modal={modalValidacionAsociacion} setModal={setModalValidacionAsociacion}/>
       )}
 
     </MainModal>

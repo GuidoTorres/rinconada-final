@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
-import { AiOutlineClose, AiOutlineForm } from "react-icons/ai";
+import { AiOutlineForm } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
 import { trabajadorEvaluacionValues } from "../../../data/initalValues";
 import MainModal from "../../modal/MainModal";
-import { Button, DatePicker, Input, Select } from "antd";
+import { Button, Input, Select } from "antd";
 import { notificacion } from "../../../helpers/mensajes";
 import "../styles/modalRegistroEvaluacion.css";
 import TextArea from "antd/es/input/TextArea";
@@ -48,7 +48,6 @@ const ModalRegistroEvaluacion = ({
     setArea(response3.data);
     setCampamento(response4.data);
   };
-  console.log(campamento);
   useEffect(() => {
     if (dataToEdit) {
       setEvaluacion(dataToEdit);
@@ -60,30 +59,30 @@ const ModalRegistroEvaluacion = ({
     getCargo();
   }, []);
 
+  useEffect(() => {
+    const cooperativa = socio.filter(
+      (item) => item?.nombre === evaluacion.recomendado_por
+    );
+
+    setEvaluacion((value) => ({
+      ...value,
+      cooperativa: cooperativa?.at(-1)?.cooperativa,
+    }));
+  }, [evaluacion.recomendado_por]);
+
   const handleData = (e, text) => {
-    if (text) {
+    if (!text && e.target) {
+      const { name, value } = e.target;
+
+      setEvaluacion((values) => {
+        return { ...values, [name]: value };
+      });
+    } else {
       setEvaluacion((values) => {
         return { ...values, [text]: e };
       });
     }
-
-    if (e.target && !text) {
-      const { name, value } = e.target;
-      setEvaluacion((values) => {
-        return { ...values, [name]: value };
-      });
-    }
-
-    if (text === "recomendado_por") {
-      const prueba = socio
-        .filter((item) => item.nombre === e)
-        .map((item) => item.cooperativa)
-        .toString();
-
-      setEvaluacion((values) => ({ ...values, cooperativa: prueba }));
-    }
   };
-  console.log(evaluacion);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,6 +122,7 @@ const ModalRegistroEvaluacion = ({
     setModal3(false);
     setDataToEdit(null);
     setEvaluacion(evaluacionValues);
+    setCargando(false);
   };
 
   return (
@@ -139,7 +139,7 @@ const ModalRegistroEvaluacion = ({
             <label> Fecha de evaluación</label>
             <Input
               type="date"
-              value={evaluacion?.fecha_evaluacion}
+              value={evaluacion?.fecha_evaluacion?.split("T")[0]}
               placeholder="Fecha de evaluación"
               name="fecha_evaluacion"
               style={{
@@ -248,6 +248,10 @@ const ModalRegistroEvaluacion = ({
               onChange={(e) => handleData(e, "condicion_cooperativa")}
               options={[
                 {
+                  label: "Externo",
+                  value: "Externo",
+                },
+                {
                   label: "Hijo",
                   value: "Hijo",
                 },
@@ -307,7 +311,7 @@ const ModalRegistroEvaluacion = ({
                 name="fiscalizador"
                 onChange={(e) => handleData(e, "fiscalizador")}
                 size="small"
-                options={socio?.map((item) => {
+                options={socio.slice(1)?.map((item) => {
                   return {
                     label: item.nombre,
                     value: item.nombre,
@@ -456,23 +460,39 @@ const ModalRegistroEvaluacion = ({
             </div>
             <div>
               <label htmlFor="">Diabetes</label>
-              <Select
+              {/* <select
                 value={evaluacion.diabetes}
                 name="diabetes"
                 onChange={(e) => handleData(e, "diabetes")}
-                size="small"
-                options={[
-                  {
-                    label: "Si",
-                    value: "Si",
-                  },
-                  {
-                    label: "No",
-                    value: "No",
-                  },
-                ]}
-              />
+              >
+                <option value="Si">Si</option>
+                <option value="No">No</option>
+
+              </select> */}
+              <div className="autoriza">
+                <div>
+                  <label htmlFor=""> Si</label>
+                  <input
+                    type="radio"
+                    name="diabetes"
+                    value="Si"
+                    checked={evaluacion.diabetes === "Si"}
+                    onChange={handleData}
+                  />
+                </div>
+                <div>
+                  <label htmlFor=""> No</label>
+                  <input
+                    type="radio"
+                    name="diabetes"
+                    value="No"
+                    checked={evaluacion.diabetes !== "Si"}
+                    onChange={handleData}
+                  />
+                </div>
+              </div>
             </div>
+
             <div>
               <label htmlFor="">Observaciones</label>
               <TextArea

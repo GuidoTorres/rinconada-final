@@ -18,6 +18,7 @@ const ModalContratoAsociacion = ({
   actualizarAsociacion,
   modal2,
   setModal2,
+  dataContrato,
 }) => {
   const [form] = Form.useForm();
 
@@ -28,8 +29,12 @@ const ModalContratoAsociacion = ({
   const route4 = "area";
   const route5 = "socio";
 
+  const ids = data?.trabajador
+    ?.map((item) => item?.evaluacions?.id)
+    .filter((item) => item !== undefined);
+
   //valores iniciales de contrato
-  const contratoValues = valuesContrato(data, evaluaciones);
+  const contratoValues = valuesContrato(data, ids);
 
   const {
     createData,
@@ -46,6 +51,8 @@ const ModalContratoAsociacion = ({
   const [gerencia, setGerencia] = useState([]);
   const [area, setArea] = useState([]);
   const [socio, setSocio] = useState([]);
+  const [id, setId] = useState([]);
+  const [responseContrato, setResponseContrato] = useState([]);
 
   const getAll = async () => {
     const cargoData = getData(route1);
@@ -53,6 +60,7 @@ const ModalContratoAsociacion = ({
     const gerenciaData = getData(route3);
     const areaData = getData(route4);
     const socioData = getData(route5);
+    const response6 = getData("contrato");
 
     const all = await Promise.all([
       cargoData,
@@ -60,18 +68,31 @@ const ModalContratoAsociacion = ({
       gerenciaData,
       areaData,
       socioData,
+      response6,
     ]);
     setCargo(all[0].data);
     setCampamento(all[1].data);
     setGerencia(all[2].data);
     setArea(all[3].data);
     setSocio(all[4].data);
+    setResponseContrato(all[5].data);
   };
   useEffect(() => {
     getAll();
   }, []);
 
-  const handleData = (e,text) => {
+
+  useEffect(() => {
+    if (responseContrato.length > 0) {
+      const contraid = responseContrato?.at(-1)?.id;
+      const idFinal = parseInt(contraid) + 1;
+      setId(idFinal);
+    } else {
+      setId(1);
+    }
+  }, [responseContrato]);
+
+  const handleData = (e, text) => {
     if (!text && e.target) {
       const { name, value } = e.target;
       form.setFieldsValue({
@@ -91,7 +112,6 @@ const ModalContratoAsociacion = ({
   };
 
   const handleSubmit = async (e) => {
-
     if (dataToEdit === null) {
       setCargando(true);
       const response = await createData(contratos, route);
@@ -122,6 +142,7 @@ const ModalContratoAsociacion = ({
     setModal2(false);
     setDataToEdit(null);
     setContratos(contratoValues);
+    setCargando(false);
   };
 
   useEffect(() => {
@@ -155,12 +176,14 @@ const ModalContratoAsociacion = ({
     cargo,
     campamento,
     gerencia,
-    area
+    area,
+    id,
+    dataToEdit
   );
 
   return (
     <MainModal
-      className={"modal-contrato"}
+      className={"modal-contrato-empresa"}
       title={dataToEdit ? "Editar contrato" : "Registrar contrato"}
       open={modal2}
       width={900}

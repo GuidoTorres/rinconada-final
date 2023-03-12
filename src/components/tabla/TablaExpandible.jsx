@@ -41,11 +41,7 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
   };
 
   const handleDelete = async (e) => {
-
     const response = await deleteData(route, e);
-    console.log('====================================');
-    console.log(response);
-    console.log('====================================');
     if (response) {
       notificacion(response.status, response.msg);
       actualizarTabla();
@@ -113,18 +109,18 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
       cell: (e, index) => (
         <>
           <AiFillEye onClick={() => handleEvaluacion(e)} />
-          {e?.evaluacion?.at(-1)?.fiscalizador_aprobado === "si" &&
-          e?.evaluacion?.at(-1)?.control === "si" &&
-          e?.evaluacion?.at(-1)?.topico === "si" &&
-          e?.evaluacion?.at(-1)?.seguridad === "si" &&
-          e?.evaluacion?.at(-1)?.medio_ambiente === "si" &&
-          e?.evaluacion?.at(-1)?.recursos_humanos === "si" &&
-          !e?.evaluacion?.at(-1)?.finalizado ? (
+          {e?.evaluacions?.fiscalizador_aprobado === "si" &&
+          e?.evaluacions?.control === "si" &&
+          e?.evaluacions?.topico === "si" &&
+          e?.evaluacions?.seguridad === "si" &&
+          e?.evaluacions?.medio_ambiente === "si" &&
+          e?.evaluacions?.recursos_humanos === "si" &&
+          !e?.evaluacions?.finalizado ? (
             <AiOutlineCheck
               style={{ color: "green", fontWeigth: "bold", fontSize: "16px" }}
             />
-          ) : e?.evaluacion?.at(-1)?.id &&
-            !e?.evaluacion?.at(-1)?.finalizado ? (
+          ) : e?.evaluacions?.id &&
+            !e?.evaluacions?.finalizado ? (
             <AiOutlineClose
               style={{ color: "red", fontWeigth: "bold", fontSize: "16px" }}
             />
@@ -145,6 +141,19 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
           <BsFillTrash2Fill onClick={() => handleDelete(e.dni)} />
         </>
       ),
+    },
+  ];
+
+  const conditionalRowStyles = [
+    {
+      when: (row) => row?.contrato?.length > 0,
+      style: (row) => ({
+        back: row?.contrato?.length > 0 ? "green" : "",
+        // color: 'white',
+        // '&:hover': {
+        //   cursor: 'pointer',
+        // },
+      }),
     },
   ];
 
@@ -185,6 +194,7 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
         responsive
         noHeader={true}
         noDataComponent={"No se encontraron resultados."}
+        conditionalRowStyles={conditionalRowStyles}
       />
 
       {modal && <ModalRegistroPersonal actualizarTabla={actualizarTabla} />}

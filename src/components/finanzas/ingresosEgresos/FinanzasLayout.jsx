@@ -75,7 +75,7 @@ const Finanzas = () => {
 
   const formatSaldoMensual = () => {
     //sumar los mismos campos
-    const prueba = saldoMensual
+    const egresos = saldoMensual
       ?.filter((item) => item.movimiento === "Egreso")
       .reduce((acc, curr) => {
         const findData = acc.find((ele) => ele.fecha === curr.fecha);
@@ -91,6 +91,8 @@ const Finanzas = () => {
       ?.filter((item) => item.movimiento === "Ingreso")
       .reduce((acc, curr) => {
         const findData = acc.find((ele) => ele.fecha === curr.fecha);
+        const egreso = acc.find(ele => ele.movimiento === "egreso")
+
         if (findData) {
           findData.monto = parseFloat(findData.monto) + parseFloat(curr.monto);
         } else {
@@ -100,16 +102,21 @@ const Finanzas = () => {
         return acc;
       }, []);
 
-    const concat = prueba?.concat(ingresos);
+    const concat = ingresos?.concat(egresos);
     const sort = concat?.sort((a, b) => {
       if (a.movimiento > b.movimiento) {
         return -1;
       }
     });
 
+    console.log('====================================');
+    console.log(sort);
+    console.log('====================================');
+
     //caluclar el saldo por mes
-    const prueba2 = concat?.reduce((acc, curr) => {
-      const ingresos = acc.find((ele) => ele.fecha === curr.fecha);
+    const prueba2 = sort?.reduce((acc, curr) => {
+      const ingresos = acc.find((ele) => ele.fecha === curr.fecha );
+
 
       if (ingresos) {
         ingresos.monto = parseFloat(ingresos.monto) - parseFloat(curr.monto);

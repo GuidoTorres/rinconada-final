@@ -14,6 +14,8 @@ import { AiOutlineForm } from "react-icons/ai";
 const ModalRegistroSocio = ({ actualizarTabla }) => {
   const [form] = Form.useForm();
 
+
+
   const route = "socio";
   const socioValues = {
     nombre: "",
@@ -38,6 +40,7 @@ const ModalRegistroSocio = ({ actualizarTabla }) => {
     setModal(false);
     setDataToEdit(null);
     setSocio(socioValues);
+    setCargando(false);
   };
 
   const handleData = (e, text) => {

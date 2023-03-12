@@ -8,7 +8,6 @@ import ModalHistorialContrato from "./ModalHistorialContrato";
 import ModalHistorialEvaluacion from "./ModalHistorialEvaluacion";
 import "../styles/personalLayout.css";
 import { personalLayout } from "../../../data/dataTable";
-import useSearch from "../../../hooks/useSearch";
 import { notificacion } from "../../../helpers/mensajes";
 import Cargando from "../../cargando/Cargando";
 import { Empty } from "antd";
@@ -31,12 +30,14 @@ const PersonalLayout = () => {
     setModal2,
     cargando,
     setCargando,
+    filterText,
+    setFilterText,
   } = useContext(CrudContext);
   const [id, setId] = useState("");
-  const { result } = useSearch(data);
   const [trabajorEvaluacion, setTrabajadorEvaluacion] = useState([]);
   const [trabajorContrato, setTrabajadorContrato] = useState([]);
-  const [dataTrabajadores, setDataTrabajadores] = useState([])
+  const [dataTrabajadores, setDataTrabajadores] = useState([]);
+  const [search, setSearch] = useState([]);
 
   const getTrabajadores = async () => {
     setCargando(true);
@@ -62,6 +63,28 @@ const PersonalLayout = () => {
       getTrabajadores();
     }
   };
+  useEffect(() => {
+    const filtered =
+      dataTrabajadores &&
+      dataTrabajadores
+        .filter((item) =>
+          item.codigo_trabajador
+            .toLowerCase()
+            .includes(filterText.toLowerCase()) ||
+            item.nombre
+            .toLowerCase()
+            .includes(filterText.toLowerCase()) ||
+            item.apellido_materno
+            .toLowerCase()
+            .includes(filterText.toLowerCase()) ||
+            item.dni
+            .toLowerCase()
+            .includes(filterText.toLowerCase())
+        )
+
+        .flat();
+    setSearch(filtered);
+  }, [filterText, dataTrabajadores]);
 
   const handleEvaluacion = (e) => {
     setModal1(true);
@@ -106,23 +129,20 @@ const PersonalLayout = () => {
           actualizarTrabajadores={getTrabajadores}
         />
         {dataTrabajadores.length > 0 ? (
-          <Tabla columns={columns} table={dataTrabajadores} />
+          <Tabla columns={columns} table={search} />
         ) : (
-          <div className="noData">
-            {cargando ? (
-              <Cargando />
-            ) : (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={<span>No hay registros para mostrar.</span>}
-              />
-            )}
-          </div>
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={<span>No hay registros para mostrar.</span>}
+          />
         )}
       </div>
 
       {modal && (
-        <ModalRegistroPersonal actualizarTabla={getTrabajadores} data={dataTrabajadores} />
+        <ModalRegistroPersonal
+          actualizarTabla={getTrabajadores}
+          data={dataTrabajadores}
+        />
       )}
 
       {modal1 && (

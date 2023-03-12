@@ -399,12 +399,13 @@ export const personalLayout = (
       button: true,
       cell: (e) => (
         <div>
-          {/* {e?.contrato?.length > 0 
-            ? (e?.contrato
+          {/* {e?.contrato?.length === 0 &&
+          e?.contrato?.at(-1)?.nota_contrato === ""
+            ? "--"
+            : e?.contrato
                 ?.map((item) => parseFloat(item?.nota_contrato))
-                .reduce((acc, curr) => parseFloat(acc) + parseFloat(curr))) /
-              e?.contrato?.length
-            : "--"} */}
+                .reduce((acc, curr) => parseFloat(acc) + parseFloat(curr)) /
+              e?.contrato?.length} */}
           <>
             <AiFillEye onClick={() => (contrato ? handleContrato(e) : null)} />
             {e?.contrato?.length > 0 &&
@@ -495,7 +496,10 @@ export const asociacionLayout = (
       cell: (e) => (
         <>
           {" "}
-          <AiFillFileExcel onClick={() => changeHandler(e)} />{" "}
+          <AiFillFileExcel
+            style={{ cursor: "pointer" }}
+            onClick={() => changeHandler(e)}
+          />{" "}
         </>
       ),
       width: "200px",
@@ -525,7 +529,7 @@ export const asociacionLayout = (
         <div className="acciones">
           <BsPencil onClick={() => handleEdit(e)} />
           <Popconfirm
-            title="Eliminar trabajador"
+            title="Eliminar asociación"
             description="¿Estas seguro de eliminar?"
             onConfirm={() => handleDelete(e.id)}
             // onCancel={cancel}
@@ -954,10 +958,8 @@ export const pagosLayout = (handleData, postPago) => {
           <Input
             name="teletrans"
             type="number"
-            style={{width:"70%"}}
-            value={
-              e?.teletrans
-            }
+            style={{ width: "70%" }}
+            value={e?.teletrans}
             onChange={(event) => handleData(event, e, i)}
           />
         </>
@@ -974,9 +976,7 @@ export const pagosLayout = (handleData, postPago) => {
           <Input
             name="observacion"
             type="text"
-            value={
-              e?.observacion
-            }
+            value={e?.observacion}
             onChange={(event) => handleData(event, e, i)}
           />
         </>
@@ -988,15 +988,13 @@ export const pagosLayout = (handleData, postPago) => {
       width: "140px",
 
       button: true,
-      cell: (e,i) => (
+      cell: (e, i) => (
         <>
           <Input
             name="fecha_pago"
             type="date"
             style={{ width: "90%" }}
-            value={
-              e?.fecha_pago
-            }
+            value={e?.fecha_pago}
             onChange={(event) => handleData(event, e, i)}
           />
         </>
@@ -1009,7 +1007,10 @@ export const pagosLayout = (handleData, postPago) => {
       button: true,
       cell: (e) => (
         <>
-          <BsCheck style={{color:"green", fontSize: "30px"}} onClick={() => postPago(e)}/>
+          <BsCheck
+            style={{ color: "green", fontSize: "30px" }}
+            onClick={() => postPago(e)}
+          />
         </>
       ),
     },
@@ -1273,8 +1274,7 @@ export const sumarTeletrans = (handleValidacion, handlePagos) => {
     {
       id: "nombres",
       name: "Nombres y apellidos",
-      selector: (row) =>
-        row?.nombre,
+      selector: (row) => row?.nombre,
       sortable: true,
       width: "250px",
     },
@@ -1342,8 +1342,7 @@ export const tablePagosFecha = (openModal, handleDelete) => {
       id: "nombre",
       name: "Apellidos y Nombres",
       width: "220px",
-      selector: (row) =>
-        row.nombre,
+      selector: (row) => row.nombre,
       sortable: true,
     },
     {
@@ -1378,8 +1377,8 @@ export const tablePagosFecha = (openModal, handleDelete) => {
       cell: (e) => (
         <div className="acciones">
           <BsPrinter />
-          <BsEye onClick={() => openModal()}/>
-          <BsTrash onClick={() => handleDelete(e.pago_id)}/>
+          <BsEye onClick={() => openModal()} />
+          <BsTrash onClick={() => handleDelete(e.pago_id)} />
         </div>
       ),
     },
@@ -1502,9 +1501,25 @@ export const finanzas = (handleEdit, handleDelete) => {
       name: "Acciones",
       button: true,
       cell: (e) => (
-        <div className="acciones">
+        <div
+          className="acciones"
+          style={{
+            display:
+              e.sucursal_id === e.sucursal_transferencia ? "none" : "block",
+          }}
+        >
           <BsPencil onClick={() => handleEdit(e)} />
-          <BsTrash onClick={() => handleDelete(e.id)} />
+          <Popconfirm
+            title="Eliminar movimimiento"
+            description="¿Estas seguro de eliminar el movimiento?"
+            onConfirm={() => handleDelete(e.id)}
+            // onCancel={cancel}
+            okText="Si"
+            cancelText="No"
+            placement="topRight"
+          >
+            <BsTrash />
+          </Popconfirm>
         </div>
       ),
     },

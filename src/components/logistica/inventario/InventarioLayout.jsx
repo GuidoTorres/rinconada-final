@@ -39,8 +39,12 @@ const InventarioLayout = () => {
     setData(response.data);
   };
 
+  console.log('====================================');
+  console.log(almacen_id);
+  console.log('====================================');
+
   const getProductoAlmacen = async () => {
-    const response = await getDataById("almacen/producto", almacen_id);
+    const response = await getData(`almacen/producto/${almacen_id}`);
     setData1(response.data);
   };
 
@@ -60,15 +64,14 @@ const InventarioLayout = () => {
   };
   const handleDelete = async (e) => {
     const route = "producto";
-    console.log('====================================');
-    console.log(e);
-    console.log('====================================');
+
     const response = await deleteData(route, e);
     if (response) {
       notificacion(response.status, response.msg);
       getProductoAlmacen();
     }
   };
+
 
   const columns = inventario(handleEdit, handleDelete);
 
@@ -81,7 +84,7 @@ const InventarioLayout = () => {
           placeholder="Seleccione un almacén"
           style={{ width: 300 }}
           name="almacen"
-          onChange={(e) => setAlmacen_id(e)}
+          onChange={(value) => setAlmacen_id(value)}
           options={data.map((item, i) => {
             return {
               value: item.id,
@@ -115,6 +118,7 @@ const InventarioLayout = () => {
         open={modal}
         actualizarTabla={getProductoAlmacen}
         id={almacen_id}
+        data={data1}
       />
       <ModalHistorialEntradas open={modal1} id={almacen_id} data={data1} />
       <ModalRequerimiento id={almacen_id} data={data1} />

@@ -56,6 +56,7 @@ const ModalRegistrarContrato = ({
     setSocio(response5.data);
     setResponseContrato(response6.data);
   };
+  
 
   useEffect(() => {
     if (responseContrato.length === 0) {
@@ -64,6 +65,7 @@ const ModalRegistrarContrato = ({
       const contraid = responseContrato?.at(-1)?.id;
       const idFinal = parseInt(contraid) + 1;
       setId(idFinal);
+
     }
   }, [responseContrato]);
 
@@ -89,10 +91,10 @@ const ModalRegistrarContrato = ({
     teletran: "",
     suspendido: false,
     finalizado: false,
+    tareo: "",
     trabajador_id: trabajadorDni,
   };
   const [contrato, setContrato] = useState(trabajadorContratoValues);
-
 
   useEffect(() => {
     if (dataToEdit) {
@@ -112,7 +114,7 @@ const ModalRegistrarContrato = ({
       let inicial = 14;
       let fechaInicio = contrato.fecha_inicio;
       let total = inicial * parseInt(contrato.periodo_trabajo);
-      const date = addDays(fechaInicio, total);
+      const date = addDays(fechaInicio, total, contrato.tareo);
       setContrato((prevState) => {
         return { ...prevState, fecha_fin: date };
       });
@@ -121,7 +123,8 @@ const ModalRegistrarContrato = ({
         return { ...prevState, fecha_fin: "" };
       });
     }
-  }, [contrato.fecha_inicio, contrato.periodo_trabajo]);
+  }, [contrato.fecha_inicio, contrato.periodo_trabajo, contrato.tareo]);
+
 
   const handleData = (e, text) => {
     if (!text && e.target) {
@@ -184,7 +187,7 @@ const ModalRegistrarContrato = ({
   );
   return (
     <MainModal
-      className={"modal-contrato"}
+      className={"modal-contrato-empresa"}
       title={dataToEdit ? "Editar contrato" : "Registrar contrato"}
       open={modal3}
       width={900}
@@ -198,7 +201,7 @@ const ModalRegistrarContrato = ({
       >
         {/* <label htmlFor="">Contrato</label> */}
         <div className="contrato">
-          {formData.splice(0, 12).map((item, i) => (
+          {formData.splice(0, 13).map((item, i) => (
             <Form.Item
               className="item"
               key={i}

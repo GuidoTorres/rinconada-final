@@ -20,7 +20,7 @@ const Login = () => {
     user,
     permisos,
     cargando,
-    setCargnado,
+    setCargando,
   } = useContext(CrudContext);
   const [userData, setUserData] = useState("");
 
@@ -33,12 +33,14 @@ const Login = () => {
     };
 
     const response = await createData(info, "auth");
+
     if (response.status === 200) {
       localStorage.setItem("user", JSON.stringify(response.data?.nombre));
       localStorage.setItem(
         "permisos",
         JSON.stringify(response?.data?.rol?.permisos[0])
       );
+      localStorage.setItem("firma", JSON.stringify(response.data?.foto));
       setPermisos(response?.data?.rol?.permisos);
       notificacion(response.status, response.msg);
       redirect(response?.data?.rol?.permisos);
@@ -60,7 +62,6 @@ const Login = () => {
       return navigate("/finanzas");
     }
   };
-
 
   return (
     <div className="image">

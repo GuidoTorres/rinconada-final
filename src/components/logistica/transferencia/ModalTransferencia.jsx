@@ -10,11 +10,18 @@ import MainModal from "../../modal/MainModal";
 import { Button, DatePicker, Form, Input, Select } from "antd";
 import "../styles/modalTransferencia.css";
 
-const ModalTransferencia = ({ almacen_id, actualizarTabla }) => {
+const ModalTransferencia = ({ almacen_id, actualizarTabla, id, data }) => {
   const [form] = Form.useForm();
 
-  const { getData, createData, dataToEdit, setModal, modal, cargando, setCargando } =
-    useContext(CrudContext);
+  const {
+    getData,
+    createData,
+    dataToEdit,
+    setModal,
+    modal,
+    cargando,
+    setCargando,
+  } = useContext(CrudContext);
 
   const initialValues = {
     almacen_id: almacen_id,
@@ -29,6 +36,7 @@ const ModalTransferencia = ({ almacen_id, actualizarTabla }) => {
 
   const [almacen, setAlmacen] = useState([]);
   const [producto, setProducto] = useState([]);
+  const [productoSelect, setProductoSelect] = useState([]);
   const [productoFinal, setProductoFinal] = useState([]);
 
   const [almacenDestino, setAlmacenDestino] = useState([]);
@@ -36,13 +44,16 @@ const ModalTransferencia = ({ almacen_id, actualizarTabla }) => {
   const [tabla, setTabla] = useState([]);
   const [newJson, setNewJson] = useState([]);
   const [idCantidad, setIdCantidad] = useState("");
+  const [productoFiltrado, setProductoFiltrado] = useState([]);
 
   const fetchData = async () => {
     const response = await getData("almacen");
     const response1 = await getData("producto");
-
     setAlmacen(response.data);
     setProducto(response1.data);
+    setProductoSelect(
+      response1.data.filter((item) => item.almacen_id === almacen_id)
+    );
   };
 
   const closeModal = () => {
@@ -53,6 +64,7 @@ const ModalTransferencia = ({ almacen_id, actualizarTabla }) => {
     const filterProductoOrigen = producto.filter(
       (item) => transferencia.origen == item.almacen_id
     );
+
     const filterAlmacen = almacen.filter(
       (item) => parseInt(transferencia.origen) !== item.id
     );
@@ -130,10 +142,18 @@ const ModalTransferencia = ({ almacen_id, actualizarTabla }) => {
         (item) => item.almacen_id == transferencia.destino
       );
 
+      console.log("====================================");
+      console.log(filterDestino);
+      console.log("====================================");
+
       // filtrar si tienen el mismo codigo interno
       let filterProductoDestino = filterDestino?.filter((item) =>
         formatData.some((item2) => item.codigo_interno === item2.codigo_interno)
       );
+
+      console.log("====================================");
+      console.log(filterProductoDestino);
+      console.log("====================================");
 
       let newArray = formatData?.map((item) => {
         return {
@@ -171,13 +191,13 @@ const ModalTransferencia = ({ almacen_id, actualizarTabla }) => {
   const handleSubmit = async (e) => {
     let route = "almacen/transferencia";
     e.preventDefault();
-    setCargando(true)
+    setCargando(true);
     const response = await createData(tabla, route);
     if (response) {
       notificacion(response.status, response.msg);
       actualizarTabla();
       closeModal();
-      setCargando(false)
+      setCargando(false);
     }
   };
 
@@ -229,7 +249,7 @@ const ModalTransferencia = ({ almacen_id, actualizarTabla }) => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={productoFinal.map((item) => {
+            options={productoSelect?.map((item) => {
               return {
                 label: item.nombre,
                 value: item.id,

@@ -8,6 +8,7 @@ import { modalUsuario } from "../../../data/FormValues";
 import { notificacion } from "../../../helpers/mensajes";
 import { AiOutlineForm } from "react-icons/ai";
 import "../styles/modalUsuario.css";
+import DragAndDrop from "../../personal/DragAndDrop";
 
 const ModalUsuario = ({ actualizarTabla }) => {
   const [form] = Form.useForm();
@@ -27,6 +28,7 @@ const ModalUsuario = ({ actualizarTabla }) => {
   const [usuario, setUsuario] = useState(usuarioValues);
   const [rol, setRol] = useState([]);
   const [cargo, setCargo] = useState([]);
+  const [avatar, setAvatar] = useState(null);
 
   const getAll = async () => {
     const response = await getData("rol");
@@ -68,23 +70,59 @@ const ModalUsuario = ({ actualizarTabla }) => {
     }
   };
 
+  console.log(usuario);
+
   const handleSubmit = async (e) => {
     if (dataToEdit === null) {
       setCargando(true);
-      const response = await createData(usuario, route);
+
+      const formData = new FormData();
+      formData.set("nombre", usuario.nombre || "");
+      formData.set("usuario", usuario.usuario || "");
+      formData.set("contrasenia", usuario.contrasenia || "");
+      formData.set("estado", usuario.estado || "");
+      formData.set("rol_id", usuario.rol_id || "");
+      formData.set("cargo_id", usuario.cargo_id || "");
+      formData.set("foto", usuario.foto || "");
+
+      avatar?.file && formData.set("image", avatar.file || "");
+
+      const query = await fetch(`http://localhost:3000/api/v1/usuario`, {
+        method: "POST",
+        body: formData,
+      });
+      const response = await query.json();
       if (response) {
         notificacion(response.status, response.msg);
         actualizarTabla();
         closeModal();
+        setCargando(false);
       }
     }
     if (dataToEdit) {
-      setCargando(true);
-      const response = await updateData(usuario, dataToEdit.id, route);
+      const formData = new FormData();
+      formData.set("nombre", usuario.nombre || "");
+      formData.set("usuario", usuario.usuario || "");
+      formData.set("contrasenia", usuario.contrasenia || "");
+      formData.set("estado", usuario.estado || "");
+      formData.set("rol_id", usuario.rol_id || "");
+      formData.set("cargo_id", usuario.cargo_id || "");
+      formData.set("foto", usuario.foto || "");
+
+      avatar?.file && formData.set("image", avatar.file || "");
+      const query = await fetch(
+        `http://localhost:3000/api/v1/usuario/${dataToEdit.id}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
+      const response = await query.json();
       if (response) {
         notificacion(response.status, response.msg);
         actualizarTabla();
         closeModal();
+        setCargando(false);
       }
     }
   };
@@ -124,6 +162,15 @@ const ModalUsuario = ({ actualizarTabla }) => {
             </>
           </Form.Item>
         ))}
+
+        <p>Firma</p>
+        <div className="avatar">
+          <DragAndDrop
+            avatar={avatar}
+            setAvatar={setAvatar}
+            selected={dataToEdit}
+          />
+        </div>
 
         <Form.Item className="button-container">
           <Button

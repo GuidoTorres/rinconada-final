@@ -72,7 +72,7 @@ const ModalRegistrar = ({ actualizarTabla }) => {
     }
   };
 
-  const formData = modalRegistrarSucursal(sucursal, handleData);
+  const formData = modalRegistrarSucursal(sucursal, handleData, dataToEdit);
   return (
     <MainModal
       className={"modal-proveedor"}

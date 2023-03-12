@@ -7,7 +7,7 @@ import { Button, Form } from "antd";
 import { notificacion } from "../../../helpers/mensajes";
 import MainModal from "../../modal/MainModal";
 import { modalRegistroEmpresa } from "../../../data/FormValues";
-import "../styles/modalRegistrarEmpresa.css"
+import "../styles/modalRegistrarEmpresa.css";
 import { AiOutlineForm } from "react-icons/ai";
 
 const ModalRegistrarEmpresa = ({ actualizarTabla, selected }) => {
@@ -19,8 +19,16 @@ const ModalRegistrarEmpresa = ({ actualizarTabla, selected }) => {
     ruc: "",
   };
   const [empresa, setEmpresa] = useState(empresaValues);
-  const { createData, updateData, modal, setDataToEdit, dataToEdit, setModal, cargando, setCargando } =
-    useContext(CrudContext);
+  const {
+    createData,
+    updateData,
+    modal,
+    setDataToEdit,
+    dataToEdit,
+    setModal,
+    cargando,
+    setCargando,
+  } = useContext(CrudContext);
 
   useEffect(() => {
     if (dataToEdit) {
@@ -39,25 +47,25 @@ const ModalRegistrarEmpresa = ({ actualizarTabla, selected }) => {
 
   const handleSubmit = async (e) => {
     if (dataToEdit === null) {
-      setCargando(true)
+      setCargando(true);
       const response = await createData(empresa, route);
 
       if (response) {
         notificacion(response.status, response.msg);
         closeModal();
         actualizarTabla();
-        setCargando(false)
+        setCargando(false);
       }
     }
 
     if (dataToEdit) {
-      setCargando(true)
+      setCargando(true);
       const response = await updateData(empresa, dataToEdit.id, route);
       if (response) {
         notificacion(response.status, response.msg);
         closeModal();
         actualizarTabla();
-        setCargando(false)
+        setCargando(false);
       }
     }
   };
@@ -103,8 +111,12 @@ const ModalRegistrarEmpresa = ({ actualizarTabla, selected }) => {
         ))}
 
         <Form.Item className="button-container">
-          <Button loading={cargando ? true: false} icon={<AiOutlineForm/>}>
-            {dataToEdit ? "Editar" : "Registrar"}
+          <Button
+            htmlType="submit"
+            icon={<AiOutlineForm />}
+            loading={cargando ? true : false}
+          >
+            {dataToEdit ? " Editar" : " Registrar"}
           </Button>
         </Form.Item>
       </Form>

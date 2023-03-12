@@ -1,5 +1,5 @@
 import { Button, Form, Input } from "antd";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineForm } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
 import { notificacion } from "../../../helpers/mensajes";
@@ -7,6 +7,8 @@ import MainModal from "../../modal/MainModal";
 import "../styles/modalVolquete.css";
 
 const ModalVolquete = ({ actualizarTabla }) => {
+  const [form] = Form.useForm();
+
   const {
     dataToEdit,
     modal,
@@ -15,33 +17,46 @@ const ModalVolquete = ({ actualizarTabla }) => {
     setCargando,
     createData,
     updateData,
+    setDataToEdit,
   } = useContext(CrudContext);
   const [volquete, setVolquete] = useState({ placa: "", propietario: "" });
 
   const closeModal = () => {
     setModal(false);
+    setCargando(false);
+    setDataToEdit(null);
   };
 
   const handleSubmit = async () => {
     if (dataToEdit === null) {
       setCargando(true);
-      const response = await createData(volquete, "trapiche");
+      const response = await createData(volquete, "volquete");
       if (response) {
         notificacion(response.status, response.msg);
         actualizarTabla();
         closeModal();
+        setCargando(false);
       }
     }
     if (dataToEdit) {
       setCargando(true);
-      const response = await updateData(volquete, dataToEdit.id, "trapiche");
+      const response = await updateData(volquete, dataToEdit.id, "volquete");
       if (response) {
         notificacion(response.status, response.msg);
         actualizarTabla();
         closeModal();
+        setCargando(false);
       }
     }
   };
+  useEffect(() => {
+    if (dataToEdit) {
+      setVolquete(dataToEdit);
+      form.setFieldsValue(dataToEdit);
+    } else {
+      setVolquete({ placa: "", propietario: "" });
+    }
+  }, [dataToEdit]);
 
   return (
     <MainModal
@@ -51,7 +66,7 @@ const ModalVolquete = ({ actualizarTabla }) => {
       width={400}
       closeModal={closeModal}
     >
-      <Form onFinish={handleSubmit}>
+      <Form form={form} onFinish={handleSubmit}>
         <Form.Item
           name="placa"
           rules={[{ required: true, message: "Campo obligatorio!" }]}

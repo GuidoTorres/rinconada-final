@@ -1,5 +1,5 @@
 import { Button, Form, Input } from "antd";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineForm } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
 import { notificacion } from "../../../helpers/mensajes";
@@ -7,6 +7,7 @@ import MainModal from "../../modal/MainModal";
 import "../styles/modalVolquete.css";
 
 const ModalTrapiche = ({ actualizarTabla }) => {
+  const [form] = Form.useForm();
   const {
     dataToEdit,
     modal,
@@ -20,7 +21,17 @@ const ModalTrapiche = ({ actualizarTabla }) => {
 
   const closeModal = () => {
     setModal(false);
+    setCargando(false)
   };
+
+  useEffect(() => {
+    if (dataToEdit) {
+      setTrapiche(dataToEdit);
+      form.setFieldsValue(dataToEdit);
+    } else {
+      setTrapiche({ nombre: "" });
+    }
+  }, [dataToEdit]);
 
   const handleSubmit = async () => {
     if (dataToEdit === null) {
@@ -30,6 +41,8 @@ const ModalTrapiche = ({ actualizarTabla }) => {
         notificacion(response.status, response.msg);
         actualizarTabla();
         closeModal();
+        setCargando(false)
+
       }
     }
     if (dataToEdit) {
@@ -39,9 +52,11 @@ const ModalTrapiche = ({ actualizarTabla }) => {
         notificacion(response.status, response.msg);
         actualizarTabla();
         closeModal();
+        setCargando(false)
       }
     }
   };
+
 
   return (
     <MainModal
@@ -51,8 +66,9 @@ const ModalTrapiche = ({ actualizarTabla }) => {
       width={400}
       closeModal={closeModal}
     >
-      <Form onFinish={handleSubmit}>
+      <Form form={form} onFinish={handleSubmit}>
         <Form.Item
+        
           name="nombre"
           rules={[{ required: true, message: "Campo obligatorio!" }]}
         >

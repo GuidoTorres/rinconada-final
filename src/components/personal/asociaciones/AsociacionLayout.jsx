@@ -35,7 +35,6 @@ const AsociacionLayout = () => {
   const [registrarAsociacion, setRegistrarAsociacion] = useState(false);
   const [registrarContratoAsociacion, setContratoAsociacion] = useState(false);
 
-
   const getAsociaciones = async () => {
     setCargando(true);
     const response = await getData(route);
@@ -45,6 +44,7 @@ const AsociacionLayout = () => {
       setCargando(false);
     }
   };
+
   useEffect(() => {
     getAsociaciones();
   }, []);
@@ -128,7 +128,7 @@ const AsociacionLayout = () => {
     const response = await postExcel.json();
 
     if (response) {
-      notificacion(response.msg, response.status);
+      notificacion(response.status, response.msg);
       getAsociaciones();
     }
 
@@ -166,16 +166,10 @@ const AsociacionLayout = () => {
             actualizarTabla={getAsociaciones}
           />
         ) : (
-          <div className="noData">
-            {asociaciones ? (
-              <Cargando />
-            ) : (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={<span>No hay registros para mostrar.</span>}
-              />
-            )}
-          </div>
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={<span>No hay registros para mostrar.</span>}
+          />
         )}
       </div>
 

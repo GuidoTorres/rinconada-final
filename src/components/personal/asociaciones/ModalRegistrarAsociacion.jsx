@@ -22,6 +22,7 @@ const ModalRegistrarAsociacion = ({
     codigo: "",
     tipo: "",
   };
+
   const [asociacion, setAsociacion] = useState(asociacionValues);
   const {
     createData,
@@ -46,6 +47,7 @@ const ModalRegistrarAsociacion = ({
     setModal(false);
     setDataToEdit(null);
     setAsociacion(asociacionValues);
+    setCargando(false)
   };
 
   const handleSubmit = async (e) => {

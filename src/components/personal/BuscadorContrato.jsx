@@ -7,31 +7,19 @@ import "./styles/buscadorHistorial.css";
 const { Search } = Input;
 
 const BuscadorContrato = ({ abrirModal, registrar, data }) => {
-  const { setFilterText } = useContext(CrudContext);
+  const { setFilterTextTrabajador } = useContext(CrudContext);
 
   return (
     <div className="personal-buscador">
       <Search
         placeholder="Ingresa un termino aqui..."
-        onChange={(e) => setFilterText(e.target.value)}
+        onChange={(e) => setFilterTextTrabajador(e.target.value)}
         style={{
           width: 300,
         }}
       />
       <div className="button-container">
-        {/* {data?.contrato?.length > 0 &&
-        data?.contrato?.at(-1)?.finalizado &&
-        data?.evaluacion?.at(-1)?.finalizado === false &&
-        data?.evaluacion?.at(-1)?.fiscalizador_aprobado === "si" &&
-        data?.evaluacion?.at(-1)?.control === "si" &&
-        data?.evaluacion?.at(-1)?.topico === "si" &&
-        data?.evaluacion?.at(-1)?.seguridad === "si" &&
-        data?.evaluacion?.at(-1)?.medio_ambiente === "si" &&
-        data?.evaluacion?.at(-1)?.recursos_humanos === "si" ? (
-          ) : (
-            ""
-            )} */}
-            <Button onClick={() => abrirModal(true)}>+ Registrar</Button>
+        <Button onClick={() => abrirModal(true)}>+ Registrar</Button>
       </div>
     </div>
   );

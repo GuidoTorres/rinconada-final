@@ -7,7 +7,8 @@ import { PlanillaContext } from "../../../context/PlanillaContext";
 import Fechas from "./Fechas";
 import "../style/modalValidacionPagosAsociacion.css";
 import { useState } from "react";
-const ModalValidacionPagosAsociacion = ({ data }) => {
+import MainModal from "../../modal/MainModal";
+const ModalValidacionPagosAsociacion = ({ data, modal2, setModal2 }) => {
   const {
     setValidacionPagosAsociacion,
     setFechas,
@@ -15,7 +16,8 @@ const ModalValidacionPagosAsociacion = ({ data }) => {
     verificacion,
     setVerificacion,
   } = useContext(PlanillaContext);
-  const { getDataById, data3, setData3 } = useContext(CrudContext);
+  const { getDataById, data3, setData3,  data2 } =
+    useContext(CrudContext);
   const [text, setText] = useState();
   const [fechasTabla, setFechasTabla] = useState();
 
@@ -34,7 +36,7 @@ const ModalValidacionPagosAsociacion = ({ data }) => {
   };
 
   const closeModal = () => {
-    setValidacionPagosAsociacion(false);
+    setModal2(false);
   };
 
   useEffect(() => {
@@ -45,142 +47,132 @@ const ModalValidacionPagosAsociacion = ({ data }) => {
   }, [data3]);
 
   return (
-    <div className="modal-validacion">
-      <div className="overlay">
-        <div className="modal-container">
-          <section className="modal-header">
-            Hoja de Tareo
-            <AiOutlineClose onClick={closeModal} />
-          </section>
-          <section className="buscador">
-            <Buscador
-              registrar={false}
-              crear={false}
-              exportar={true}
-              cargar={false}
-            />
-          </section>
-          <section style={{ paddingLeft: "30px" }}>
-            <div>
-              <label htmlFor="">
-                Nombre: {data && data?.nombre ? data.nombre : "---"}
-              </label>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                marginTop: "5px",
-              }}
-            >
-              <div>
-                <label htmlFor="">
-                  Dni: {data && data?.dni ? data.dni : "---"}
-                </label>
-              </div>
-              <div style={{ marginLeft: "50px" }}>
-                <label htmlFor="">
-                  Teléfono: {data && data?.telefono ? data.telefono : "---"}
-                </label>
-              </div>
-              <div style={{ marginLeft: "50px" }}>
-                <label htmlFor="">
-                  Cargo: {data && data?.cargo ? data.cargo : "---"}
-                </label>
-              </div>
-            </div>
-          </section>
-          <section className="table-container">
-            <table>
-              <tr style={{}}>
-                <th>Nro</th>
-                <th>Hoja de tareo asistencia de operacion</th>
-
-                {fechasTabla?.map((item) =>
-                  item.map((data) => (
-                    <th style={{ writingMode: "vertical-lr", transform: "scale(-1)" }}>
-                      <span>{data}</span>
-                    </th>
-                  ))
-                )}
-              </tr>
-              {data3?.map((item, index) => (
-                <tr key={index + 2}>
-                  <td>{index + 1}</td>
-                  <td>
-                    {item?.nombre +
-                      " " +
-                      item?.apellido_paterno +
-                      " " +
-                      item?.apellido_materno}
-                  </td>
-                  {item?.trabajador_asistencia?.map((data) => (
-                    <td>
-                      {data.asistencia === "Permiso"
-                        ? "P"
-                        : data.asistencia === "Asistio"
-                        ? "X"
-                        : data.asistencia === "Falto"
-                        ? "F"
-                        : data.asistencia === "Dia libre"
-                        ? "DL"
-                        : data.asistencia === "Comision"
-                        ? "C"
-                        : "F"}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </table>
-          </section>
-          <section
-            style={{
-              paddingLeft: "30px",
-              marginTop: "20px",
-              display: "flex",
-              gap: 20,
-              paddingRight: "30px",
-            }}
-          >
-            <button
-              style={{
-                padding: "10px",
-                backgroundColor: "white",
-                borderRadius: "6px",
-                border: "1px solid grey",
-              }}
-              onClick={() => modalVerificacion("Verificación Gerente de Op.")}
-            >
-              Verificación Gerente de Op.
-            </button>
-            <button
-              style={{
-                padding: "10px",
-                backgroundColor: "white",
-                borderRadius: "6px",
-                border: "1px solid grey",
-              }}
-              onClick={() =>
-                modalVerificacion("Verificación Jefe de Operaciones")
-              }
-            >
-              Verificación Jefe de Operaciones
-            </button>
-            <button
-              style={{
-                padding: "10px",
-                backgroundColor: "white",
-                borderRadius: "6px",
-                border: "1px solid grey",
-              }}
-              onClick={() => modalVerificacion("Validacion de Trabajador")}
-            >
-              Validacion de Trabajador
-            </button>
-          </section>
+    <MainModal
+      className={"modal-validacion"}
+      title={"Hoja de tareo"}
+      open={modal2}
+      width={900}
+      closeModal={closeModal}
+    >
+      <section style={{ paddingLeft: "30px" }}>
+        <div>
+          <label htmlFor="">
+            Nombre: {data && data?.nombre ? data.nombre : "---"}
+          </label>
         </div>
-      </div>
-    </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            marginTop: "5px",
+          }}
+        >
+          <div>
+            <label htmlFor="">
+              Dni: {data && data?.dni ? data.dni : "---"}
+            </label>
+          </div>
+          <div style={{ marginLeft: "50px" }}>
+            <label htmlFor="">
+              Teléfono: {data && data?.telefono ? data.telefono : "---"}
+            </label>
+          </div>
+          <div style={{ marginLeft: "50px" }}>
+            <label htmlFor="">
+              Cargo: {data && data?.cargo ? data.cargo : "---"}
+            </label>
+          </div>
+        </div>
+      </section>
+      <section className="table-container">
+        <table>
+          <tr style={{}}>
+            <th>Nro</th>
+            <th>Hoja de tareo asistencia de operacion</th>
+
+            {fechasTabla?.map((item) =>
+              item.map((data) => (
+                <th
+                  style={{ writingMode: "vertical-lr", transform: "scale(-1)" }}
+                >
+                  <span>{data}</span>
+                </th>
+              ))
+            )}
+          </tr>
+          {data3?.map((item, index) => (
+            <tr key={index + 2}>
+              <td>{index + 1}</td>
+              <td>
+                {item?.nombre +
+                  " " +
+                  item?.apellido_paterno +
+                  " " +
+                  item?.apellido_materno}
+              </td>
+              {item?.trabajador_asistencia?.map((data) => (
+                <td>
+                  {data.asistencia === "Permiso"
+                    ? "P"
+                    : data.asistencia === "Asistio"
+                    ? "X"
+                    : data.asistencia === "Falto"
+                    ? "F"
+                    : data.asistencia === "Dia libre"
+                    ? "DL"
+                    : data.asistencia === "Comision"
+                    ? "C"
+                    : "F"}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </table>
+      </section>
+      <section
+        style={{
+          paddingLeft: "30px",
+          marginTop: "20px",
+          display: "flex",
+          gap: 20,
+          paddingRight: "30px",
+        }}
+      >
+        <button
+          style={{
+            padding: "10px",
+            backgroundColor: "white",
+            borderRadius: "6px",
+            border: "1px solid grey",
+          }}
+          onClick={() => modalVerificacion("Verificación Gerente de Op.")}
+        >
+          Verificación Gerente de Op.
+        </button>
+        <button
+          style={{
+            padding: "10px",
+            backgroundColor: "white",
+            borderRadius: "6px",
+            border: "1px solid grey",
+          }}
+          onClick={() => modalVerificacion("Verificación Jefe de Operaciones")}
+        >
+          Verificación Jefe de Operaciones
+        </button>
+        <button
+          style={{
+            padding: "10px",
+            backgroundColor: "white",
+            borderRadius: "6px",
+            border: "1px solid grey",
+          }}
+          onClick={() => modalVerificacion("Validacion de Trabajador")}
+        >
+          Validacion de Trabajador
+        </button>
+      </section>
+    </MainModal>
   );
 };
 

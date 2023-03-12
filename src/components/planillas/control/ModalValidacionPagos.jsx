@@ -8,16 +8,17 @@ import useSearch from "../../../hooks/useSearch";
 import MainModal from "../../modal/MainModal";
 import "../style/modalValidacionPagos.css";
 
-const ModalValidacionPagos = ({ data }) => {
+const ModalValidacionPagos = ({ data, modal, setModal }) => {
   const { verificacion, setVerificacion } = useContext(PlanillaContext);
-  const { getDataById, data2, setData2, modal, setModal } =
+  const { getDataById, data2,   } =
     useContext(CrudContext);
   const [text, setText] = useState();
-  const { result } = useSearch(data2);
+  const [validacion, setValidacion] = useState([]);
+  // const { result } = useSearch(validacion);
   const getTareo = async () => {
     const route = "planilla/tareo";
     const response = await getDataById(route, data.dni);
-    setData2(response.data);
+    setValidacion(response.data);
   };
   useEffect(() => {
     getTareo();
@@ -46,7 +47,8 @@ const ModalValidacionPagos = ({ data }) => {
         registrar={false}
         crear={false}
         exportar={true}
-        cargar={false}
+        data1={data}
+        data2={validacion}
       />
       <div>
         <label htmlFor="">
@@ -68,9 +70,9 @@ const ModalValidacionPagos = ({ data }) => {
               [data].map((item) => (item.telefono ? item.telefono : "----"))}
           </label>
         </div>
-        {/* <div>
-                  <label htmlFor="">Cargo:</label>
-                </div> */}
+        <div>
+          <label htmlFor="">Cargo: {data.contratos.puesto}</label>
+        </div>
 
         <div
           style={{
@@ -83,11 +85,11 @@ const ModalValidacionPagos = ({ data }) => {
         <div style={{ marginBottom: "10px" }}>
           <label htmlFor="">
             Total de días asistidos:{" "}
-            {data2.filter((item) => item.asistencia === "Asistio").length}
+            {validacion.filter((item) => item.asistencia === "Asistio").length}
           </label>
         </div>
       </div>
-      <Tabla columns={columns} table={result} />
+      <Tabla columns={columns} table={validacion} />
 
       {/* <section
         style={{

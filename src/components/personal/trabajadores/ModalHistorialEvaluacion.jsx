@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CrudContext } from "../../../context/CrudContext";
 import ModalRegistroEvaluacion from "./ModalRegistroEvaluacion";
 import Tabla from "../../tabla/Tabla";
@@ -12,7 +12,7 @@ import "../styles/modalHistorialEvaluacion.css";
 import Cargando from "../../cargando/Cargando";
 import { Empty } from "antd";
 
-const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador,data }) => {
+const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador, data }) => {
   const route = "evaluacion";
 
   const {
@@ -28,6 +28,7 @@ const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador,data }) => {
     cargando,
     setCargando,
   } = useContext(CrudContext);
+  const [historial, setHistorial] = useState([]);
   const { result } = useSearch(data1);
 
   const getEvaluacion = async () => {
@@ -76,18 +77,12 @@ const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador,data }) => {
         />
       </section>
       {data1.length > 0 ? (
-        <Tabla columns={columns} table={result} />
+        <Tabla columns={columns} table={data1} />
       ) : (
-        <div className="noData">
-          {cargando ? (
-            <Cargando />
-          ) : (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={<span>No hay registros para mostrar.</span>}
-            />
-          )}
-        </div>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={<span>No hay registros para mostrar.</span>}
+        />
       )}
 
       {modal3 && (

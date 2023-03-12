@@ -36,7 +36,6 @@ const ModalHistorialContrato = ({
   const [id, setId] = useState("");
   const { result } = useSearch(data1);
 
-
   const getContrato = async () => {
     const route = "contrato";
     const response = await getDataById(route, selected);
@@ -94,16 +93,10 @@ const ModalHistorialContrato = ({
       {data1.length > 0 ? (
         <Tabla columns={columns} table={result} />
       ) : (
-        <div className="noData">
-          {cargando ? (
-            <Cargando />
-          ) : (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={<span>No hay registros para mostrar.</span>}
-            />
-          )}
-        </div>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={<span>No hay registros para mostrar.</span>}
+        />
       )}
 
       {modal3 && (

@@ -824,6 +824,32 @@ export const modalRegistroContratoPersonal = (
     },
 
     {
+      label: <label>Tareo (días de trabajo)</label>,
+      name: "tareo",
+      rules: [
+        {
+          required: false,
+        },
+      ],
+      type: (
+        <Select
+          value={contrato?.tareo}
+          name="tareo"
+          onChange={(e) => handleData(e, "tareo")}
+          options={[
+            {
+              label: "Mes cerrado",
+              value: "Mes cerrado",
+            },
+            {
+              label: "Lunes a sabado",
+              value: "Lunes a sabado",
+            },
+          ]}
+        />
+      ),
+    },
+    {
       label: <label>Perido de trabajo(quincena)</label>,
       name: "periodo_trabajo",
       rules: [
@@ -840,6 +866,7 @@ export const modalRegistroContratoPersonal = (
         />
       ),
     },
+
     {
       label: <label>Tipo de contrato</label>,
       name: "tipo_contrato",
@@ -959,7 +986,7 @@ export const modalRegistroContratoPersonal = (
         <Select
           value={contrato?.suspendido}
           name="suspendido"
-          onChange={handleData}
+          onChange={(e) => handleData(e, "suspendido")}
           options={[
             {
               label: "Normal",
@@ -1016,7 +1043,9 @@ export const modalRegistroContratoAsociacion = (
   campamento,
   gerencia,
   area,
-  form
+  form,
+  dataToEdit,
+  id
 ) => {
   return [
     {
@@ -1031,7 +1060,8 @@ export const modalRegistroContratoAsociacion = (
 
       type: (
         <Input
-          value={contrato?.codigo_contrato}
+          disabled
+          value={dataToEdit !== null ? contrato?.id : id}
           type="text"
           name="codigo_contrato"
           placeholder="Codigo de contrato"
@@ -1688,7 +1718,7 @@ export const modalRegistrarMovimiento = (
           name="fecha"
           placeholder="Ingrese la fecha"
           onChange={handleData}
-          defaultValue={sucursal.fecha}
+          value={sucursal?.fecha}
         />
       ),
     },
@@ -1976,13 +2006,43 @@ export const modalRegistrarMovimiento = (
         },
       ],
       type: (
-        <Input
-          value={sucursal.comprobante}
-          type="text"
-          name="comprobante"
+        <Select
           placeholder="Comprobante"
-          onChange={handleData}
-        />
+          style={{
+            width: "100%",
+          }}
+          name="forma_pago"
+          onChange={(e) => handleData(e, "comprobante")}
+          value={sucursal.comprobante}
+        >
+          <Select.Option value="Factura electronica">
+            Factura electronica
+          </Select.Option>
+          <Select.Option value="Boleta de Venta">Boleta de venta</Select.Option>
+          <Select.Option value="Bolecta electronica">
+            Bolecta electronica
+          </Select.Option>
+          <Select.Option value="Nota de pedido">Nota de pedido</Select.Option>
+          <Select.Option value="Nota de venta">Nota de venta</Select.Option>
+          <Select.Option value="Recibo">Recibo</Select.Option>
+          <Select.Option value="Recibo externo">Recibo externo</Select.Option>
+          <Select.Option value="Declaración jurada">
+            Declaración jurada
+          </Select.Option>
+          <Select.Option value="Proforma">Proforma</Select.Option>
+          <Select.Option value="Tickets">Tickets</Select.Option>
+          <Select.Option value="Constancia">Constancia</Select.Option>
+          <Select.Option value="Transferencia">Transferencia</Select.Option>
+          <Select.Option value="Voucher">Voucher</Select.Option>
+          <Select.Option value="Lista">Lista</Select.Option>
+          <Select.Option value="Planilla de gastos de movilidad">
+            Planilla de gastos de movilidad
+          </Select.Option>
+          <Select.Option value="Contrato">Contrato</Select.Option>
+          <Select.Option value="Recibo por honorarios">
+            Recibo por honorarios
+          </Select.Option>
+        </Select>
       ),
     },
     {
@@ -2120,7 +2180,7 @@ export const modalRegistrarProveedor = (proveedor, handleData) => {
   ];
 };
 
-export const modalRegistrarSucursal = (sucursal, handleData) => {
+export const modalRegistrarSucursal = (sucursal, handleData, dataToEdit) => {
   return [
     {
       label: <label>Nombre</label>,
@@ -2187,6 +2247,7 @@ export const modalRegistrarSucursal = (sucursal, handleData) => {
       ],
       type: (
         <Input
+          disabled={dataToEdit !== null ? true : false}
           value={sucursal.saldo_inicial}
           name="saldo_inicial"
           placeholder="saldo_inicial"

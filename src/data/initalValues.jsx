@@ -94,7 +94,7 @@ export const empresaContratoValues = (data) => {
   };
 };
 
-export const valuesContrato = (data, evaluaciones) => {
+export const valuesContrato = (data, ids) => {
   return {
     fecha_inicio: "",
     codigo_contrato: "",
@@ -114,7 +114,7 @@ export const valuesContrato = (data, evaluaciones) => {
     puesto: "",
     asociacion_id: data && data?.id,
     estado: false,
-    evaluacion_id: evaluaciones.map(item => item?.evaluacion?.at(-1)?.id)
+    evaluacion_id: ids
   };
 };
 

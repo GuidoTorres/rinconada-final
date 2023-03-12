@@ -23,7 +23,7 @@ const Tabla = ({ columns, table, filas }) => {
         responsive
 
         paginationComponentOptions={paginationComponentOptions}
-        paginationPerPage={filas || 8}
+        paginationPerPage={filas || 10}
         paginationRowsPerPageOptions={[8, 16, 24, 32, 40]}
       />
     </div>

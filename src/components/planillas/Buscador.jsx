@@ -5,6 +5,8 @@ import { PlanillaContext } from "../../context/PlanillaContext";
 import { Input, Button, Radio } from "antd";
 import { notificacion } from "../../helpers/mensajes";
 import "./style/buscador.css";
+import { handleDownloadExcel } from "../../helpers/tablaExcel";
+import Item from "antd/es/list/Item";
 const { Search } = Input;
 
 const Buscador = ({
@@ -16,7 +18,11 @@ const Buscador = ({
   actualizarTabla,
   actualizarAsistencia,
   actualizar,
-  buscador, cargando, setCargando
+  buscador,
+  cargando,
+  setCargando,
+  data1,
+  data2,
 }) => {
   const { createData, setFilterText } = useContext(CrudContext);
   const { setControlAsistencia } = useContext(PlanillaContext);
@@ -26,31 +32,35 @@ const Buscador = ({
     abrirModal(true);
   };
 
-
-
   const changeHandler = (e) => {
     inputFileRef.current.click();
   };
 
   const excelFile = async (e) => {
-    let formData = new FormData();
-    formData.append("myFile", e.target.files[0]);
-    const excel = await fetch(
-      `${import.meta.env.VITE_APP_BASE}/asistencia/excel`,
-      {
-        method: "post",
-        body: formData,
-      }
-    );
-    const response = await excel.json();
-    if (response) {
-      notificacion(response.status, response.msg);
-      actualizar();
-      actualizarTabla();
-      setControlAsistencia(false);
-    }
-
-    inputFileRef.current.value = null;
+    const result = data2?.map((dat) => {
+      return {
+        Nro: 1,
+        Nombres_Apellidos: data1?.nombre,
+        dni: data1?.dni,
+        Celular: data1?.telefono,
+        Cargo: data1?.contratos?.puesto,
+        Área: data1?.contratos?.area,
+        [dat?.asistencium?.fecha]:
+          dat.asistencia === "Permiso"
+            ? "P"
+            : dat.asistencia === "Asistio"
+            ? "X"
+            : dat.asistencia === "Falto"
+            ? "F"
+            : dat.asistencia === "Dia libre"
+            ? "DL"
+            : dat.asistencia === "Comision"
+            ? "C"
+            : "F",
+      };
+    });
+    console.log(result);
+    // handleDownloadExcel(result, "Hoja de tareo", "Hoja de tareo");
   };
 
   return (
@@ -95,13 +105,13 @@ const Buscador = ({
           ) : (
             ""
           )}
-          {cargar !== false ? (
+          {/* {cargar !== false ? (
             <Button style={{ width: "100px" }} onClick={changeHandler}>
               Cargar
             </Button>
           ) : (
             ""
-          )}
+          )} */}
         </div>
       )}
     </div>

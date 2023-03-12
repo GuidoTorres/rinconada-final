@@ -5,14 +5,16 @@ export const CrudContext = createContext();
 export const CrudProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [data1, setData1] = useState([]);
-  const [user, setUser] = useState(false)
-  const [permisos, setPermisos] = useState([])
+  const [user, setUser] = useState(false);
+  const [permisos, setPermisos] = useState([]);
 
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [filterText, setFilterText] = useState("");
+  const [filterTextTrabajador, setFilterTextTrabajdor] = useState("");
+
   const [filterTextModal, setFilterTextModal] = useState("");
-  const [cargando, setCargando] = useState(false)
+  const [cargando, setCargando] = useState(false);
 
   const [dataToEdit, setDataToEdit] = useState(null);
   const [modalCampamento, setModalCampamento] = useState(false);
@@ -23,8 +25,8 @@ export const CrudProvider = ({ children }) => {
   const [tipo, setTipo] = useState("");
   const [multipleRequerimientos, setMultipleRequerimientos] = useState([]);
   const [sidebar, setSidebar] = useState(false);
-  const [result, setResult] = useState()
-  const [prueba, setPrueba] = useState()
+  const [result, setResult] = useState();
+  const [prueba, setPrueba] = useState();
   const [header, setHeader] = useState({
     back: "",
     text: "",
@@ -71,32 +73,26 @@ export const CrudProvider = ({ children }) => {
   };
 
   const updateData = async (data, id, route) => {
-    const prueba = await fetch(
-      `${process.env.REACT_APP_BASE}/${route}/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const prueba = await fetch(`${process.env.REACT_APP_BASE}/${route}/${id}`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     const content = await prueba.json();
     return content;
   };
 
   const deleteData = async (route, id) => {
-    const prueba = await fetch(
-      `${process.env.REACT_APP_BASE}/${route}/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const prueba = await fetch(`${process.env.REACT_APP_BASE}/${route}/${id}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+    });
     const content = await prueba.json();
     return content;
   };
@@ -138,7 +134,18 @@ export const CrudProvider = ({ children }) => {
     setMultipleRequerimientos,
     sidebar,
     setSidebar,
-    header,cargando, setCargando,
-    setHeader, user, setUser, permisos, setPermisos, result, setResult}
+    header,
+    cargando,
+    setCargando,
+    setHeader,
+    user,
+    setUser,
+    permisos,
+    setPermisos,
+    result,
+    setResult,
+    filterTextTrabajador,
+    setFilterTextTrabajdor,
+  };
   return <CrudContext.Provider value={info}>{children}</CrudContext.Provider>;
 };
