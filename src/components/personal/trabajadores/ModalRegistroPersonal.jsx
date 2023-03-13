@@ -114,7 +114,7 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
 
     if (dataToEdit === null) {
       setCargando(true);
-      const query = await fetch(`http://localhost:3000/api/v1/trabajador`, {
+      const query = await fetch(`https://rinconada.fly.dev/api/v1/trabajador`, {
         method: "POST",
         body: formData,
       });
@@ -129,7 +129,7 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
     if (dataToEdit !== null) {
       setCargando(true);
       const query = await fetch(
-        `http://localhost:3000/api/v1/trabajador/${dataToEdit.dni}`,
+        `https://rinconada.fly.dev/api/v1/trabajador/${dataToEdit.dni}`,
         {
           method: "PUT",
           body: formData,
