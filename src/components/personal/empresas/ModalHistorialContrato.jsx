@@ -8,19 +8,18 @@ import MainModal from "../../modal/MainModal";
 import { empresaHistorialContrato } from "../../../data/dataTable";
 import "../styles/modalHistorialContrato.css";
 
-const ModalHistorialContrato = ({ selected }) => {
+const ModalHistorialContrato = ({ selected, modal1, setModal1 }) => {
   const {
     getDataById,
     deleteData,
     data1,
     setData1,
     setDataToEdit,
-    modal1,
-    setModal1,
     modal2,
     setModal2,
   } = useContext(CrudContext);
   const [id, setId] = useState("");
+  const [modalRegistrarContrato, setModalRegistraContrato] = useState(false);
 
   const getContrato = async () => {
     const route = "empresa";
@@ -32,7 +31,7 @@ const ModalHistorialContrato = ({ selected }) => {
 
   const handleEdit = (e) => {
     setDataToEdit(e.contratos);
-    setModal1(true);
+    setModalRegistraContrato(true);
     setId(e);
   };
 
@@ -46,7 +45,7 @@ const ModalHistorialContrato = ({ selected }) => {
 
   const closeModal = () => {
     setModal1(false);
-    setDataToEdit(null)
+    setDataToEdit(null);
   };
 
   useEffect(() => {
@@ -63,16 +62,18 @@ const ModalHistorialContrato = ({ selected }) => {
       width={900}
       closeModal={closeModal}
     >
-      <Buscador abrirModal={setModal2} registrar={true} modal={true} />
+      <Buscador abrirModal={setModalRegistraContrato} registrar={true} modal={true} />
       <div className="container">
         <Tabla columns={columns} table={data1} />
       </div>
 
-      {modal2 && (
+      {modalRegistrarContrato && (
         <ModalRegistrarContrato
           actualizarTabla={getContrato}
           selected={id}
           data={selected}
+          modal2={modalRegistrarContrato}
+          setModal2={setModalRegistraContrato}
         />
       )}
     </MainModal>

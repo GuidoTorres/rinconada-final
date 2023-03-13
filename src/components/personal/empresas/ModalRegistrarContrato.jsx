@@ -8,7 +8,8 @@ import { notificacion } from "../../../helpers/mensajes";
 import MainModal from "../../modal/MainModal";
 import { AiOutlineForm } from "react-icons/ai";
 import "../styles/modalRegistrarContrato.css";
-const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
+import { logDOM } from "@testing-library/react";
+const ModalRegistrarContrato = ({ actualizarTabla, selected, data, modal2, setModal2 }) => {
   const [form] = Form.useForm();
 
   const route = "contrato";
@@ -22,16 +23,13 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
     createData,
     updateData,
     getData,
-    modal1,
-    setModal1,
+ 
     setDataToEdit,
     dataToEdit,
     cargando,
     setCargando,
   } = useContext(CrudContext);
-  console.log('====================================');
-  console.log(data);
-  console.log('====================================');
+
 
   const empresaValues = valuesContratoEmpresa(data.id)
 
@@ -67,6 +65,10 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
     setSocio(all[4].data);
     setId(all[5].data);
   };
+
+  console.log('====================================');
+  console.log(dataToEdit);
+  console.log('====================================');
 
   useEffect(() => {
     if (dataToEdit) {
@@ -131,7 +133,7 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
   };
 
   const closeModal = () => {
-    setModal1(false);
+    setModal2(false);
     setDataToEdit(null);
     setContrato(modalContratoEmpresa);
   };
@@ -148,7 +150,7 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
     <MainModal
       className={"modal-contrato-empresa"}
       title={"Registrar contrato"}
-      open={modal1}
+      open={modal2}
       width={900}
       closeModal={closeModal}
     >

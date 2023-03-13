@@ -10,7 +10,12 @@ import { modalRegistroEmpresa } from "../../../data/FormValues";
 import "../styles/modalRegistrarEmpresa.css";
 import { AiOutlineForm } from "react-icons/ai";
 
-const ModalRegistrarEmpresa = ({ actualizarTabla, selected }) => {
+const ModalRegistrarEmpresa = ({
+  actualizarTabla,
+  selected,
+  modal,
+  setModal,
+}) => {
   const [form] = Form.useForm();
 
   const route = "empresa";
@@ -22,10 +27,9 @@ const ModalRegistrarEmpresa = ({ actualizarTabla, selected }) => {
   const {
     createData,
     updateData,
-    modal,
     setDataToEdit,
     dataToEdit,
-    setModal,
+
     cargando,
     setCargando,
   } = useContext(CrudContext);

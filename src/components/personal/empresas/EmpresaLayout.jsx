@@ -20,10 +20,14 @@ const EmpresaLayout = () => {
     modal,
     setModal1,
     modal1,
+    setModal2,
+    modal2,
     setDataToEdit,
   } = useContext(CrudContext);
   const [empresas, setEmpresas] = useState([]);
   const [id, setId] = useState("");
+  const [modalRegistrarEmpresa, setModalREgistraEmpres] = useState(false);
+  const [modalHistorial, setModalHistorial] = useState(false);
 
   const { result } = useSearch(empresas);
 
@@ -34,7 +38,7 @@ const EmpresaLayout = () => {
 
   const handleEdit = (e) => {
     setDataToEdit(e);
-    setModal(true);
+    setModalREgistraEmpres(true);
   };
 
   const handleDelete = async (e) => {
@@ -50,7 +54,7 @@ const EmpresaLayout = () => {
   }, []);
 
   const handleContrato = (e) => {
-    setModal1(true);
+    setModalHistorial(true);
     setId(e);
   };
 
@@ -60,7 +64,7 @@ const EmpresaLayout = () => {
     <>
       <Header text={"Empresas"} user={"Usuario"} ruta={"/personal"} />
       <div className="margenes">
-        <Buscador abrirModal={setModal} registrar={true} />
+        <Buscador abrirModal={setModalREgistraEmpres} registrar={true} />
 
         {result?.length > 0 ? (
           <Tabla columns={columns} table={result} />
@@ -72,8 +76,20 @@ const EmpresaLayout = () => {
         )}
       </div>
 
-      {modal && <ModalRegistrarEmpresa actualizarTabla={getEmpresa} />}
-      {modal1 && <ModalHistorialContrato selected={id} />}
+      {modalRegistrarEmpresa && (
+        <ModalRegistrarEmpresa
+          actualizarTabla={getEmpresa}
+          modal={modalRegistrarEmpresa}
+          setModal={setModalREgistraEmpres}
+        />
+      )}
+      {modalHistorial && (
+        <ModalHistorialContrato
+          selected={id}
+          modal1={modalHistorial}
+          setModal1={setModalHistorial}
+        />
+      )}
     </>
   );
 };
