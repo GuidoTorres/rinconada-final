@@ -58,6 +58,11 @@ const ModalVolquete = ({ actualizarTabla }) => {
     }
   }, [dataToEdit]);
 
+
+  console.log('====================================');
+  console.log(volquete);
+  console.log('====================================');
+
   return (
     <MainModal
       className={"modal-volquete"}
@@ -77,20 +82,20 @@ const ModalVolquete = ({ actualizarTabla }) => {
             type="text"
             name="placa"
             placeholder="Placa"
-            onChange={(e) => setVolquete({ placa: e.target.value })}
+            onChange={(e) => setVolquete(value => ({...value, placa: e.target.value }))}
           ></Input>
         </Form.Item>
 
         <Form.Item
           name="propietario"
-          rules={[{ required: true, message: "Campo obligatorio!" }]}
+          rules={[{ required: false }]}
         >
           <Input
             value={volquete?.propietario}
             type="text"
             name="propietario"
             placeholder="Propietario"
-            onChange={(e) => setVolquete({ propietario: e.target.value })}
+            onChange={(e) => setVolquete(value => ({...value, propietario: e.target.value }))}
           ></Input>
 
           <div className="button-container">

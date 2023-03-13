@@ -9,10 +9,10 @@ import BuscadorTrapiche from "../BuscadorTrapiche";
 import ModalTrapiche from "./ModalTrapiche";
 
 const Trapiche = () => {
-  const { getData, modal, setModal,setDataToEdit, deleteData } = useContext(CrudContext);
+  const { getData, modal, setModal, setDataToEdit, deleteData } =
+    useContext(CrudContext);
   const [trapiches, setTrapiches] = useState([]);
-  const {result} = useSearch(trapiches)
-
+  const { result } = useSearch(trapiches);
 
   const getTrapiche = async () => {
     const response = await getData("trapiche");
@@ -25,7 +25,6 @@ const Trapiche = () => {
   const handleEdit = (e) => {
     setDataToEdit(e);
     setModal(true);
-
   };
 
   const handleDelete = async (e) => {
@@ -45,7 +44,7 @@ const Trapiche = () => {
         <Tabla columns={columns} table={result} />
       </div>
 
-      {modal && <ModalTrapiche actualizarTabla={getTrapiche}/>}
+      {modal && <ModalTrapiche actualizarTabla={getTrapiche} />}
     </>
   );
 };

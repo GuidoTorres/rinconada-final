@@ -33,8 +33,10 @@ const ModalHistorialContrato = ({
     cargando,
     setCargando,
   } = useContext(CrudContext);
+
+  const [search, setSearch] = useState([]);
+  const [filterText, setFilterText] = useState("");
   const [id, setId] = useState("");
-  const { result } = useSearch(data1);
 
   const getContrato = async () => {
     const route = "contrato";
@@ -53,6 +55,28 @@ const ModalHistorialContrato = ({
     setModal3(true);
     setId(e);
   };
+  useEffect(() => {
+    const filtered =
+      data1 &&
+      data1
+        .filter(
+          (item) =>
+            item?.fecha_inicio
+              ?.split("T")[0]
+              ?.toLowerCase()
+              .includes(filterText.toLowerCase()) ||
+            item?.fecha_fin
+              ?.split("T")[0]
+              ?.toLowerCase()
+              .includes(filterText.toLowerCase()) ||
+            item?.tipo_contrato
+              ?.toLowerCase()
+              .includes(filterText.toLowerCase())
+        )
+
+        .flat();
+    setSearch(filtered);
+  }, [filterText, data1]);
 
   const handleDelete = async (id) => {
     const response = await deleteData(route, id.id);
@@ -87,11 +111,12 @@ const ModalHistorialContrato = ({
           registrar={true}
           tipo={"contrato"}
           data={data}
+          setFilterText={setFilterText}
         />
       </section>
 
       {data1.length > 0 ? (
-        <Tabla columns={columns} table={result} />
+        <Tabla columns={columns} table={search} />
       ) : (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}

@@ -48,6 +48,7 @@ const ModalRegistrarContrato = ({
     const response4 = await getData(route4);
     const response5 = await getData(route5);
     const response6 = await getData("contrato");
+    const response7 = await getData("contrato/last/id");
 
     setCargo(response1.data);
     setCampamento(response2.data);
@@ -55,20 +56,8 @@ const ModalRegistrarContrato = ({
     setArea(response4.data);
     setSocio(response5.data);
     setResponseContrato(response6.data);
+    setId(response7.data);
   };
-  
-
-  useEffect(() => {
-    if (responseContrato.length === 0) {
-      setId(1);
-    } else {
-      const contraid = responseContrato?.at(-1)?.id;
-      const idFinal = parseInt(contraid) + 1;
-      setId(idFinal);
-
-    }
-  }, [responseContrato]);
-
   const trabajadorContratoValues = {
     fecha_inicio: "",
     codigo_contrato: "",
@@ -95,7 +84,11 @@ const ModalRegistrarContrato = ({
     trabajador_id: trabajadorDni,
   };
   const [contrato, setContrato] = useState(trabajadorContratoValues);
-
+  useEffect(() => {
+    if (dataToEdit === null) {
+      setContrato((value) => ({ ...value, codigo_contrato: id }));
+    }
+  }, [id, dataToEdit]);
   useEffect(() => {
     if (dataToEdit) {
       setContrato(dataToEdit);
@@ -124,7 +117,6 @@ const ModalRegistrarContrato = ({
       });
     }
   }, [contrato.fecha_inicio, contrato.periodo_trabajo, contrato.tareo]);
-
 
   const handleData = (e, text) => {
     if (!text && e.target) {

@@ -42,8 +42,6 @@ const ModalHistorialContratoAsociacion = ({
     setId(e);
   };
   
-
-
   const handleDelete = async (id) => {
     let route = "contrato";
     const response = await deleteData(route, id.id);

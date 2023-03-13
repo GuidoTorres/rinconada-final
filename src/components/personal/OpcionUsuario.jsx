@@ -1,14 +1,13 @@
 import React from "react";
 import MenuOpcion from "../menu-opciones/MenuOpcion";
-import { BsTools,BsTruck } from "react-icons/bs";
+import { BsHouseDoor, BsTools,BsTruck } from "react-icons/bs";
 import { BiBuildings } from "react-icons/bi";
 
 import { GrGroup } from "react-icons/gr";
 import { FaHandshake } from "react-icons/fa";
 
 import "../../components/administracion/styles/opcionUsuario.css";
-import { useContext } from "react";
-import { CrudContext } from "../../context/CrudContext";
+
 
 const OpcionUsuario = () => {
   const trabajador = JSON.parse(
@@ -61,7 +60,7 @@ const OpcionUsuario = () => {
       <MenuOpcion
           text={"Trapiches"}
           path={"trapiche"}
-          img={<FaHandshake className="icon" />}
+          img={<BsHouseDoor className="icon" />}
         />
         <MenuOpcion
           text={"Volquetes"}

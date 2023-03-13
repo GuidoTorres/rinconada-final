@@ -1,19 +1,16 @@
 import React from "react";
-import { useContext } from "react";
-import { CrudContext } from "../../context/CrudContext";
 import { Input, Button } from "antd";
 import "./styles/buscadorHistorial.css";
 
 const { Search } = Input;
 
-const BuscadorContrato = ({ abrirModal, registrar, data }) => {
-  const { setFilterTextTrabajador } = useContext(CrudContext);
+const BuscadorContrato = ({ abrirModal, registrar, data,setFilterText }) => {
 
   return (
     <div className="personal-buscador">
       <Search
         placeholder="Ingresa un termino aqui..."
-        onChange={(e) => setFilterTextTrabajador(e.target.value)}
+        onChange={(e) => setFilterText(e.target.value)}
         style={{
           width: 300,
         }}

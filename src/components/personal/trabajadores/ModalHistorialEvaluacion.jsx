@@ -5,7 +5,6 @@ import Tabla from "../../tabla/Tabla";
 
 import { tableHistorialEvaluacion } from "../../../data/dataTable";
 import BuscadorEvaluacion from "../BuscadorEvaluacion";
-import useSearch from "../../../hooks/useSearch";
 import MainModal from "../../modal/MainModal";
 import { notificacion } from "../../../helpers/mensajes";
 import "../styles/modalHistorialEvaluacion.css";
@@ -14,6 +13,8 @@ import { Empty } from "antd";
 
 const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador, data }) => {
   const route = "evaluacion";
+  const [search, setSearch] = useState([]);
+  const [filterText, setFilterText] = useState("");
 
   const {
     getDataById,
@@ -29,7 +30,6 @@ const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador, data }) => {
     setCargando,
   } = useContext(CrudContext);
   const [historial, setHistorial] = useState([]);
-  const { result } = useSearch(data1);
 
   const getEvaluacion = async () => {
     const response = await getDataById(route, selected.dni);
@@ -48,6 +48,21 @@ const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador, data }) => {
       actualizarTrabajador();
     }
   };
+
+  useEffect(() => {
+    const filtered =
+      data1 &&
+      data1
+        .filter((item) =>
+          item?.fecha_evaluacion
+            .split("T")[0]
+            ?.toLowerCase()
+            .includes(filterText.toLowerCase())
+        )
+
+        .flat();
+    setSearch(filtered);
+  }, [filterText, data1]);
 
   useEffect(() => {
     getEvaluacion();
@@ -74,10 +89,11 @@ const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador, data }) => {
           abrirModal={setModal3}
           registrar={true}
           data={data}
+          setFilterText={setFilterText}
         />
       </section>
       {data1.length > 0 ? (
-        <Tabla columns={columns} table={data1} />
+        <Tabla columns={columns} table={search} />
       ) : (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}

@@ -6,14 +6,13 @@ import { AiOutlineForm } from "react-icons/ai";
 import "./styles/buscadorHistorial.css";
 const { Search } = Input;
 
-const BuscadorEvaluacion = ({ abrirModal, registrar, data }) => {
-  const { setFilterTextEvaluacion } = useContext(CrudContext);
+const BuscadorEvaluacion = ({ abrirModal, registrar, data, setFilterText }) => {
 
   return (
     <div className="personal-buscador">
       <Search
         placeholder="Ingresa un termino aqui..."
-        onChange={(e) => setFilterTextEvaluacion(e.target.value)}
+        onChange={(e) => setFilterText(e.target.value)}
         style={{
           width: 300,
         }}

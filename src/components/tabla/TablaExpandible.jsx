@@ -7,12 +7,13 @@ import {
   AiOutlineCheck,
   AiOutlineClose,
 } from "react-icons/ai";
-import { BsFillTrash2Fill } from "react-icons/bs";
+import { BsFillTrash2Fill, BsPencil, BsTrash } from "react-icons/bs";
 import ModalRegistroPersonal from "../personal/trabajadores/ModalRegistroPersonal";
 import { CrudContext } from "../../context/CrudContext";
 import ModalHistorialEvaluacion from "../personal/trabajadores/ModalHistorialEvaluacion";
 import { notificacion } from "../../helpers/mensajes";
-import { Empty } from "antd";
+import { Empty, Popconfirm } from "antd";
+import { BiBold } from "react-icons/bi";
 
 const Tabla = ({ columns, table, actualizarTabla }) => {
   const route = "trabajador";
@@ -119,8 +120,7 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
             <AiOutlineCheck
               style={{ color: "green", fontWeigth: "bold", fontSize: "16px" }}
             />
-          ) : e?.evaluacions?.id &&
-            !e?.evaluacions?.finalizado ? (
+          ) : e?.evaluacions?.id && !e?.evaluacions?.finalizado ? (
             <AiOutlineClose
               style={{ color: "red", fontWeigth: "bold", fontSize: "16px" }}
             />
@@ -136,19 +136,30 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
       name: "Acciones",
       button: true,
       cell: (e) => (
-        <>
-          <AiFillEdit onClick={() => handleEdit(e)} />
-          <BsFillTrash2Fill onClick={() => handleDelete(e.dni)} />
-        </>
+        <div className="acciones">
+          <BsPencil onClick={() => handleEdit(e)} />
+          <Popconfirm
+            title="Eliminar trabajador"
+            description="¿Estas seguro de eliminar?"
+            onConfirm={() => handleDelete(e.dni)}
+            // onCancel={cancel}
+            okText="Si"
+            cancelText="No"
+            placement="topRight"
+          >
+            <BsTrash />
+          </Popconfirm>
+        </div>
       ),
     },
   ];
 
   const conditionalRowStyles = [
     {
-      when: (row) => row?.contrato?.length > 0,
+      when: (row) => row?.contrato,
       style: (row) => ({
-        back: row?.contrato?.length > 0 ? "green" : "",
+        backgroundColor: row?.contrato?.length > 0 ? "#87b07bf6" : "",
+        fontSize: "15px",
         // color: 'white',
         // '&:hover': {
         //   cursor: 'pointer',
@@ -184,7 +195,6 @@ const Tabla = ({ columns, table, actualizarTabla }) => {
         pagination
         fixedHeader
         striped
-        highlightOnHover
         expandableRows
         expandableRowsComponent={expandedComponent}
         expandableRowDisabled={(row) =>

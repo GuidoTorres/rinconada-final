@@ -73,6 +73,7 @@ const AsociacionLayout = () => {
             nombre: item?.nombre,
             campamento: item?.campamento,
             tipo: item?.tipo,
+            contrato: item?.contrato,
             trabajador:
               item &&
               item.trabajadors &&
@@ -131,6 +132,7 @@ const AsociacionLayout = () => {
       notificacion(response.status, response.msg);
       getAsociaciones();
     }
+
 
     inputFileRef.current.value = null;
   };

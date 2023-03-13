@@ -21,10 +21,15 @@ const Tabla = ({ columns, table, filas }) => {
         striped
         highlightOnHover
         responsive
-
         paginationComponentOptions={paginationComponentOptions}
         paginationPerPage={filas || 10}
         paginationRowsPerPageOptions={[8, 16, 24, 32, 40]}
+        noDataComponent={
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={<span>No hay registros para mostrar.</span>}
+          />
+        }
       />
     </div>
   );

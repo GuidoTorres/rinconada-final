@@ -52,7 +52,6 @@ const ModalContratoAsociacion = ({
   const [area, setArea] = useState([]);
   const [socio, setSocio] = useState([]);
   const [id, setId] = useState([]);
-  const [responseContrato, setResponseContrato] = useState([]);
 
   const getAll = async () => {
     const cargoData = getData(route1);
@@ -60,7 +59,7 @@ const ModalContratoAsociacion = ({
     const gerenciaData = getData(route3);
     const areaData = getData(route4);
     const socioData = getData(route5);
-    const response6 = getData("contrato");
+    const response7 = getData("contrato/last/id");
 
     const all = await Promise.all([
       cargoData,
@@ -68,29 +67,19 @@ const ModalContratoAsociacion = ({
       gerenciaData,
       areaData,
       socioData,
-      response6,
+      response7,
     ]);
     setCargo(all[0].data);
     setCampamento(all[1].data);
     setGerencia(all[2].data);
     setArea(all[3].data);
     setSocio(all[4].data);
-    setResponseContrato(all[5].data);
+    setId(all[5].data);
   };
   useEffect(() => {
     getAll();
   }, []);
 
-
-  useEffect(() => {
-    if (responseContrato.length > 0) {
-      const contraid = responseContrato?.at(-1)?.id;
-      const idFinal = parseInt(contraid) + 1;
-      setId(idFinal);
-    } else {
-      setId(1);
-    }
-  }, [responseContrato]);
 
   const handleData = (e, text) => {
     if (!text && e.target) {
@@ -154,12 +143,19 @@ const ModalContratoAsociacion = ({
   }, [dataToEdit]);
 
   useEffect(() => {
+    if(dataToEdit === null){
+
+      setContratos(value => ({...value, codigo_contrato: id}))
+    }
+  },[id])
+
+  useEffect(() => {
     //para calcular la fecha de fin al registrar contrato
     if (contratos.fecha_inicio !== "" && contratos.periodo_trabajo !== "") {
       let inicial = 14;
       let fechaInicio = contratos.fecha_inicio;
       let total = inicial * parseInt(contratos.periodo_trabajo);
-      const date = addDays(fechaInicio, total);
+      const date = addDays(fechaInicio, total, "asociacion");
       setContratos((prevState) => {
         return { ...prevState, fecha_fin: date };
       });

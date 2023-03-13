@@ -5,6 +5,16 @@ export const addDays = (date, daysToAdd, tareo) => {
   let daysAdded = 0,
     momentDate = moment(new Date(date));
 
+    if (tareo === "asociacion") {
+      while (daysAdded < daysToAdd) {
+        momentDate = momentDate.add(1, "days");
+        if (!WEEKEND.includes(momentDate.weekday())) {
+          daysAdded++;
+          console.log(WEEKEND.includes(momentDate.weekday()));
+        }
+      }
+    }
+
   if (tareo === "Lunes a sabado") {
     while (daysAdded < daysToAdd) {
       momentDate = momentDate.add(1, "days");

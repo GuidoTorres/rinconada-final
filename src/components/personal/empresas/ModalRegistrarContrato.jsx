@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { CrudContext } from "../../../context/CrudContext";
 import { modalContratoEmpresa } from "../../../data/FormValues";
-import { valuesContrato } from "../../../data/initalValues";
+import { valuesContratoEmpresa } from "../../../data/initalValues";
 import { notificacion } from "../../../helpers/mensajes";
 import MainModal from "../../modal/MainModal";
 import { AiOutlineForm } from "react-icons/ai";
@@ -29,20 +29,27 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
     cargando,
     setCargando,
   } = useContext(CrudContext);
+  console.log('====================================');
+  console.log(data);
+  console.log('====================================');
 
-  const [contrato, setContrato] = useState(modalContratoEmpresa);
+  const empresaValues = valuesContratoEmpresa(data.id)
+
+  const [contrato, setContrato] = useState(empresaValues);
   const [cargo, setCargo] = useState([]);
   const [campamento, setCampamento] = useState([]);
   const [gerencia, setGerencia] = useState([]);
   const [area, setArea] = useState([]);
   const [socio, setSocio] = useState([]);
+  const [id, setId] = useState("");
 
   const getAll = async () => {
-    const cargoData = await getData(route1);
-    const campamentoData = await getData(route2);
-    const gerenciaData = await getData(route3);
-    const areaData = await getData(route4);
-    const socioData = await getData(route5);
+    const cargoData = getData(route1);
+    const campamentoData = getData(route2);
+    const gerenciaData = getData(route3);
+    const areaData = getData(route4);
+    const socioData = getData(route5);
+    const response7 = getData("contrato/last/id");
 
     const all = await Promise.all([
       cargoData,
@@ -50,6 +57,7 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
       gerenciaData,
       areaData,
       socioData,
+      response7,
     ]);
 
     setCargo(all[0].data);
@@ -57,13 +65,14 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
     setGerencia(all[2].data);
     setArea(all[3].data);
     setSocio(all[4].data);
+    setId(all[5].data);
   };
 
   useEffect(() => {
     if (dataToEdit) {
       setContrato(dataToEdit);
     } else {
-      setContrato(valuesContrato);
+      setContrato(empresaValues);
     }
   }, [dataToEdit]);
 
@@ -71,18 +80,32 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
     getAll();
   }, []);
 
-  const handleData = (e) => {
-    const { name, value } = e.target;
-    setContrato((values) => {
-      return { ...values, [name]: value };
-    });
-
-    if (name === "recomendado_por") {
-      const prueba = socio.filter((item) => item.nombre === value);
-      const cooperativa = prueba.map(
-        (item) => (contrato.cooperativa = item.cooperativa)
-      );
+  useEffect(() => {
+    if (dataToEdit === null) {
+      setContrato((value) => ({ ...value, codigo_contrato: id }));
     }
+  }, [id, dataToEdit]);
+
+  const handleData = (e, text) => {
+
+    if (!text && e.target) {
+      const { name, value } = e.target;
+      form.setFieldsValue({
+        [name]: value,
+      });
+      setContrato((values) => {
+        return { ...values, [name]: value };
+      });
+    } else {
+      form.setFieldsValue({
+        [text]: e,
+      });
+      setContrato((values) => {
+        return { ...values, [text]: e };
+      });
+    }
+
+
   };
 
   const handleSubmit = async (e) => {
@@ -90,7 +113,7 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
       setCargando(true);
       const response = await createData(contrato, route);
       if (response) {
-        notificacion(response.msg, response.status);
+        notificacion(response.status, response.msg);
         closeModal();
         actualizarTabla();
         setCargando(false);
@@ -99,7 +122,7 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
       setCargando(true);
       const response = await updateData(contrato, selected.id, route);
       if (response) {
-        notificacion(response.msg, response.status);
+        notificacion(response.status, response.msg);
         closeModal();
         actualizarTabla();
         setCargando(false);
@@ -136,7 +159,7 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
         layout="horizontal"
       >
         <div className="contrato">
-          {formData.slice(0, 10).map((item, i) => (
+          {formData.slice(0, 9).map((item, i) => (
             <Form.Item
               className="item"
               key={i}
@@ -153,7 +176,7 @@ const ModalRegistrarContrato = ({ actualizarTabla, selected, data }) => {
         </div>
 
         <div className="finalizacion">
-          {formData.slice(10, 15).map((item, i) => (
+          {formData.slice(9, 15).map((item, i) => (
             <Form.Item
               className="item"
               key={i}
