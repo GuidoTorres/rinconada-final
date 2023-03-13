@@ -81,13 +81,13 @@ const AsociacionLayout = () => {
                 (prueba) =>
                   prueba?.nombre
                     ?.toLowerCase()
-                    .includes(filterText.toLowerCase()) ||
+                    ?.includes(filterText.toLowerCase()) ||
                   prueba?.apellido_paterno
                     ?.toLowerCase()
-                    .includes(filterText.toLowerCase()) ||
+                    ?.includes(filterText.toLowerCase()) ||
                   prueba?.apellido_materno
                     ?.toLowerCase()
-                    .includes(filterText.toLowerCase())
+                    ?.includes(filterText.toLowerCase())
               ),
           },
         ])

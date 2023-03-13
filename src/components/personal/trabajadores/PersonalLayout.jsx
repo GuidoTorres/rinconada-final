@@ -67,19 +67,16 @@ const PersonalLayout = () => {
     const filtered =
       dataTrabajadores &&
       dataTrabajadores
-        .filter((item) =>
-          item.codigo_trabajador
-            .toLowerCase()
-            .includes(filterText.toLowerCase()) ||
-            item.nombre
-            .toLowerCase()
-            .includes(filterText.toLowerCase()) ||
-            item.apellido_materno
-            .toLowerCase()
-            .includes(filterText.toLowerCase()) ||
-            item.dni
-            .toLowerCase()
-            .includes(filterText.toLowerCase())
+        .filter(
+          (item) =>
+            item?.codigo_trabajador
+              ?.toLowerCase()
+              ?.includes(filterText.toLowerCase()) ||
+            item?.nombre?.toLowerCase()?.includes(filterText.toLowerCase()) ||
+            item?.apellido_materno
+              ?.toLowerCase()
+              ?.includes(filterText.toLowerCase()) ||
+            item?.dni?.toLowerCase()?.includes(filterText.toLowerCase())
         )
 
         .flat();
