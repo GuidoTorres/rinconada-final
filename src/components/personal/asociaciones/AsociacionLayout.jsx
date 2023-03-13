@@ -76,17 +76,17 @@ const AsociacionLayout = () => {
             contrato: item?.contrato,
             trabajador:
               item &&
-              item.trabajadors &&
-              item.trabajadors.filter(
+              item?.trabajadors &&
+              item?.trabajadors?.filter(
                 (prueba) =>
                   prueba?.nombre
-                    .toLowerCase()
+                    ?.toLowerCase()
                     .includes(filterText.toLowerCase()) ||
                   prueba?.apellido_paterno
-                    .toLowerCase()
+                    ?.toLowerCase()
                     .includes(filterText.toLowerCase()) ||
                   prueba?.apellido_materno
-                    .toLowerCase()
+                    ?.toLowerCase()
                     .includes(filterText.toLowerCase())
               ),
           },
@@ -99,8 +99,8 @@ const AsociacionLayout = () => {
         filtered &&
         filtered.filter(
           (item) =>
-            item.nombre.toLowerCase().includes(filterText.toLowerCase()) ||
-            item.trabajador.length
+            item?.nombre.toLowerCase().includes(filterText.toLowerCase()) ||
+            item?.trabajador?.length
         );
       setSearch(filtered2);
     }
@@ -129,7 +129,6 @@ const AsociacionLayout = () => {
       notificacion(response.status, response.msg);
       getAsociaciones();
     }
-
 
     inputFileRef.current.value = null;
   };
