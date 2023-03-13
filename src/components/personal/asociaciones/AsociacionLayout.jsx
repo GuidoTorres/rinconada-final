@@ -99,7 +99,7 @@ const AsociacionLayout = () => {
         filtered &&
         filtered.filter(
           (item) =>
-            item?.nombre.toLowerCase().includes(filterText.toLowerCase()) ||
+            item?.nombre?.toLowerCase()?.includes(filterText.toLowerCase()) ||
             item?.trabajador?.length
         );
       setSearch(filtered2);
