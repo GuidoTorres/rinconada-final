@@ -50,6 +50,7 @@ const Buscador = ({
           ref={inputFileRef}
           onChange={excelFile}
           style={{ display: "none" }}
+          accept=".xlsx, .xls, .csv"
         />
 
         <Search

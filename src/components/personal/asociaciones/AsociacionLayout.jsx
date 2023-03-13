@@ -121,9 +121,6 @@ const AsociacionLayout = () => {
       {
         method: "post",
         body: formData,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
       }
     );
     const response = await postExcel.json();
@@ -156,6 +153,7 @@ const AsociacionLayout = () => {
         ref={inputFileRef}
         onChange={excelFile}
         style={{ display: "none" }}
+        accept=".xlsx, .xls, .csv"
       />
       <Header text={"Asociaciones"} user={"Usuario"} ruta={"/personal"} />
       <div className="margenes">
