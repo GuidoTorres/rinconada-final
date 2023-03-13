@@ -121,7 +121,7 @@ const ModalRegistrarAsociacion = ({
             </>
           </Form.Item>
         ))}
-        {asociacion.tipo === "Canteadores" &&
+        {asociacion.tipo === "Canteadores" ?
           formData.splice(0, 2).map((item, i) => (
             <Form.Item
               key={i}
@@ -134,7 +134,21 @@ const ModalRegistrarAsociacion = ({
                 {item.type}
               </>
             </Form.Item>
-          ))}
+          ))
+          : formData.splice(0, 1).map((item, i) => (
+            <Form.Item
+              key={i}
+              name={item.name}
+              rules={item.rules}
+              style={{ marginBottom: "8px" }}
+            >
+              <>
+                {item.label}
+                {item.type}
+              </>
+            </Form.Item>
+          ))
+        }
 
         <Form.Item className="button-container">
           <Button
