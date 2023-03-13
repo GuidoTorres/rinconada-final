@@ -20,6 +20,8 @@ const ModalRegistrarAlmacen = ({ actualizarTabla }) => {
   useEffect(() => {
     if (dataToEdit !== null) {
       setAlmacen(dataToEdit);
+      form.setFieldsValue(dataToEdit);
+
     } else {
       setAlmacen(almacenValues);
     }

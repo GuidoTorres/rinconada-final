@@ -56,18 +56,20 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
     const response1 = await getData(route1);
     const response2 = await getData(route2);
 
-    setCodRequerimiento(response.data);
-    setArea(response1.data);
-    setTrabajador(response2.data);
-  };
+    const all = await Promise.all([response, response1, response2]);
 
-  console.log("====================================");
-  console.log(search);
-  console.log("====================================");
+    setCodRequerimiento(all[0].data);
+    setArea(all[1].data);
+    setTrabajador(all[2].data);
+  };
 
   useEffect(() => {
     getRequerimientoCodigo();
   }, []);
+
+  console.log("====================================");
+  console.log(requerimiento);
+  console.log("====================================");
 
   useEffect(() => {
     if (dataToEdit !== null) {
@@ -79,30 +81,27 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
 
   useEffect(() => {
     // para obtener al trabajador en base al dni
-    if (requerimiento?.dni?.length > 7) {
-      const filterDni = trabajador.filter(
-        (item) => item.dni == requerimiento.dni
+
+    if (requerimiento?.dni?.length >= 7) {
+      const filterDni = trabajador?.filter(
+        (item) => item.dni === requerimiento.dni
       );
-      const prueba = [...filterDni].pop();
-      const filter = prueba.contrato.map((item) => {
-        return {
-          nombre:
-            prueba?.nombre +
+
+      if (filterDni.length > 0) {
+        const traba = filterDni?.at(-1);
+        setRequerimiento((values) => ({
+          ...values,
+          solicitante:
+            traba?.nombre +
             " " +
-            prueba?.apellido_paterno +
+            traba?.apellido_paterno +
             " " +
-            prueba?.apellido_materno,
-          area: parseInt(
-            area.filter((data) => data.id == item.area).map((item) => item.id)
-          ),
-        };
-      });
-      const obj = [...filter].pop();
-      setRequerimiento((values) => ({
-        ...values,
-        solicitante: obj.nombre,
-        area: obj.area,
-      }));
+            traba?.apellido_materno,
+          area: traba?.contrato
+            ?.filter((item) => item?.finalizado === false)
+            ?.at(-1)?.area,
+        }));
+      }
     }
   }, [requerimiento.dni]);
 
@@ -147,7 +146,6 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
     }
 
     if (idRequerimiento !== "" && idRequerimiento !== undefined) {
-
       setNewJson((state) =>
         state.map((item, i) =>
           i === idRequerimiento
@@ -166,7 +164,7 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
   }, [newJson]);
 
   const handleData = (e, i, text) => {
-    if (i!== undefined) {
+    if (i !== undefined) {
       setIdRequerimiento(i);
     }
 
@@ -195,7 +193,11 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
         closeModal();
       }
     } else {
-      const response = await updateData(newJson, dataToEdit.id, routeUpdate);
+      const response = await updateData(
+        requerimiento,
+        dataToEdit.id,
+        routeUpdate
+      );
       if (response.status === 200) {
         notificacion(response.status, response.msg);
         actualizarTabla();
@@ -230,13 +232,18 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
 
   const column1 = mostrarRequerimientoTable(handleDelete);
 
-  const columns = requerimientoTable(handleData, handleDelete, requerimiento, dataToEdit);
+  const columns = requerimientoTable(
+    handleData,
+    handleDelete,
+    requerimiento,
+    dataToEdit
+  );
 
   return (
     <Modal
       destroyOnClose={true}
       className="modal-requerimiento"
-      title="Registrar requerimiento"
+      title={dataToEdit === null ? "Registrar requerimiento" : "Editar requerimiento"}
       open={modal3}
       centered
       onCancel={closeModal}
@@ -259,10 +266,9 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
           <Input
             type="date"
             placeholder="Fecha de pedido"
-            format={"YYYY-MM-DD"}
             name="fecha_pedido"
             onChange={handleData}
-            defaultValue={requerimiento.fecha_entrega}
+            value={requerimiento.fecha_pedido}
           />
         </div>
         <div className="container">
@@ -270,9 +276,9 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
           <Input
             type="date"
             placeholder="Fecha de entrega"
-            format={"YYYY-MM-DD"}
             name="fecha_entrega"
-            onChange={(e) => handleData(e)}
+            value={requerimiento.fecha_entrega}
+            onChange={handleData}
           />
         </div>
         <div className="container">
@@ -301,10 +307,10 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
             placeholder="Área"
             name="area"
             value={requerimiento.area}
-            onChange={handleData}
+            onChange={(e) => handleData(e, null, "area")}
             options={area.map((item, i) => {
               return {
-                value: item.id,
+                value: item.nombre,
                 label: item.nombre,
               };
             })}
@@ -357,8 +363,6 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
             showSearch
             optionFilterProp="children"
             name="producto"
-            // value={requerimiento.producto}
-            // onSearch={(e) => setText(e.target.value)}
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }

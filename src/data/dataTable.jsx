@@ -2606,12 +2606,16 @@ export const requerimientoLayout = (handleEdit, handleDelete) => {
       width: "120px",
 
       selector: (row) =>
-        row?.completado ? (
-          <Tag color="green">Pedido</Tag>
-        ) : row?.estado === "1" ? (
-          <Tag color="blue">Aprobado</Tag>
-        ) : (
+        row?.estado === "Pendiente" ? (
           <Tag color="volcano">Pendiente</Tag>
+        ) : row?.estado === "Aprobado" ? (
+          <Tag color="blue">Aprobado</Tag>
+        ) : row?.estado === "Pedido" ? (
+          <Tag color="green">Pedido</Tag>
+        ) : row?.estado === "En almacén" ? (
+          <Tag color="lime">En almacén</Tag>
+        ) : (
+          <Tag color="purple">Entregado</Tag>
         ),
     },
 
@@ -2743,11 +2747,11 @@ export const categoriaLayout = (handleEdit, handleDelete) => {
       selector: (row) => row.id,
     },
 
-    {
-      id: "abreviatura",
-      name: "Abreviatura",
-      selector: (row) => row.abreviatura,
-    },
+    // {
+    //   id: "abreviatura",
+    //   name: "Abreviatura",
+    //   selector: (row) => row.abreviatura,
+    // },
 
     {
       id: "descripcion",

@@ -1,3 +1,4 @@
+import { Empty } from "antd";
 import React, { useContext } from "react";
 import DataTable from "react-data-table-component";
 import "./tabla.css";
@@ -14,26 +15,31 @@ const TablaRequerimientos = ({ columns, table, set }) => {
     <div style={{ padding: "10px 20px 10px 60px" }}>
       {console.log(data)}
       <div style={{ marginTop: "5px" }}>
-        <label htmlFor="">{data.solicitante}</label>
-        <label htmlFor="">{data.celular}</label>
+        <label htmlFor="">
+          <strong>Solicitante:</strong> {data.solicitante}
+        </label>
+        <br />
+        <label htmlFor="">
+          <strong>Teléfono:</strong> {data.celular}
+        </label>
 
-        <table>
+        <table style={{ marginTop: "20px" }}>
           <tr>
-            <td style={{width:"140px", textAlign:"center"}}>
+            <td style={{ width: "140px", textAlign: "center" }}>
               <strong>Fecha de pedido</strong>
             </td>
-            <td style={{width:"240px", textAlign:"center"}}>
+            <td style={{ width: "240px", textAlign: "center" }}>
               <strong>Producto</strong>
             </td>
-            <td style={{width:"180px", textAlign:"center"}}>
+            <td style={{ width: "180px", textAlign: "center" }}>
               <strong>Cantidad</strong>
             </td>
           </tr>
           {data.requerimiento_productos.map((item, i) => (
             <tr key={i}>
-              <td style={{textAlign:"center"}}>{data.fecha_pedido}</td>
-              <td style={{textAlign:"center"}}>{item.producto.nombre}</td>
-              <td style={{textAlign:"center"}}>{item.cantidad}</td>
+              <td style={{ textAlign: "center" }}>{data.fecha_pedido}</td>
+              <td style={{ textAlign: "center" }}>{item.producto.nombre}</td>
+              <td style={{ textAlign: "center" }}>{item.cantidad}</td>
             </tr>
           ))}
         </table>
@@ -63,7 +69,12 @@ const TablaRequerimientos = ({ columns, table, set }) => {
         paginationComponentOptions={paginationComponentOptions}
         responsive
         noHeader={true}
-        noDataComponent={"No se encontraron resultados."}
+        noDataComponent={
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={<span>No hay registros para mostrar.</span>}
+          />
+        }
         onSelectedRowsChange={handleChange}
         selectableRowDisabled={rowDisabledCriteria}
       />

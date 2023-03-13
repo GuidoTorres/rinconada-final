@@ -48,10 +48,10 @@ const CategoriaLayout = () => {
     <>
       <Header text={"Categorías"} user={"Usuario"} ruta={"/logistica"} />
       <div className="margenes">
-        <BuscadorEntradaSalida abrirModal={setModal} categoria={true}/>
+        <BuscadorEntradaSalida abrirModal={setModal} categoria={true} />
 
         {result?.length > 0 ? (
-        <Tabla columns={columns} table={result} />
+          <Tabla columns={columns} table={result} />
         ) : (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}

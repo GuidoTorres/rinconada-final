@@ -63,26 +63,34 @@ const ModalRegistrarEntradaSalida = ({
     const route3 = "pedido/id";
     const route4 = "pedido/entrada";
 
-    const response = await getData(route);
-    const response1 = await getData(route1);
-    const response2 = await getData(route2);
-    const response3 = await getData(route3);
-    const response4 = await getData(route4);
-    const response5 = await getDataById("almacen/producto", almacen_id);
-    setArea(response.data);
-    setEntradaId(response1.data);
-    setTrabajador(response2.data);
-    setPedido(response3.data);
-    setPedidoEntrada(response4.data);
-    setProductoAlmacen(response5.data);
+    const response = getData(route);
+    const response1 = getData(route1);
+    const response2 = getData(route2);
+    const response3 = getData(route3);
+    const response4 = getData(route4);
+    const response5 = getDataById("almacen/producto", almacen_id);
+
+    const all = await Promise.all([
+      response,
+      response1,
+      response2,
+      response3,
+      response4,
+      response5,
+    ]);
+
+    setArea(all[0].data);
+    setEntradaId(all[1].data);
+    setTrabajador(all[2].data);
+    setPedido(all[3].data);
+    setPedidoEntrada(all[4].data);
+    setProductoAlmacen(all[5].data);
   };
 
   const closeModal = () => {
     setModal2(false);
     setDataToEdit(null);
     setEntrada(initialValues);
-    setSearch([]);
-    setNewJson([]);
     setCostoTotal("");
   };
 
@@ -220,28 +228,22 @@ const ModalRegistrarEntradaSalida = ({
 
   useEffect(() => {
     // para obtener al trabajador en base al dni
-    if (entrada?.dni?.length > 7) {
-      const filterDni = trabajador.filter((item) => item.dni == entrada.dni);
+    if (entrada?.dni?.length >= 7) {
+      const filterDni = trabajador?.filter((item) => item.dni === entrada.dni);
 
-      const prueba = [...filterDni].pop();
-      const filter = prueba.contrato.map((item) => {
-        return {
-          nombre:
-            prueba?.nombre +
+      if (filterDni.length > 0) {
+        const traba = filterDni?.at(-1);
+        setEntrada((values) => ({
+          ...values,
+          encargado:
+            traba?.nombre +
             " " +
-            prueba?.apellido_paterno +
+            traba?.apellido_paterno +
             " " +
-            prueba?.apellido_materno,
-          area: parseInt(
-            area.filter((data) => data.id == item.area).map((item) => item.id)
-          ),
-        };
-      });
-      const obj = [...filter].pop();
-      setEntrada((values) => ({ ...values, encargado: obj.nombre }));
-      setAreaId(obj.area);
-    } else {
-      setDni("");
+            traba?.apellido_materno,
+        }));
+        setAreaId(traba?.area);
+      }
     }
   }, [entrada.dni]);
 
@@ -337,7 +339,6 @@ const ModalRegistrarEntradaSalida = ({
             : item
         )
       );
-
     }
   }, [text, entrada, key, agregar]);
 
@@ -417,6 +418,10 @@ const ModalRegistrarEntradaSalida = ({
     newJson?.cantidad
   );
 
+  console.log('====================================');
+  console.log(tipo);
+  console.log('====================================');
+
   return (
     <>
       <Modal
@@ -433,7 +438,7 @@ const ModalRegistrarEntradaSalida = ({
           <div className="container">
             <label>Código</label>
             <Input
-              value={parseInt(entradaId[entradaId.length - 1]?.id) + 1 || 1}
+              value={parseInt(entradaId.at(-1)?.id) + 1 || 1}
               type="text"
               name="codigo"
               disabled
@@ -444,7 +449,7 @@ const ModalRegistrarEntradaSalida = ({
             <label>Motivo de {tipo}</label>
 
             <Input
-              placeholder="Motivo de entrada"
+              placeholder={`Motivo de ${tipo}`}
               value={entrada.motivo}
               type="text"
               name="motivo"
@@ -492,7 +497,7 @@ const ModalRegistrarEntradaSalida = ({
                   placeholder="Personal"
                   type="text"
                   name="personal"
-                  value={entrada.encargado || dni}
+                  value={entrada.encargado}
                   onChange={handleData}
                 />
               </>
@@ -604,7 +609,7 @@ const ModalRegistrarEntradaSalida = ({
             ) : (
               ""
             )}
-            {search.length > 0 && (
+            {search && search.length > 0 && (
               <div className="agregar">
                 <Button onClick={() => setAgregar("agregar")}>
                   <AiOutlineCheck />
@@ -614,7 +619,7 @@ const ModalRegistrarEntradaSalida = ({
           </div>
         </form>
         <div className="tabla">
-          {search?.length !== 0 ? (
+          {search && search?.length !== 0 ? (
             <Tabla columns={columns1} table={search} />
           ) : newJson.length > 0 ? (
             <Tabla columns={columns} table={newJson} />
@@ -634,7 +639,7 @@ const ModalRegistrarEntradaSalida = ({
           ""
         )}
         <div className="button-container">
-          {newJson?.length !== 0 ? (
+          {newJson && newJson?.length !== 0 ? (
             <Button
               type="primary"
               onClick={handleSubmit}

@@ -64,14 +64,14 @@ const ModalHistorialContrato = ({
             item?.fecha_inicio
               ?.split("T")[0]
               ?.toLowerCase()
-              .includes(filterText.toLowerCase()) ||
+              ?.includes(filterText.toLowerCase()) ||
             item?.fecha_fin
               ?.split("T")[0]
               ?.toLowerCase()
-              .includes(filterText.toLowerCase()) ||
+              ?.includes(filterText.toLowerCase()) ||
             item?.tipo_contrato
               ?.toLowerCase()
-              .includes(filterText.toLowerCase())
+              ?.includes(filterText.toLowerCase())
         )
 
         .flat();

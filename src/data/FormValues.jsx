@@ -610,13 +610,12 @@ export const modalRegistroTrabajador = (
           name="asociacion_id"
           onChange={(e) => handleData(e, "asociacion_id")}
           value={trabajador.asociacion_id}
-          options={asociacion.map((item) => {
-            return {
-              value: item.id,
-              label: item.nombre,
-            };
-          })}
-        />
+        >
+          <Select.Option value={null}>Sin Asociación</Select.Option>
+          {asociacion?.map((item) => (
+            <Select.Option value={item.id}>{item.nombre}</Select.Option>
+          ))}
+        </Select>
       ),
     },
   ];
@@ -2460,7 +2459,7 @@ export const modalAlmacen = (almacen, handleData) => {
       ),
     },
     {
-      label: <label>Codigo</label>,
+      label: <label>Código</label>,
       name: "codigo",
       rules: [
         {
@@ -2478,7 +2477,7 @@ export const modalAlmacen = (almacen, handleData) => {
       ),
     },
     {
-      label: <label>Descripcion</label>,
+      label: <label>Descripción</label>,
       name: "descripcion",
       rules: [
         {

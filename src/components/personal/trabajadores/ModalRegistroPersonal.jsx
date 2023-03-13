@@ -94,6 +94,7 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
     }
   };
 
+
   const handleSubmit = async (e) => {
     const formData = new FormData();
     formData.set("dni", trabajador.dni || "");
@@ -114,7 +115,7 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
 
     if (dataToEdit === null) {
       setCargando(true);
-      const query = await fetch(`https://rinconada.fly.dev/api/v1/trabajador`, {
+      const query = await fetch(`${process.env.REACT_APP_BASE}/trabajador`, {
         method: "POST",
         body: formData,
       });
@@ -129,7 +130,7 @@ const ModalRegistroPersonal = ({ actualizarTabla, data }) => {
     if (dataToEdit !== null) {
       setCargando(true);
       const query = await fetch(
-        `https://rinconada.fly.dev/api/v1/trabajador/${dataToEdit.dni}`,
+        `${process.env.REACT_APP_BASE}/trabajador/${dataToEdit.dni}`,
         {
           method: "PUT",
           body: formData,

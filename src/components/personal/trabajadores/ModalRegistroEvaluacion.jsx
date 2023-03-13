@@ -60,15 +60,17 @@ const ModalRegistroEvaluacion = ({
   }, []);
 
   useEffect(() => {
-    const cooperativa = socio.filter(
-      (item) => item?.nombre === evaluacion.recomendado_por
-    );
+    if (dataToEdit === null) {
+      const cooperativa = socio.filter(
+        (item) => item?.nombre === evaluacion.recomendado_por
+      );
 
-    setEvaluacion((value) => ({
-      ...value,
-      cooperativa: cooperativa?.at(-1)?.cooperativa,
-    }));
-  }, [evaluacion.recomendado_por]);
+      setEvaluacion((value) => ({
+        ...value,
+        cooperativa: cooperativa?.at(-1)?.cooperativa,
+      }));
+    }
+  }, [evaluacion.recomendado_por, dataToEdit]);
 
   const handleData = (e, text) => {
     if (!text && e.target) {

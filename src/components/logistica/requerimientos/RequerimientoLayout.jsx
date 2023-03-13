@@ -80,7 +80,6 @@ const RequerimientoLayout = () => {
     setModal3(true);
     setDataToEdit(e);
   };
-  console.log(pedido);
 
   const columns = requerimientoLayout(handleEdit, handleDelete);
   const pedidoColumns = pedidoLayout(updatePedido, handleDelete);
@@ -97,12 +96,12 @@ const RequerimientoLayout = () => {
           </label>
           <div className="margenes">
             <BuscadorRequerimiento generar={true} data={requerimientos} />
-            <TablaRequerimientos
-                columns={columns}
-                table={requerimientos}
-                set={setRequerimientos}
-              />
 
+            <TablaRequerimientos
+              columns={columns}
+              table={requerimientos}
+              set={setRequerimientos}
+            />
           </div>
         </div>
         <br />

@@ -55,7 +55,7 @@ const ModalHistorialEvaluacion = ({ selected, actualizarTrabajador, data }) => {
       data1
         .filter((item) =>
           item?.fecha_evaluacion
-            .split("T")[0]
+            ?.split("T")[0]
             ?.toLowerCase()
             .includes(filterText.toLowerCase())
         )

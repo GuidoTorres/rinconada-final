@@ -14,7 +14,6 @@ const EstadisticasLayout = () => {
     fecha_fin: "",
   });
   const [datos, setDatos] = useState([]);
-
   const { createData } = useContext(CrudContext);
 
   const data = {
@@ -55,10 +54,7 @@ const EstadisticasLayout = () => {
   const getEstadisticas = async () => {
     if (fechas.fecha_inicio !== "" && fechas.fecha_fin !== "") {
       const route = "entrada/estadistica";
-
       const response = await createData(fechas, route);
-
-      console.log(response);
       if (response) {
         setDatos(response.data);
       }
@@ -73,38 +69,37 @@ const EstadisticasLayout = () => {
     <>
       <Header text={"Estadísticas"} user={"Usuario"} ruta={"/logistica"} />
       <div className="estadisticas-container">
-
-      <div className="estadisticas-layout">
-        <div>
-          <label htmlFor="">Fecha de inicio:</label>
-          <DatePicker
-            style={{
-              width: "100%",
-            }}
-            format={"DD-MM-YYYY"}
-            name="fecha_inicio"
-            placeholder="Fecha de inicio"
-            onChange={(e) => handleData(e, "fecha_inicio")}
+        <div className="estadisticas-layout">
+          <div>
+            <label htmlFor="">Fecha de inicio:</label>
+            <DatePicker
+              style={{
+                width: "100%",
+              }}
+              format={"DD-MM-YYYY"}
+              name="fecha_inicio"
+              placeholder="Fecha de inicio"
+              onChange={(e) => handleData(e, "fecha_inicio")}
             />
+          </div>
+          <div>
+            <label htmlFor="">Fecha de fin:</label>
+            <DatePicker
+              style={{
+                width: "100%",
+              }}
+              format={"YYYY-MM-DD"}
+              name="fecha_fin"
+              placeholder="Fecha de fin"
+              onChange={(e) => handleData(e, "fecha_fin")}
+            />
+          </div>
         </div>
-        <div>
-          <label htmlFor="">Fecha de fin:</label>
-          <DatePicker
-            style={{
-              width: "100%",
-            }}
-            format={"YYYY-MM-DD"}
-            name="fecha_fin"
-            placeholder="Fecha de fin"
-            onChange={(e) => handleData(e, "fecha_fin")}
-            />
+
+        <div className="grafico-container">
+          <Bar datasetIdKey="id" data={data} responsive />
         </div>
       </div>
-
-      <div className="grafico-container">
-        <Bar datasetIdKey="id" data={data} responsive />
-      </div>
-    </div>
     </>
   );
 };
