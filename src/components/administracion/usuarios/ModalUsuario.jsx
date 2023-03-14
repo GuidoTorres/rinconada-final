@@ -87,7 +87,7 @@ const ModalUsuario = ({ actualizarTabla }) => {
 
       avatar?.file && formData.set("image", avatar.file || "");
 
-      const query = await fetch(`http://localhost:3000/api/v1/usuario`, {
+      const query = await fetch(`${process.env.REACT_APP_BASE}/usuario`, {
         method: "POST",
         body: formData,
       });
@@ -111,7 +111,7 @@ const ModalUsuario = ({ actualizarTabla }) => {
 
       avatar?.file && formData.set("image", avatar.file || "");
       const query = await fetch(
-        `http://localhost:3000/api/v1/usuario/${dataToEdit.id}`,
+        `${process.env.REACT_APP_BASE}/usuario/${dataToEdit.id}`,
         {
           method: "PUT",
           body: formData,
@@ -131,6 +131,7 @@ const ModalUsuario = ({ actualizarTabla }) => {
     setModal(false);
     setDataToEdit(null);
     setUsuario(usuarioValues);
+    setCargando(false)
   }
 
   const formData = modalUsuario(usuario, handleData, rol, cargo, dataToEdit);

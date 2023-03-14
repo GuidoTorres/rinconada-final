@@ -2334,19 +2334,25 @@ export const registrarEntrada = (
 
       selector: (row) => row?.nombre,
     },
+    {
+      id: "stock",
+      name: "Stock",
+      width: "80px",
+
+      selector: (row) => row?.stock,
+    },
 
     {
       id: "cantidad",
       name: "Cantidad",
       cell: (e, i) => (
         <>
-          <input
+          <Input
             type="number"
-            disabled={codigo}
             name="cantidad"
             value={e.cantidad}
             onChange={(a) => handleData(a, i)}
-            style={{ width: "60px" }}
+            style={{ width: "100px" }}
           />
         </>
       ),
@@ -2526,8 +2532,8 @@ export const requerimientoTable = (
     {
       id: "codigo",
       name: "Código",
-      width: "80px",
-
+      width: "100px",
+      sortable: true,
       selector: (row) => row.codigo_producto,
     },
     {
@@ -2540,12 +2546,12 @@ export const requerimientoTable = (
       name: "Cantidad",
       cell: (e, i) => (
         <>
-          <input
+          <Input
             type="number"
             name="cantidad"
             onChange={(a) => handleData(a, i)}
             value={e.cantidad}
-            style={{ width: "60px" }}
+            style={{ width: "80px" }}
           />
         </>
       ),
@@ -2788,7 +2794,7 @@ export const aprobacionLayout = (updateAprobacion) => {
     {
       id: "codigo",
       name: "Código",
-      selector: (row) => "000" + row.id,
+      selector: (row) => row.id,
     },
     {
       id: "fecha",
@@ -2799,10 +2805,10 @@ export const aprobacionLayout = (updateAprobacion) => {
       id: "estado",
       name: "Estado",
       selector: (row) =>
-        row?.estado === "1" ? (
-          <Tag color="green">Aprobado</Tag>
-        ) : (
+        row?.estado === "Pendiente" ? (
           <Tag color="volcano">Pendiente</Tag>
+          ) : (
+          <Tag color="green">Aprobado</Tag>
         ),
     },
     {

@@ -33,6 +33,10 @@ const ModalContratoAsociacion = ({
     ?.map((item) => item?.evaluacions?.id)
     .filter((item) => item !== undefined);
 
+    console.log('====================================');
+    console.log(ids);
+    console.log('====================================');
+
   //valores iniciales de contrato
   const contratoValues = valuesContrato(data, ids);
 
@@ -79,7 +83,6 @@ const ModalContratoAsociacion = ({
   useEffect(() => {
     getAll();
   }, []);
-
 
   const handleData = (e, text) => {
     if (!text && e.target) {
@@ -143,11 +146,10 @@ const ModalContratoAsociacion = ({
   }, [dataToEdit]);
 
   useEffect(() => {
-    if(dataToEdit === null){
-
-      setContratos(value => ({...value, codigo_contrato: id}))
+    if (dataToEdit === null) {
+      setContratos((value) => ({ ...value, codigo_contrato: id }));
     }
-  },[id])
+  }, [id]);
 
   useEffect(() => {
     //para calcular la fecha de fin al registrar contrato

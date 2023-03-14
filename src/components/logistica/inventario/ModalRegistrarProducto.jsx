@@ -59,8 +59,6 @@ const ModalRegistrarProducto = ({ actualizarTabla, id }) => {
     }
   }, [cod_producto]);
 
-  console.log(productoId);
-
   const closeModal = () => {
     setModal(false);
     setDataToEdit(null);

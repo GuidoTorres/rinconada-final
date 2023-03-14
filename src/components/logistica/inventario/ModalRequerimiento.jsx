@@ -2,15 +2,11 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
-import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
-import {
-  mostrarRequerimientoTable,
-  requerimientoTable,
-} from "../../../data/dataTable";
+import { requerimientoTable } from "../../../data/dataTable";
 import { requerimientoValues } from "../../../data/initalValues";
 import Tabla from "../../tabla/Tabla";
-import { Select, Modal, Input, DatePicker, Button, Empty } from "antd";
+import { Select, Modal, Input, Button } from "antd";
 import { notificacion } from "../../../helpers/mensajes";
 import "../styles/modalRequerimientos.css";
 
@@ -26,23 +22,19 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
   } = useContext(CrudContext);
 
   const [codRequerimiento, setCodRequerimiento] = useState("");
-  const initialValues = requerimientoValues(id);
+  const initialValues = requerimientoValues();
   const [requerimiento, setRequerimiento] = useState(initialValues);
   const [text, setText] = useState("");
-  const [search, setSearch] = useState([]);
   const [newJson, setNewJson] = useState([]);
-  const [key, setKey] = useState("");
-  const [agregar, setAgregar] = useState("");
   const [area, setArea] = useState([]);
   const [idRequerimiento, setIdRequerimiento] = useState("");
   const [trabajador, setTrabajador] = useState([]);
-  const [dni, setDni] = useState();
-  const [areaId, setAreaId] = useState();
+  const [idReq, setIdReq] = useState("");
+  const [productoEditar, setProductoEditar] = useState([]);
 
   const closeModal = () => {
     setModal3(false);
     setDataToEdit(null);
-    setSearch([]);
     setNewJson([]);
     setRequerimiento(initialValues);
   };
@@ -51,37 +43,77 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
     const route = "requerimiento";
     const route1 = "area";
     const route2 = "trabajador";
+    const route3 = "requerimiento/last/id";
 
-    const response = await getData(route);
-    const response1 = await getData(route1);
-    const response2 = await getData(route2);
+    const response = getData(route);
+    const response1 = getData(route1);
+    const response2 = getData(route2);
+    const response3 = getData(route3);
 
-    const all = await Promise.all([response, response1, response2]);
+    const all = await Promise.all([response, response1, response2, response3]);
 
     setCodRequerimiento(all[0].data);
     setArea(all[1].data);
     setTrabajador(all[2].data);
+    setIdReq(all[3].data);
+    setRequerimiento((value) => ({
+      ...value,
+      codigo: dataToEdit === null ? all[3].data : "",
+    }));
   };
 
   useEffect(() => {
     getRequerimientoCodigo();
   }, []);
-
-  console.log("====================================");
-  console.log(requerimiento);
-  console.log("====================================");
-
+  const getListaProducto = async (id) => {
+    const response = await getData(`almacen/producto/${id}`);
+    setProductoEditar(response.data);
+  };
   useEffect(() => {
     if (dataToEdit !== null) {
-      setRequerimiento(dataToEdit);
-    } else {
-      setRequerimiento(initialValues);
+      setRequerimiento((value) => ({
+        ...value,
+        codigo: dataToEdit.codigo,
+        fecha_pedido: dataToEdit?.fecha_pedido,
+        fecha_entrega: dataToEdit?.fecha_entrega,
+        solicitante: dataToEdit?.solicitante,
+        area: dataToEdit?.area,
+        celular: dataToEdit?.celular,
+        proyecto: dataToEdit?.proyecto,
+        producto_id: "",
+        descripcion: "",
+        cantidad: dataToEdit?.cantidad,
+        dni: dataToEdit?.dni,
+      }));
+
+      const formatData = dataToEdit?.requerimiento_productos?.map((item) => {
+        return {
+          codigo_producto: item?.producto?.id,
+          codigo: dataToEdit?.codigo || "",
+          fecha_pedido: dataToEdit?.fecha_pedido || "",
+          fecha_entrega: dataToEdit?.fecha_entrega || "",
+          solicitante: dataToEdit?.solicitante || "",
+          area: dataToEdit?.area || "",
+          celular: dataToEdit?.celular || "",
+          proyecto: dataToEdit?.proyecto || "",
+          producto_id: item?.id,
+          descripcion: item?.producto?.nombre,
+          cantidad: item?.cantidad,
+          unidad: item?.producto?.unidad?.nombre,
+          almacen_id: item?.producto?.almacen_id,
+          stock: item?.producto?.stock,
+          dni: dataToEdit?.dni,
+        };
+      });
+
+      setNewJson(formatData);
+
+      getListaProducto(dataToEdit.almacen_id);
     }
   }, [dataToEdit]);
 
+  // para obtener al trabajador en base al dni
   useEffect(() => {
-    // para obtener al trabajador en base al dni
-
     if (requerimiento?.dni?.length >= 7) {
       const filterDni = trabajador?.filter(
         (item) => item.dni === requerimiento.dni
@@ -105,63 +137,77 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
     }
   }, [requerimiento.dni]);
 
+  // filtrar el producto para llenar la tabla
   useEffect(() => {
-    if (requerimiento.producto && data) {
-      const filterProducto = data?.filter(
-        (item) => item.id === requerimiento.producto
-      );
-      const formatData =
-        filterProducto.length > 0 &&
-        filterProducto.map((item) => {
-          return {
-            codigo_producto: item.id,
-            codigo: requerimiento.codigo || "",
-            fecha_pedido: requerimiento.fecha_pedido || "",
-            fecha_entrega: requerimiento.fecha_entrega || "",
-            solicitante: requerimiento.solicitante || "",
-            area: requerimiento.area || "",
-            celular: requerimiento.celular || "",
-            proyecto: requerimiento.proyecto || "",
-            producto_id: item.id,
-            descripcion: item.nombre,
-            cantidad: requerimiento.cantidad || "",
-            unidad: item.unidad,
-            almacen_id: id,
-            stock: item.stock,
-          };
-        });
+    if (requerimiento.producto) {
+      let filterProducto;
+      if (data?.length > 0) {
+        filterProducto = data?.filter(
+          (item) => item.id === requerimiento.producto
+        );
+      }
+      if (productoEditar?.length > 0) {
+        filterProducto = productoEditar?.filter(
+          (item) => item.id === requerimiento.producto
+        );
+      }
 
-      if (formatData.length !== 0) {
-        setSearch([formatData[0]]);
-        if (agregar !== "") {
-          let newState = [requerimiento];
+      if (filterProducto.length > 0) {
+        const formatData =
+          filterProducto.length > 0 &&
+          filterProducto.map((item) => {
+            return {
+              codigo_producto: item?.id,
+              codigo: requerimiento?.codigo,
+              fecha_pedido: requerimiento?.fecha_pedido,
+              fecha_entrega: requerimiento?.fecha_entrega,
+              solicitante: requerimiento?.solicitante,
+              area: requerimiento?.area,
+              celular: requerimiento?.celular,
+              proyecto: requerimiento?.proyecto,
+              producto_id: item?.id,
+              descripcion: item?.nombre,
+              cantidad: requerimiento?.cantidad,
+              unidad: item?.unidad,
+              almacen_id: id,
+              stock: item?.stock,
+              dni: requerimiento?.dni,
+            };
+          });
 
-          newState[0].producto = "";
-          newState[0].categoria = "";
-          newState[0].cantidad = "";
-          setNewJson((current) => [...current, search[0]]);
-          setSearch([]);
+        if (formatData.length > 0) {
+          const result = newJson?.filter((item) => {
+            const prueba = formatData.find(
+              (ele) => ele.codigo_producto === item.codigo_producto
+            );
+
+            if (prueba) {
+              return item;
+            } else {
+              return prueba;
+            }
+          });
+
+          if (result.length === 0) {
+            setNewJson((value) => [...value, formatData.at(-1)]);
+          }
         }
       }
     }
+  }, [requerimiento]);
 
+  //para actualizar la cantidad en la tabla
+  useEffect(() => {
     if (idRequerimiento !== "" && idRequerimiento !== undefined) {
       setNewJson((state) =>
-        state.map((item, i) =>
+        state?.map((item, i) =>
           i === idRequerimiento
             ? { ...item, cantidad: requerimiento.cantidad }
             : item
         )
       );
     }
-  }, [text, requerimiento, key, agregar]);
-
-  useEffect(() => {
-    if (newJson?.length !== 0) {
-      setKey("");
-      setAgregar("");
-    }
-  }, [newJson]);
+  }, [idRequerimiento, requerimiento]);
 
   const handleData = (e, i, text) => {
     if (i !== undefined) {
@@ -193,11 +239,7 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
         closeModal();
       }
     } else {
-      const response = await updateData(
-        requerimiento,
-        dataToEdit.id,
-        routeUpdate
-      );
+      const response = await updateData(newJson, dataToEdit.id, routeUpdate);
       if (response.status === 200) {
         notificacion(response.status, response.msg);
         actualizarTabla();
@@ -206,31 +248,13 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
     }
   };
 
-  useEffect(() => {
-    if (dataToEdit !== null) {
-      const filterData = dataToEdit.requerimiento_productos?.map((item) => {
-        return {
-          id: dataToEdit.id,
-          cantidad: item.cantidad,
-          codigo_producto: item.producto.id,
-          codigo_barras: item.producto.codigo_barras,
-          codigo_interno: item.producto.codigo_interno,
-          descripcion: item.producto.nombre,
-          fecha: item.producto.fecha,
-          unidad: item.producto.unidad,
-        };
-      });
-      setNewJson(filterData);
-    }
-  }, [dataToEdit]);
-
+  // para la edicion del requerimiento
   const handleDelete = (e) => {
-    setNewJson((current) =>
-      current.filter((item) => item.producto_id !== e.producto_id)
+    setNewJson((value) =>
+      value.filter((item) => item.producto_id !== e.producto_id)
     );
+    setRequerimiento(initialValues);
   };
-
-  const column1 = mostrarRequerimientoTable(handleDelete);
 
   const columns = requerimientoTable(
     handleData,
@@ -243,7 +267,9 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
     <Modal
       destroyOnClose={true}
       className="modal-requerimiento"
-      title={dataToEdit === null ? "Registrar requerimiento" : "Editar requerimiento"}
+      title={
+        dataToEdit === null ? "Registrar requerimiento" : "Editar requerimiento"
+      }
       open={modal3}
       centered
       onCancel={closeModal}
@@ -367,29 +393,30 @@ const ModalRequerimiento = ({ id, data, actualizarTabla }) => {
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
             onChange={(e) => handleData(e, null, "producto")}
-            options={data?.map((item, i) => {
-              return {
-                value: item.id,
-                label: item.nombre,
-              };
-            })}
+            options={
+              data
+                ? data?.map((item, i) => {
+                    return {
+                      value: item.id,
+                      label: item.nombre,
+                    };
+                  })
+                : productoEditar?.map((item, i) => {
+                    return {
+                      value: item.id,
+                      label: item.nombre,
+                    };
+                  })
+            }
           />
         </div>
-
-        {search?.length > 0 && (
-          <div className="agregar">
-            <Button onClick={() => setAgregar("agregar")}>
-              <AiOutlineCheck />
-            </Button>
-          </div>
-        )}
       </form>
       <br />
-      {search && search?.length !== 0 ? (
-        <Tabla columns={column1} table={search} />
-      ) : (
-        <Tabla columns={columns} table={newJson} />
-      )}
+
+      <div>
+        <Tabla columns={columns} table={newJson} filas={5} />
+      </div>
+
       <div className="button-container">
         {newJson?.length !== 0 ? (
           <Button type="primary" onClick={handleSubmit}>

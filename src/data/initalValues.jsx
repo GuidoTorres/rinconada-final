@@ -243,12 +243,13 @@ export const entradaSalidaValues = (tipo, id) => {
     codigo_pedido: "",
     costo: "",
     dni: "",
+    costo_total: ""
   };
 };
 
-export const requerimientoValues = (id) => {
+export const requerimientoValues = (id, edit) => {
   return {
-    codigo: parseInt(id) + 1,
+    codigo: edit === null ? id : "",
     fecha_pedido: "",
     fecha_entrega: "",
     solicitante: "",

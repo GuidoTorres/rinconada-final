@@ -41,7 +41,7 @@ const ModalHistorialContratoAsociacion = ({
     setModalContrato(true);
     setId(e);
   };
-  
+
   const handleDelete = async (id) => {
     let route = "contrato";
     const response = await deleteData(route, id.id);
@@ -75,7 +75,8 @@ const ModalHistorialContratoAsociacion = ({
     },
     {
       id: "Fecha de inicio",
-      name: "Fecha de inicio",width: "16%",
+      name: "Fecha de inicio",
+      width: "16%",
       selector: (row) => row?.fecha_inicio?.split("T")[0],
     },
     {
@@ -100,19 +101,19 @@ const ModalHistorialContratoAsociacion = ({
       cell: (e) => (
         <>
           <div className="acciones">
-          <BsPencil onClick={() => handleEdit(e)} />
-          <Popconfirm
-            title="Eliminar trabajador"
-            description="¿Estas seguro de eliminar?"
-            onConfirm={() => handleDelete(e)}
-            // onCancel={cancel}
-            okText="Si"
-            cancelText="No"
-            placement="topRight"
-          >
-            <BsTrash />
-          </Popconfirm>
-        </div>
+            <BsPencil onClick={() => handleEdit(e)} />
+            <Popconfirm
+              title="Eliminar trabajador"
+              description="¿Estas seguro de eliminar?"
+              onConfirm={() => handleDelete(e)}
+              // onCancel={cancel}
+              okText="Si"
+              cancelText="No"
+              placement="topRight"
+            >
+              <BsTrash />
+            </Popconfirm>
+          </div>
         </>
       ),
     },
@@ -146,7 +147,7 @@ const ModalHistorialContratoAsociacion = ({
           actualizarAsociacion={actualizarAsociacion}
           modal2={modalContrato}
           setModal2={setModalContrato}
-          dataContrato = {data1}
+          dataContrato={data1}
         />
       )}
     </MainModal>

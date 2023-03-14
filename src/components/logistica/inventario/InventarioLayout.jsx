@@ -39,10 +39,6 @@ const InventarioLayout = () => {
     setData(response.data);
   };
 
-  console.log('====================================');
-  console.log(almacen_id);
-  console.log('====================================');
-
   const getProductoAlmacen = async () => {
     const response = await getData(`almacen/producto/${almacen_id}`);
     setData1(response.data);

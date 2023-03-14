@@ -2,15 +2,11 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
-import { AiOutlineCheck } from "react-icons/ai";
 import { CrudContext } from "../../../context/CrudContext";
-import {
-  mostrarProductoEntrada,
-  registrarEntrada,
-} from "../../../data/dataTable";
+import { registrarEntrada } from "../../../data/dataTable";
 import { entradaSalidaValues } from "../../../data/initalValues";
 import Tabla from "../../tabla/Tabla";
-import { Select, Modal, Button, Input, Empty } from "antd";
+import { Select, Modal, Button, Input } from "antd";
 import { notificacion } from "../../../helpers/mensajes";
 import ModalRegistrarProducto from "./ModalRegistrarProducto";
 import "../styles/modalRegistrarEntrada.css";
@@ -36,22 +32,15 @@ const ModalRegistrarEntradaSalida = ({
     setCargando,
   } = useContext(CrudContext);
 
-  const [text, setText] = useState("");
-  const [search, setSearch] = useState([]);
   const initialValues = entradaSalidaValues(tipo, almacen_id);
   const [entrada, setEntrada] = useState(initialValues);
   const [newJson, setNewJson] = useState([]);
-  const [key, setKey] = useState("");
-  const [agregar, setAgregar] = useState("");
   const [area, setArea] = useState([]);
   const [entradaId, setEntradaId] = useState([]);
   const [idCantidad, setIdCantidad] = useState("");
   const [trabajador, setTrabajador] = useState([]);
-  const [dni, setDni] = useState();
   const [pedido, setPedido] = useState([]);
   const [pedidoEntrada, setPedidoEntrada] = useState([]);
-  const [costoTotal, setCostoTotal] = useState("");
-  const [requerimientoJson, setRequerimientoJson] = useState([]);
   const [areaId, setAreaId] = useState();
   const [productoAlmacen, setProductoAlmacen] = useState([]);
   const [buscador, setBuscador] = useState("");
@@ -91,22 +80,22 @@ const ModalRegistrarEntradaSalida = ({
     setModal2(false);
     setDataToEdit(null);
     setEntrada(initialValues);
-    setCostoTotal("");
+    setNewJson([]);
   };
 
   useEffect(() => {
     getArea();
   }, []);
 
+  // para juntar productos iguales de requerimientos en uno solo
   useEffect(() => {
-    // para juntar productos iguales de requerimientos en uno solo
     if (entrada.codigo_pedido !== "" && dataToEdit === null) {
       const filterData = pedidoEntrada.filter(
         (item) =>
-          item.id == entrada.codigo_pedido &&
+          item.id === entrada.codigo_pedido &&
           item.requerimiento_pedidos
             .map((item) => item.requerimiento)
-            .filter((item) => item.almacen_id == almacen_id)
+            .filter((item) => item.almacen_id === almacen_id)
       );
 
       const formatData =
@@ -177,26 +166,31 @@ const ModalRegistrarEntradaSalida = ({
             tipo: entrada?.tipo,
             codigo: entrada?.codigo,
             motivo: entrada?.motivo,
-            encargado: entrada?.encargado || dni,
+            encargado: entrada?.encargado,
             codigo_compra: entrada?.codigo_compra,
             boleta: entrada?.boleta,
             codigo_requerimiento: entrada?.codigo_requerimiento,
             area: areaId,
+            dni: item.dni,
           };
         });
-
-      if (formatMerge.length > 0) {
-        let costo = formatMerge.reduce((acc, value) => acc + value.costo, 0);
-        setCostoTotal(costo);
-      }
 
       setNewJson(formatMerge);
       entrada.codigo_requerimiento = formatData;
     }
   }, [entrada]);
 
+  //para calcular el costo total de de los productos
   useEffect(() => {
-    // si es edicion llenar el formulario con data del servidor, sino valores iniciales
+    let costo = newJson.reduce(
+      (acc, value) => parseFloat(acc) + parseFloat(value.costo),
+      0
+    );
+    setEntrada((value) => ({ ...value, costo_total: costo }));
+  }, [newJson]);
+
+  // si es edicion llenar el formulario con data del servidor, sino valores iniciales
+  useEffect(() => {
     if (dataToEdit !== null) {
       setEntrada(dataToEdit);
 
@@ -217,17 +211,16 @@ const ModalRegistrarEntradaSalida = ({
           codigo: item.producto.codigo,
           producto_id: item.producto.id,
           tipo: dataToEdit.tipo,
+          stock: item.stock
         };
       });
 
       setNewJson(formatData);
-    } else {
-      setEntrada(initialValues);
     }
-  }, [dataToEdit]);
+  }, []);
 
+  // para obtener al trabajador en base al dni
   useEffect(() => {
-    // para obtener al trabajador en base al dni
     if (entrada?.dni?.length >= 7) {
       const filterDni = trabajador?.filter((item) => item.dni === entrada.dni);
 
@@ -247,22 +240,24 @@ const ModalRegistrarEntradaSalida = ({
     }
   }, [entrada.dni]);
 
+  // agregar productos a la tabla si se usa el buscador
   useEffect(() => {
-    // agregar productos a la tabla si se usa el buscador
     if (productoAlmacen.length > 0 && entrada.producto) {
       const filterProducto = productoAlmacen?.filter(
         (item) => item.id === entrada.producto
       );
 
+      console.log(filterProducto);
+
       //dar formato para entrada o salida
       const formatData =
-        tipo === "entrada" && filterProducto.length > 0
+        tipo === "entrada" && filterProducto?.length > 0
           ? filterProducto.map((item) => {
               return {
                 id: item.id,
-                codigo_producto: item.codigo,
+                codigo_producto: item.id,
                 nombre: item.nombre,
-                cantidad: entrada.cantidad || item.stock,
+                cantidad: entrada.cantidad,
                 unidad: item.unidad,
                 boleta: entrada.boleta,
                 motivo: entrada.motivo,
@@ -278,52 +273,59 @@ const ModalRegistrarEntradaSalida = ({
                 producto: entrada.producto,
                 stock: parseInt(item.stock),
                 nuevo_stock: parseInt(item.stock) + parseInt(entrada.cantidad),
+                costo_inicial: parseFloat(item?.precio),
                 costo: parseFloat(item.precio).toFixed(2),
               };
             })
-          : tipo === "salida" && filterProducto.length > 0
-          ? filterProducto.map((item) => {
+          : tipo === "salida" && filterProducto?.length > 0
+          ? filterProducto?.map((item) => {
               return {
-                id: item.id,
-                codigo_producto: item.codigo,
-                nombre: item.nombre,
-                cantidad: entrada.cantidad || item.stock,
-                unidad: item.unidad,
-                boleta: entrada.boleta,
-                motivo: entrada.motivo,
-                categoria: entrada.categoria,
-                codigo: parseInt(entradaId[entradaId.length - 1]?.id) + 1,
-                codigo_compra: entrada.codigo_compra,
-                codigo_requerimiento: entrada.codigo_requerimiento,
-                encargado: entrada.encargado,
-                fecha: entrada.fecha,
-                producto_id: item.id,
-                tipo: entrada.tipo,
+                id: item?.id,
+                codigo_producto: item?.id,
+                nombre: item?.nombre,
+                cantidad: entrada?.cantidad,
+                unidad: item?.unidad,
+                boleta: entrada?.boleta,
+                motivo: entrada?.motivo,
+                categoria: entrada?.categoria,
+                codigo: parseInt(entradaId[entradaId?.length - 1]?.id) + 1,
+                codigo_compra: entrada?.codigo_compra,
+                codigo_requerimiento: entrada?.codigo_requerimiento,
+                encargado: entrada?.encargado,
+                fecha: entrada?.fecha,
+                producto_id: item?.id,
+                tipo: entrada?.tipo,
                 almacen_id: almacen_id,
-                area: entrada.area || areaId,
-                stock: parseInt(item.stock),
-                costo: parseFloat(item.precio).toFixed(2),
+                area: entrada?.area || areaId,
+                stock: parseInt(item?.stock),
+                costo_inicial: parseFloat(item?.precio),
+                costo: parseFloat(item?.precio).toFixed(2),
               };
             })
           : "";
 
       if (formatData.length > 0) {
-        setSearch([formatData[0]]);
+        const result = newJson?.filter((item) => {
+          const prueba = formatData.find(
+            (ele) => ele.codigo_producto === item.codigo_producto
+          );
 
-        if (agregar !== "") {
-          let newState = [entrada];
+          if (prueba) {
+            return item;
+          } else {
+            return prueba;
+          }
+        });
 
-          newState[0].producto = "";
-          newState[0].categoria = "";
-          newState[0].cantidad = "";
-
-          setNewJson((current) => [...current, formatData[0]]);
-          setSearch([]);
+        if (result.length === 0) {
+          setNewJson((value) => [...value, formatData.at(-1)]);
         }
       }
     }
+  }, [entrada]);
 
-    //para actaulizar la cantidad cada vez que se cambia en la tabla
+  //para actualizar la cantidad y el costo en la tabla
+  useEffect(() => {
     if (idCantidad !== "" && newJson.length !== 0 && idCantidad !== undefined) {
       setNewJson((state) =>
         state.map((item, i) =>
@@ -332,23 +334,16 @@ const ModalRegistrarEntradaSalida = ({
                 ...item,
                 cantidad: entrada.cantidad,
                 costo:
-                  entrada.cantidad === ""
-                    ? item.costo
-                    : parseFloat(item.costo) * parseInt(entrada.cantidad),
+                  entrada.cantidad !== ""
+                    ? parseFloat(item.costo_inicial) *
+                      parseFloat(entrada.cantidad)
+                    : item.costo_inicial,
               }
             : item
         )
       );
     }
-  }, [text, entrada, key, agregar]);
-
-  useEffect(() => {
-    //reiniciar valores para agregar nuevos productos a la tabla
-    if (newJson.length !== 0) {
-      setKey("");
-      setAgregar("");
-    }
-  }, [newJson]);
+  }, [idCantidad, entrada.cantidad]);
 
   const handleSubmit = async (e) => {
     let route = "entrada";
@@ -394,21 +389,10 @@ const ModalRegistrarEntradaSalida = ({
   };
 
   const handleDelete = (e) => {
-    if (dataToEdit !== null) {
-      setSearch((current) => current.filter((item) => item.id !== e.id));
-      setNewJson((current) => current.filter((item) => item.id !== e.id));
-    } else {
-      setSearch((current) =>
-        current.filter((item) => item.producto_id !== e.producto_id)
-      );
-
-      setNewJson((current) =>
-        current.filter((item) => item.producto_id !== e.producto_id)
-      );
-    }
+    setNewJson((current) => current.filter((item) => item.id !== e.id));
+    setEntrada(initialValues);
   };
 
-  const columns1 = mostrarProductoEntrada(handleDelete);
   const columns = registrarEntrada(
     handleData,
     handleDelete,
@@ -417,10 +401,6 @@ const ModalRegistrarEntradaSalida = ({
     entrada?.codigo_pedido,
     newJson?.cantidad
   );
-
-  console.log('====================================');
-  console.log(tipo);
-  console.log('====================================');
 
   return (
     <>
@@ -432,7 +412,7 @@ const ModalRegistrarEntradaSalida = ({
         centered
         onCancel={closeModal}
         footer={null}
-        width={900}
+        width={950}
       >
         <form className="modal-body">
           <div className="container">
@@ -609,31 +589,15 @@ const ModalRegistrarEntradaSalida = ({
             ) : (
               ""
             )}
-            {search && search.length > 0 && (
-              <div className="agregar">
-                <Button onClick={() => setAgregar("agregar")}>
-                  <AiOutlineCheck />
-                </Button>
-              </div>
-            )}
           </div>
         </form>
         <div className="tabla">
-          {search && search?.length !== 0 ? (
-            <Tabla columns={columns1} table={search} />
-          ) : newJson.length > 0 ? (
-            <Tabla columns={columns} table={newJson} />
-          ) : (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={<span>No hay productos para mostrar.</span>}
-            />
-          )}
+          <Tabla columns={columns} table={newJson} />
         </div>
 
-        {costoTotal !== "" && costoTotal !== 0 ? (
+        {newJson.length > 0 ? (
           <label htmlFor="">
-            <strong>Costo total:</strong> {costoTotal}
+            <strong>Costo total:</strong> {entrada.costo_total}
           </label>
         ) : (
           ""
