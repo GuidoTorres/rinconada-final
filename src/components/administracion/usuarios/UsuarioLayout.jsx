@@ -41,7 +41,7 @@ const UsuarioLayout = () => {
   };
 
   const handleDelete = async (id) => {
-    const response = await deleteData("pago", id);
+    const response = await deleteData("usuario", id);
     if (response) {
       notificacion(response.status, response.msg);
       getUsuarios();
